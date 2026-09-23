@@ -39,11 +39,18 @@ imagined ERD produces tables nobody renders.
 ```
 /pspt:status      where the project stands, what runs next
 /pspt:spec        derive the next stage of the specification set
+/pspt:enhance     grow the spec conversationally without breaking any existing requirement
 /pspt:build       take one phase exit criterion through red → green → clean → check
+/pspt:build-long  run /pspt:build in a loop until the user says stop
 /pspt:trace       walk requirement → screen → column → endpoint → test
 /pspt:code        add an error code everywhere it must appear, at once
 /pspt:reg         reserve a numbered regression and wire its id into the specs
 ```
+
+> `/pspt:ticket` — turn spec items into phases.md exit criteria — is a
+> planned sibling of `/pspt:enhance`. Enhance changes the spec; ticket
+> turns spec into a work list; build implements one ticket. Three
+> skills, three jobs, no overlap.
 
 ## What it requires
 
@@ -70,14 +77,28 @@ of what disagrees. Never a half-spec.
 ## What it produces
 
 ```
-docs/
-  strict-rules.md   data-spec.md   error-handling.md   phases.md      shared
-  BE/  be-architecture.md  be-stack.md  testing.md  features/*.md
-  FE/  fe-architecture.md  fe-stack.md  design-system.md  features/*.md
+<parent repo>/
+  docs/
+    strict-rules.md   data-spec.md   error-handling.md   phases.md      shared
+    BE/  be-architecture.md  be-stack.md  testing.md  features/*.md
+    FE/  fe-architecture.md  fe-stack.md  design-system.md  features/*.md
+  .gitmodules
+  backend/     → <owner>/<slug>-backend   (git submodule)
+  frontend/    → <owner>/<slug>-frontend  (git submodule)
 ```
 
 One stage per invocation, stopping at each checkpoint. Nothing moves right until
 the artifact on the left has been read.
+
+`backend/` and `frontend/` are **git submodules**, each with its own GitHub
+repository. The parent repo tracks the specification, the mockup, and the two
+pinned submodule commits. The first `/pspt:build` invocation creates the two
+remotes via `gh repo create --private` and wires the submodules; every later
+invocation writes into whichever submodule the exit criterion belongs to and
+commits — inside the submodule, then in the parent so the pointer moves in the
+same change. No push; the user pushes on their own cadence.
+
+Requires `gh` (GitHub CLI) installed and authenticated. See SR-3.
 
 | Stage | Produces |
 |---|---|

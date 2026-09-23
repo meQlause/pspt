@@ -22,7 +22,7 @@ in this repository follows them without being asked.
 |---|---|---|
 | SR-1 | Every dependency a service needs is injected, never imported. No module-level singleton inside a feature. | Boundary lint rule, and a unit test that builds each service with fakes |
 | SR-2 | `tests/` mirrors `src/` exactly. No test file lives inside `src/`. | Path parity script in CI |
-| SR-3 | The mandatory toolchain in §3 is installed in every repository. | Dependency check in CI |
+| SR-3 | The mandatory toolchain in §3 is installed in every repository, **including `gh` (GitHub CLI, authenticated) so `/pspt:build` can create and wire the backend and frontend submodules on its first invocation**. | Dependency check in CI |
 | SR-4 | Playwright with Chromium is installed and runnable, locally and in CI. | The `e2e` job |
 | SR-5 | The pipeline is green before a merge. A test is never skipped, deleted or weakened to reach green. | Branch protection |
 | SR-6 | Commits are authored by the connected account. No co-author trailer, no tool attribution. | `commitlint` hook |
