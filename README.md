@@ -30,8 +30,8 @@ imagined ERD produces tables nobody renders.
 ## Install
 
 ```
-/plugin marketplace add Ardial/pspt
-/plugin install pspt
+/plugin marketplace add meQlause/pspt
+/plugin install pspt@pspt
 ```
 
 ## Use
