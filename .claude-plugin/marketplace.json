@@ -1,0 +1,15 @@
+{
+  "name": "pspt",
+  "metadata": {
+    "description": "Spec-driven development toolkit. Turns requirement documents and a static HTML mockup into the full engineering specification set — data spec with a real ERD, architecture and stack decisions, endpoint contracts, error registry, testing strategy and a phased plan — then drives the red/green/clean/check build loop against it."
+  },
+  "owner": {
+    "name": "Ardial"
+  },
+  "plugins": [
+    {
+      "name": "pspt",
+      "source": "./"
+    }
+  ]
+}
