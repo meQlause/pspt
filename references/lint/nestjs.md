@@ -188,7 +188,59 @@ and the same input always gives the same output.
 
 ---
 
-## 9. `warn` is not advisory
+## 9. Identifier length
+
+```js
+'id-length': ['error', {
+  min: 3,
+  properties: 'never',
+  exceptions: ['id', 'db', 'tx', 'to', 'up'],
+}],
+```
+
+**No variable, parameter, class or method name under 3 characters.** A
+one-letter name in a map callback (`.map(i => …)`, `.filter(x => …)`) says
+nothing about what the value is; spell it out (`.map(issue => …)`). Loop
+counters spelled `i` / `j` / `k` fall under the same rule — reach for a
+named iteration (`for (const row of rows)`) instead. Object property keys
+(the `properties: 'never'` flag) are exempt because JSON payloads and
+inherited API shapes are not ours to rename.
+
+The five exceptions are load-bearing domain vocabulary that keeps its short
+form: `id` (primary key, everywhere), `db` (database handle), `tx`
+(transaction handle in `runInTransaction` callbacks), `to` / `up` (route
+argument names in migration files). Add nothing else without a written
+reason.
+
+`_req`, `_next` and the other underscore-prefixed unused parameters from §8
+are exempted by convention — `id-length` counts the leading underscore as
+part of the name (so `_req` is 4 characters, above the floor).
+
+---
+
+## 10. Magic values
+
+```js
+'no-magic-numbers': ['error', {
+  ignore: [-1, 0, 1, 2],
+  ignoreArrayIndexes: true,
+  ignoreDefaultValues: true,
+  ignoreClassFieldInitialValues: true,
+  enforceConst: true,
+  detectObjects: false,
+}],
+'sonarjs/no-duplicate-string': ['error', { threshold: 3 }],
+```
+
+**No unnamed number** except `-1`, `0`, `1`, `2`; **no string literal
+repeated 3+ times in one file** — extract to a named `const`. Full rationale
+in [`express.md`](./express.md) §11; the shape and exemptions transfer
+unchanged. Test files opt out via a `tests/**` override; Zod schemas keep
+their literals inline.
+
+---
+
+## 11. `warn` is not advisory
 
 `max-params`, `max-statements`, `no-negated-condition`,
 `unused-imports/no-unused-vars`, `no-explicit-any` and the two downgraded

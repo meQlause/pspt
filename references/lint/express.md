@@ -217,7 +217,90 @@ duplication rule — transfers unchanged.
 
 ---
 
-## 10. `warn` is not advisory
+## 10. Identifier length
+
+```js
+'id-length': ['error', {
+  min: 3,
+  properties: 'never',
+  exceptions: ['id', 'db', 'tx', 'to', 'up'],
+}],
+```
+
+**No variable, parameter, class or method name under 3 characters.** A
+one-letter name in a map callback (`.map(i => …)`, `.filter(x => …)`) says
+nothing about what the value is; spell it out (`.map(issue => …)`). Loop
+counters spelled `i` / `j` / `k` fall under the same rule — reach for a
+named iteration (`for (const row of rows)`) instead. Object property keys
+(the `properties: 'never'` flag) are exempt because JSON payloads and
+inherited API shapes are not ours to rename.
+
+The five exceptions are load-bearing domain vocabulary that keeps its short
+form: `id` (primary key, everywhere), `db` (database handle in a repository),
+`tx` (transaction handle in `runInTransaction` callbacks), `to` / `up` (route
+argument names in migration files). Add nothing else without a written
+reason.
+
+`_req`, `_next` and the other underscore-prefixed unused parameters from §8
+are exempted by convention — the `unused-imports` plugin recognises them via
+`argsIgnorePattern: '^_'`, and `id-length` sees the leading underscore as
+part of the name (so `_req` is 4 characters, above the floor).
+
+---
+
+## 11. Magic values
+
+```js
+'no-magic-numbers': ['error', {
+  ignore: [-1, 0, 1, 2],
+  ignoreArrayIndexes: true,
+  ignoreDefaultValues: true,
+  ignoreClassFieldInitialValues: true,
+  enforceConst: true,
+  detectObjects: false,
+}],
+'sonarjs/no-duplicate-string': ['error', { threshold: 3 }],
+```
+
+**No unnamed number** except `-1`, `0`, `1`, `2`. Array indexes are fine
+(`items[3]`), default parameter values are fine (`(count = 100) => …`), and
+class-field initialisers are fine — everything else must be a `const` with a
+name (`const MAX_PAGE_SIZE = 100`). `enforceConst: true` means declaring the
+constant with `let` fails the rule too.
+
+Why the four-value floor: `-1` is the failed-`indexOf` sentinel, `0` is the
+empty-collection identity, `1` is the increment step, `2` is the divisor for
+"half" and the base for binary; naming any of them would make the code less
+readable, not more. Every other quantity has a name in the domain — a booking
+lasts `MINIMUM_DURATION_MINUTES`, not `60`; a page holds `PAGE_SIZE` items,
+not `25`.
+
+**No string literal that appears three times or more in one file** — extract
+it to a `const`. This bans the whole `'E-VALIDATION'`-typed-in-four-places
+class of drift; the code and the copy each get one home. Two-time literals
+stay legal because renaming a pair rarely earns its diff.
+
+### Reasonable exemptions
+
+Numbers in **test files** (`tests/**`) are the point of the test — a table
+of `[input, expected]` pairs would be unreadable if every literal had to be a
+named constant. Turn the rule off in the `tests/**` glob:
+
+```js
+{
+  files: ['tests/**/*.ts'],
+  rules: { 'no-magic-numbers': 'off', 'sonarjs/no-duplicate-string': 'off' },
+}
+```
+
+Numbers **inside a Zod schema** are the schema's own constants (`z.string().min(1)`,
+`z.number().int().min(1024)`) — they read naturally in place and are the
+`const`. Applying the rule inside a schema is noise, so keep it in the
+service-and-rules glob and leave `*.schema.ts` on the default.
+
+---
+
+## 12. `warn` is not advisory
 
 `max-params`, `max-statements`, `no-negated-condition`,
 `unused-imports/no-unused-vars`, `no-explicit-any` and the two downgraded

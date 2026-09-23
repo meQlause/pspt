@@ -198,7 +198,60 @@ and `<Button secondary>` beat `<Button isPrimary={bool}>`.
 
 ---
 
-## 8. `warn` is not advisory
+## 8. Identifier length
+
+```js
+'id-length': ['error', {
+  min: 3,
+  properties: 'never',
+  exceptions: ['id', 'db', 'to', 'up', 'fn'],
+}],
+```
+
+**No variable, parameter, class or method name under 3 characters.** A
+one-letter name in a map callback (`.map(i => …)`, `.filter(x => …)`) says
+nothing about what the value is; spell it out (`.map(court => …)`). Loop
+counters spelled `i` / `j` / `k` fall under the same rule — reach for a
+named iteration (`for (const row of rows)`) instead. Object property keys
+(the `properties: 'never'` flag) are exempt because JSON payloads and
+inherited API shapes are not ours to rename.
+
+The five exceptions are load-bearing domain vocabulary that keeps its short
+form: `id` (primary key, everywhere), `db` (a client-side cache handle when
+one exists), `to` / `up` (typical arguments in a route target), `fn` (a
+higher-order helper passed a function). Add nothing else without a written
+reason. React components must be `PascalCase` and at least 3 characters
+regardless — `A`, `X`, `H` are not component names.
+
+`_props`, `_event` and other underscore-prefixed unused parameters from §7
+are exempted by convention — `id-length` counts the leading underscore as
+part of the name (so `_ev` is 3 characters, at the floor).
+
+---
+
+## 9. Magic values
+
+```js
+'no-magic-numbers': ['error', {
+  ignore: [-1, 0, 1, 2],
+  ignoreArrayIndexes: true,
+  ignoreDefaultValues: true,
+  ignoreClassFieldInitialValues: true,
+  enforceConst: true,
+  detectObjects: false,
+}],
+'sonarjs/no-duplicate-string': ['error', { threshold: 3 }],
+```
+
+**No unnamed number** except `-1`, `0`, `1`, `2`; **no string literal
+repeated 3+ times in one file** — extract to a named `const`. Full rationale
+in [`react.md`](./react.md) §11; the shape and exemptions transfer
+unchanged. Test files opt out via a `tests/**` override; Zod schemas and
+`className` utility strings stay inline.
+
+---
+
+## 10. `warn` is not advisory
 
 `max-params`, `max-statements`, `jsx-max-depth`, `exhaustive-deps`,
 `no-img-element`, `no-explicit-any` and `unused-imports/no-unused-vars` are all
