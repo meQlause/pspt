@@ -22,23 +22,54 @@ homes eventually has two truths.
 Ask in this order. An answer deletes later questions; do not ask a question whose
 answer is already settled.
 
-| # | Question | Options | Deletes |
+| # | Question | Options presented | Deletes |
 |---|---|---|---|
-| 1 | Database | PostgreSQL · MySQL · SQLite | — |
-| 2 | Backend framework | Express · NestJS | Q4 if NestJS |
-| 3 | ORM / query layer | Prisma · Drizzle · Kysely · TypeORM | — |
-| 4 | DI container | Awilix · tsyringe · manual factories | — |
-| 5 | Frontend framework | Next.js · React + Vite | Q6 if Next.js |
-| 6 | Frontend routing | react-router · TanStack Router | — |
-| 7 | Server state | TanStack Query · SWR · RTK Query | — |
-| 8 | Validation | Zod · Valibot · TypeBox | — |
+| 1 | Database | PostgreSQL · MySQL · SQLite · **user may name another** | — |
+| 2 | Backend framework | **Express · NestJS** — the only two with a governing lint file | Q4 if NestJS |
+| 3 | ORM / query layer | Prisma · Drizzle · Kysely · TypeORM · **user may name another** | — |
+| 4 | DI container | Awilix · tsyringe · manual factories · **user may name another** | — |
+| 5 | Frontend framework | **React + Vite · Next.js** — the only two with a governing lint file | Q6 if Next.js |
+| 6 | Frontend routing | react-router · TanStack Router · **user may name another** | — |
+| 7 | Server state | TanStack Query · SWR · RTK Query · **user may name another** | — |
+| 8 | Validation | Zod · Valibot · TypeBox · **user may name another** | — |
 
-**Not asked:** language (TypeScript), architecture (feature-based with the
-`*.rules.ts` layer), and the test toolchain. Those are fixed — see
-`../conventions.md`.
+**Fixed, never asked:** language is **TypeScript**, runtime is **Node**,
+architecture is feature-based with the `*.rules.ts` layer, and the test
+toolchain is standard. See `../conventions.md`. If the user asks to use a
+language other than TypeScript or a runtime other than Node, decline: this
+plugin does not have the conventions, lint rules, or architecture patterns
+to support them, and switching would silently ship a project without the
+guarantees the rest of the pipeline assumes.
 
-Present each with two candidates, the trade-off in one line each, and the
-configuration trap that fails at runtime. Ask for trade-offs, not for an answer.
+**Framework choices are strict.** Q2 (backend framework) and Q5 (frontend
+framework) each accept only the two options listed above, because those are
+the only stacks with a governing lint file in `references/lint/`. **If the
+user names a different framework** (Fastify, Hono, Koa on the backend;
+SvelteKit, Solid, Vue on the frontend), stop and ask plainly:
+
+> This plugin does not ship a lint file, an architecture doc template, or
+> a `*.rules.ts` boundary for `<framework>`. You will not get the
+> commit-hook zero-warnings guarantee, the schema-not-branching complexity
+> cap, or the purity boundary that makes every rule testable with no
+> fixtures. Do you still want to develop with `<framework>`, unsupported —
+> or would you rather stick with Express / NestJS (or React / Next.js) for
+> the guarantees?
+
+If they say yes to unsupported, proceed but record it under a `noLinter`
+key in `docs/.pspt.json` (see §State file) so `/pspt:build` and
+`/pspt:enhance` can warn each time they run. Do not attempt to invent lint
+rules for the unsupported framework — the whole point of the four shipped
+files is that they are hand-authored, not generated.
+
+**All other library choices are open.** Q1, Q3, Q4, Q6, Q7 and Q8 present
+two or three reasonable candidates with their trade-offs, but the user may
+name any library they prefer. Record the answer and move on — no
+unsupported-warning needed for these, because the linter cares about the
+framework, not the ORM or the query cache.
+
+Present each question with two candidates, the trade-off in one line each,
+and the configuration trap that fails at runtime. Ask for trade-offs, not
+for an answer.
 
 ### Consequences to state, not discover
 
@@ -53,9 +84,10 @@ configuration trap that fails at runtime. Ask for trade-offs, not for an answer.
 ## Linter — select, never generate
 
 The project's lint rules are already written, one file per stack, in
-`references/lint/`. **Do not author new rules.** `be-stack.md` §2 and
-`fe-stack.md` §2 state which file governs and summarise only what a spec author
-needs to know:
+`references/lint/`. **These four files are the whole supported set.** Do
+not author new rules and do not attempt to adapt one file to a stack it
+was not written for — every threshold in there was chosen for the
+specific framework it names.
 
 | Stack answer | Governing file |
 |---|---|
@@ -64,8 +96,16 @@ needs to know:
 | Next.js | `references/lint/nextjs.md` |
 | React + Vite | `references/lint/react.md` |
 
-Copy that file into the target repo's docs so it travels with the project, and
-link to it rather than restating its tables.
+For a supported stack: copy the matching file into the target repo's docs
+so it travels with the project, and link to it rather than restating its
+tables. `be-stack.md` §2 and `fe-stack.md` §2 name which file governs.
+
+For an unsupported stack (a framework the user opted into after the
+warning above): write `<lint file skipped — no governing file ships for
+<framework>. See docs/.pspt.json.noLinter.>` in place of the lint table.
+Do not fabricate one, and do not silently omit the reference — the next
+reader must see that this project ships without the lint guarantees the
+plugin's other outputs assume.
 
 The three consequences that must reach the specification are in
 `../conventions.md` §4: schema-not-branching, `const` map not ternary chain, and
@@ -103,9 +143,12 @@ every screen implements.
 
 ## Exit criteria
 
+- [ ] Language is TypeScript, runtime is Node — recorded, not asked
+- [ ] Backend framework is Express or NestJS **or** an unsupported framework the user opted into after the no-lint warning, with the choice recorded under `docs/.pspt.json`
+- [ ] Frontend framework is React + Vite or Next.js **or** an unsupported framework recorded the same way
 - [ ] Every stack choice records its alternative and the reason it lost *for this project*
 - [ ] Every stack choice records its trap, or states that none is known
-- [ ] The governing lint file is named and copied into the repo
+- [ ] For a supported framework: the governing lint file is named and copied into the repo. For an unsupported framework: the `<lint file skipped …>` note is written in place of the lint table, with `noLinter` set in the state file
 - [ ] Import boundaries are stated as rules a linter can enforce, not as advice
 - [ ] Every error code has exactly one status and one defined screen behaviour
-- [ ] The single check command is defined and runs format, lint, types and dead code
+- [ ] The single check command is defined and runs format, lint, types and dead code (for an unsupported framework, the lint step is either omitted with a written note, or wired to whatever the user's ecosystem provides — never fabricated)

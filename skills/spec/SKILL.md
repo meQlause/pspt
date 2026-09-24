@@ -141,12 +141,20 @@ After each stage, write `docs/.pspt.json`:
   "stages": { "s2": "<ISO date>", "s3": null, "s4": null, "s5": null, "s6": null },
   "stack": { "database": "...", "backend": "...", "orm": "...", "di": "...",
              "frontend": "...", "routing": "...", "serverState": "...", "validation": "..." },
-  "repos": { "backend": null, "frontend": null }
+  "repos": { "backend": null, "frontend": null },
+  "noLinter": { "backend": null, "frontend": null }
 }
 ```
 
-It records **answers**, never content. The documents remain the authority for
-everything they contain.
+It records **answers**, never content. The documents remain the authority
+for everything they contain.
+
+`noLinter.backend` / `noLinter.frontend` are `null` when the framework is
+supported (Express, NestJS, React + Vite, Next.js — each has a governing
+lint file in `references/lint/`). When the user opts into an unsupported
+framework after the warning in S3, record the framework name here so
+`/pspt:build` and `/pspt:enhance` can surface a reminder each time they
+run that the commit-hook zero-warnings guarantee is off for that side.
 
 ## Step 6 — Stop
 
