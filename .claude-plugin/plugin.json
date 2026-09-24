@@ -1,6 +1,6 @@
 {
   "name": "pspt",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Derive a complete engineering specification set from requirement documents and an HTML mockup, then build against it. Implements the SDD + TDD method: BRD/PRD/SRS plus a static mockup in, data specification, architecture, stack, feature contracts, testing strategy and phased delivery plan out. TypeScript, feature-based architecture, with a pure decision layer the linter enforces.",
   "keywords": [
     "sdd",
