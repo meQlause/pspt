@@ -160,22 +160,40 @@ plain next steps to pick from:
   spec, ticket and build are three separate skills so each stays honest
   about what it changes.
 
-## 6. Commits
+## 6. Commit the enhancement — automatic
 
-Prepare the message, commit only if the user asked. Same shape as
-`/pspt:build` §Commits: no `Co-Authored-By` trailer, no tool
-attribution, no "generated with" footer.
+Once the spec files are written, commit. Same discipline as
+`/pspt:build`'s Commits section: `git status --porcelain` first, stage
+explicit paths (never `git add -A` / `git add .`), then commit. No
+`git push` — the user pushes when they are ready.
+
+Message template:
 
 ```
-feat(spec): <one-line what changed>
+feat(spec): <one-line what the enhancement adds>
 
-<body: why this enhancement, and what it does not change; wrapped at 100>
+<body: why this enhancement, and what it does not change; wrapped at 100.
+If the enhancement required a change to a settled decision or a shipped
+contract, name the change and note the user's explicit consent (§3).>
 
 spec: <files touched>
-ids: <new FR-nnn, NFR-nnn, E-..., REG-nnn, etc.>
+ids: <new FR-nnn, NFR-nnn, E-..., etc.>
 ```
 
-No `git push`. The user pushes when they are ready.
+If both `<repo>/docs/` paths are set in `docs/.pspt.json` (the submodule
+layout `/pspt:build` produces), commit inside each affected repo the same
+way and move the parent submodule pointer last, exactly as
+`/pspt:build` §Commits describes.
+
+**SR-6: no `Co-Authored-By` trailer**, no tool attribution, no "generated
+with" footer, in the commit message and in the pull request description.
+The `commitlint` hook rejects it regardless.
+
+### When the user says "don't commit this enhancement"
+
+Skip the commit for this invocation only. Next enhancement commits
+automatically again. Do not create a "wip:" or "temp:" commit as a
+workaround — leave the change staged (or unstaged) and stop.
 
 ---
 

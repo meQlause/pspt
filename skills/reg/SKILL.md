@@ -73,3 +73,44 @@ When the test goes green, tick its exit criterion in `phases.md` and confirm the
 identifier appears in all four places. A regression whose id is only in the
 register is invisible to the next person reading the feature document — which is
 exactly the reader who needs to know.
+
+## Commit — automatic
+
+Once the id is written into all four places (§Reserving one), commit.
+Same discipline as `/pspt:build`'s Commits section: `git status --porcelain`
+first, stage the explicit paths (register file, test file, feature doc,
+`phases.md`, and — if `docs/.pspt.json` records two repo paths — the
+same shared file in the second repo), then commit. No `git push`.
+
+Reservation and closing land as separate commits, because they happen at
+different times:
+
+- **Reserving** — before the test can pass:
+
+  ```
+  test(regression): reserve REG-<nnn> for <one-line defect summary>
+
+  <body: what the defect looked like, what the assertion will prove.
+  Wrapped at 100.>
+
+  id: REG-<nnn>
+  places: BE/testing.md, <test file path>, <feature doc>, phases.md
+  ```
+
+- **Closing** — when the test goes green and the checkbox is ticked:
+
+  ```
+  test(regression): REG-<nnn> green — <what it now protects>
+
+  closes: REG-<nnn>
+  ```
+
+If the docs live in submodules, commit inside each affected repo and
+move the parent submodule pointer last, per `/pspt:build` §Commits.
+
+**SR-6: no `Co-Authored-By` trailer**, no tool attribution.
+
+### When the user says "don't commit this one"
+
+Skip the commit for this invocation only. Next reservation or closing
+commits automatically again.

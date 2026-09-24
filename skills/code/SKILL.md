@@ -72,3 +72,45 @@ Database and ORM errors are translated at the boundary, never leaked. Record the
 mapping in `error-handling.md` §2 — a uniqueness violation, a foreign key
 violation, a missing row, an exclusion-constraint violation. The raw driver
 message never reaches a response or any log line a client can see.
+
+## Commit — automatic when a code was added or changed
+
+An add or a change touches all five places at once, so it lands as one
+commit that captures the whole change. Same discipline as `/pspt:build`'s
+Commits section: `git status --porcelain` first, stage explicit paths
+(registry, copy, mapping, feature doc, and — if `docs/.pspt.json` records
+two repo paths — the same shared file in the second repo), then commit.
+No `git push`.
+
+Message template:
+
+```
+feat(errors): <one-line what the code is for>
+
+<body: the condition that raises it, the status, the sentence, the
+screen behaviour. Wrapped at 100.>
+
+code: E-<AREA>-<NAME>
+places: error-handling.md, <feature docs>, both repos if applicable
+```
+
+For a change (renaming a code, updating copy, moving between presentation
+classes), use `fix(errors):` instead and note what the change replaces.
+**Never `refactor(errors):`** for a semantic change — a shipped code is
+part of the contract; a rename is a new code, not a rewrite of the old
+one (see §Rules).
+
+If the docs live in submodules, commit inside each affected repo and
+move the parent submodule pointer last, per `/pspt:build` §Commits.
+
+**Audit mode never commits.** `/pspt:code` invoked without a specific code
+runs the audit checks in §Auditing and reports findings only. Fixing a
+drift finding is a subsequent invocation with the specific code named,
+which then commits as an add or change.
+
+**SR-6: no `Co-Authored-By` trailer**, no tool attribution.
+
+### When the user says "don't commit this one"
+
+Skip the commit for this invocation only. Next add or change commits
+automatically again.
