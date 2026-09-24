@@ -156,12 +156,50 @@ framework after the warning in S3, record the framework name here so
 `/pspt:build` and `/pspt:enhance` can surface a reminder each time they
 run that the commit-hook zero-warnings guarantee is off for that side.
 
-## Step 6 — Stop
+## Step 6 — Commit the stage
 
-After one stage, stop. Report in three lines:
+Once the stage's output files are written and `docs/.pspt.json` has been
+updated, commit. Same rules as `/pspt:build`'s Commits section: enumerate
+paths with `git status --porcelain`, stage explicitly (never `git add -A`
+or `git add .`), and only then commit. No `git push` — the user pushes on
+their own cadence.
+
+The stage's message uses `feat(spec)` as the type and names what landed:
 
 ```
-S2 complete.  docs/data-spec.md  — 6 tables, 1 exclusion constraint, 17 extraction rows
+feat(spec): <stage> — <one-line what the stage produced>
+
+<body: what the stage generated and any decisions worth remembering,
+wrapped at 100. If the user opted into an unsupported framework in S3,
+name it here and reference docs/.pspt.json.noLinter.>
+
+stage: S<n>
+docs: <files written this stage>
+```
+
+If both `<repo>/docs/` paths are set in `.pspt.json` and the stage wrote
+into them, commit inside each affected repo the same way. In this
+plugin's current model those repos are the backend / frontend submodules,
+so the parent's submodule pointer moves in the same pass — commit the
+parent last, exactly as `/pspt:build` §Commits describes.
+
+**SR-6: no `Co-Authored-By` trailer**, no tool attribution, no "generated
+with" footer, in the commit message and in the pull request description.
+The `commitlint` hook rejects the commit regardless, so ignoring this
+only produces a failed commit.
+
+### When the user says "don't commit this stage"
+
+Skip the commit for this invocation only. The next stage's commit is
+still automatic. Do not create a "wip:" or "temp:" commit as a
+workaround — leave the change staged (or unstaged) and stop.
+
+## Step 7 — Stop
+
+After the commit lands, stop. Report in three lines:
+
+```
+S2 complete.  docs/data-spec.md  — 6 tables, 1 exclusion constraint, 17 extraction rows.  Committed: 4b8246f.
 
 Read it and change anything you disagree with; it is the input to every stage after this.
 Next: /pspt:spec  → S3, shared decisions (framework, ORM, error registry)
