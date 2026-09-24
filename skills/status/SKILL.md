@@ -33,10 +33,12 @@ count plus the first few is enough at this level.
 **Build progress.** If `phases.md` exists, count ticked versus total exit
 criteria per phase.
 
-**Drift.** If `docs/.pspt.json` records two repository paths, compare the four
-shared files (`strict-rules.md`, `data-spec.md`, `error-handling.md`,
-`phases.md`) between them and report any that differ. A shared contract with two
-versions is a defect, not a formatting difference.
+**Drift.** Spec docs live only in the working directory's `docs/`, so
+there is nothing to compare across repos and no drift row to render.
+The `noLinter` field in `docs/.pspt.json` is the only cross-check worth
+running: if it names an unsupported framework, surface that in the
+output so the reader knows the commit-hook zero-warnings guarantee is
+off for that side.
 
 ## Output
 

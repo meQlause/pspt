@@ -1,8 +1,9 @@
 # S3 — Shared decisions
 
-**Produces:** `docs/strict-rules.md` and `docs/error-handling.md` (both repos),
-`docs/BE/be-architecture.md`, `docs/BE/be-stack.md`, `docs/FE/fe-architecture.md`,
-`docs/FE/fe-stack.md`
+**Produces** (all in the working directory's `./docs/`, one place, never
+mirrored into the submodules): `strict-rules.md`, `error-handling.md`,
+`BE/be-architecture.md`, `BE/be-stack.md`, `BE/lint.md`,
+`FE/fe-architecture.md`, `FE/fe-stack.md`, `FE/lint.md`
 
 `strict-rules.md` is S0 and conceptually precedes everything, but it cannot be
 written until the container is known — so it is filled from
@@ -96,9 +97,11 @@ specific framework it names.
 | Next.js | `references/lint/nextjs.md` |
 | React + Vite | `references/lint/react.md` |
 
-For a supported stack: copy the matching file into the target repo's docs
-so it travels with the project, and link to it rather than restating its
-tables. `be-stack.md` §2 and `fe-stack.md` §2 name which file governs.
+For a supported stack: copy the matching file into `./docs/BE/lint.md`
+or `./docs/FE/lint.md` (whichever side owns it) so the parent's spec
+carries it in one place, and link from `be-stack.md` §2 / `fe-stack.md`
+§2 rather than restating its tables. The submodules read the lint from
+here at build time — no mirroring, no drift.
 
 For an unsupported stack (a framework the user opted into after the
 warning above): write `<lint file skipped — no governing file ships for
@@ -148,7 +151,7 @@ every screen implements.
 - [ ] Frontend framework is React + Vite or Next.js **or** an unsupported framework recorded the same way
 - [ ] Every stack choice records its alternative and the reason it lost *for this project*
 - [ ] Every stack choice records its trap, or states that none is known
-- [ ] For a supported framework: the governing lint file is named and copied into the repo. For an unsupported framework: the `<lint file skipped …>` note is written in place of the lint table, with `noLinter` set in the state file
+- [ ] For a supported framework: the governing lint file is named and copied into `./docs/BE/lint.md` or `./docs/FE/lint.md` (the parent's docs, one place). For an unsupported framework: the `<lint file skipped …>` note is written in place of the lint table, with `noLinter` set in the state file
 - [ ] Import boundaries are stated as rules a linter can enforce, not as advice
 - [ ] Every error code has exactly one status and one defined screen behaviour
 - [ ] The single check command is defined and runs format, lint, types and dead code (for an unsupported framework, the lint step is either omitted with a written note, or wired to whatever the user's ecosystem provides — never fabricated)

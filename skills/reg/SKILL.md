@@ -78,9 +78,11 @@ exactly the reader who needs to know.
 
 Once the id is written into all four places (§Reserving one), commit.
 Same discipline as `/pspt:build`'s Commits section: `git status --porcelain`
-first, stage the explicit paths (register file, test file, feature doc,
-`phases.md`, and — if `docs/.pspt.json` records two repo paths — the
-same shared file in the second repo), then commit. No `git push`.
+first, stage the explicit paths (register file, feature doc and `phases.md`
+under the parent's `docs/`; the test file inside the submodule it lives in),
+then commit. Inside a submodule when the test file lives there; in the
+parent when the doc updates land; parent submodule pointer moves last, per
+`/pspt:build` §Commits. No `git push`.
 
 Reservation and closing land as separate commits, because they happen at
 different times:

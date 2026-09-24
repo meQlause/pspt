@@ -23,7 +23,7 @@ places.
 | 2 | `error-handling.md` §4 copy | The user-facing sentence, in the product's language |
 | 3 | `error-handling.md` §5 frontend mapping | Which presentation class: field level, blocking banner, advisory banner, screen level, navigation |
 | 4 | The feature document's error table | Every endpoint that can raise it |
-| 5 | Both repositories | If `docs/.pspt.json` records two repo paths, the shared file is updated in both |
+| 5 | (removed) | Spec docs live once, in the working directory's `docs/`. There is no second copy to update. |
 
 Miss any one and the code is half-real: the backend can raise something the
 frontend renders as a generic failure.
@@ -78,9 +78,8 @@ message never reaches a response or any log line a client can see.
 An add or a change touches all five places at once, so it lands as one
 commit that captures the whole change. Same discipline as `/pspt:build`'s
 Commits section: `git status --porcelain` first, stage explicit paths
-(registry, copy, mapping, feature doc, and — if `docs/.pspt.json` records
-two repo paths — the same shared file in the second repo), then commit.
-No `git push`.
+(registry, copy, mapping, feature doc — all under the parent's `docs/`),
+then commit. No `git push`.
 
 Message template:
 

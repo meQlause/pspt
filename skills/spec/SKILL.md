@@ -114,7 +114,12 @@ criterion. That chain is what makes `/pspt:trace` work later.
 
 ### Where documents are written
 
-Default: `./docs/`, using this layout.
+Always the working directory's `./docs/`, using this layout. **Never ask
+for backend or frontend repository paths** — those repos are the git
+submodules `/pspt:build` Step 0 creates under `./backend/` and
+`./frontend/`, and they hold **code only**, never spec docs. One source
+of truth for the specification, one place to grep, one commit whenever
+it changes.
 
 ```
 docs/
@@ -123,13 +128,12 @@ docs/
   FE/  fe-architecture.md  fe-stack.md  design-system.md  features/*.md
 ```
 
-At S3, ask for the backend and frontend repository paths. If given, write each
-side's documents into `<repo>/docs/` and the four shared files into **both**, and
-record the paths in `docs/.pspt.json`. If the user leaves them blank, keep
-everything in `./docs/`.
-
-Also at S3, copy the governing lint file from `references/lint/` into the
-matching repo so it travels with the project.
+At S3, copy the governing lint file from `references/lint/` into
+`./docs/BE/lint.md` or `./docs/FE/lint.md` (whichever side owns it) —
+still in the parent's `docs/`, still one source. The submodule reads
+the lint rules from the parent's docs at build time; the parent's
+commit hooks and CI enforce them against the submodule's code the same
+way.
 
 ### State file
 
@@ -141,13 +145,17 @@ After each stage, write `docs/.pspt.json`:
   "stages": { "s2": "<ISO date>", "s3": null, "s4": null, "s5": null, "s6": null },
   "stack": { "database": "...", "backend": "...", "orm": "...", "di": "...",
              "frontend": "...", "routing": "...", "serverState": "...", "validation": "..." },
-  "repos": { "backend": null, "frontend": null },
   "noLinter": { "backend": null, "frontend": null }
 }
 ```
 
 It records **answers**, never content. The documents remain the authority
 for everything they contain.
+
+**No `repos` field.** The spec docs live in the working directory's
+`./docs/`, always, in one place. `/pspt:build` Step 0 creates the two
+submodules under `./backend/` and `./frontend/` for **code**; they never
+carry spec docs, and the spec skill never asks where they are.
 
 `noLinter.backend` / `noLinter.frontend` are `null` when the framework is
 supported (Express, NestJS, React + Vite, Next.js — each has a governing
