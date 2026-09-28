@@ -1,6 +1,6 @@
 ---
 name: ticket
-description: Turn one change request into a planned, test-first ticket — tickets/<slug>/request.md (summary, scope, checkable acceptance criteria), plan.md (code research, affected and at-risk files, test cases written before code, traceability check) and phase.md (additive → wire-in → docs) — stop for approval, then implement phase by phase, record every test result and close out. Use for "/pspt:ticket <name> <request>", "ticket this", "plan this change before touching code", or to resume an existing ticket with "/pspt:ticket <name>".
+description: Plan one change conversationally before any code — ask what the user wants, dig one or two questions at a time while reading the code to check each idea is possible, until every question is settled and the user says "ready". Then write tickets/<slug>/request.md (summary, scope, checkable acceptance criteria), plan.md (current state, affected and at-risk files, test cases written before code, traceability check) and phase.md (additive → wire-in → docs), stop for approval, implement phase by phase, record every test result and close out. Use for "/pspt:ticket <name> <request>", "ticket this", "plan this change before touching code", or to resume an existing ticket with "/pspt:ticket <name>".
 ---
 
 # The ticket
@@ -8,14 +8,25 @@ description: Turn one change request into a planned, test-first ticket — ticke
 `/pspt:spec` writes what must be true. `/pspt:enhance` grows it. `/pspt:build`
 takes one exit criterion from red to green. `/pspt:ticket` is the unit a person
 actually asks for — "rename the booking reference", "add an offline banner",
-"make cancellation idempotent" — written down, researched, planned with its
-tests **before** any code, approved, and then built in small verifiable phases.
+"make cancellation idempotent" — talked through against the real code, written
+down, planned with its tests **before** any code, approved, and then built in
+small verifiable phases.
 
-Three files, one folder, one approval gate:
+The shape is a conversation first, like `/pspt:enhance`, and documents second.
+Ask, look at the code, ask again, until nothing is open. Then write — request,
+then plan, then phase, in that order.
+
+```
+conversation  →  request.md  →  plan.md  →  phase.md  →  approval  →  build  →  close
+ (questions      what is asked,  what the      the order     ← stop      phase by
+  + code)        scope, ACs      code needs    it lands in               phase
+```
+
+Three files, one folder:
 
 ```
 tickets/<slug>/
-  request.md   what is asked, why, scope, acceptance criteria    ← the user's words
+  request.md   what is asked, why, scope, acceptance criteria, decisions made
   plan.md      what the code looks like now, what changes, what proves it
   phase.md     the order the change lands in, and when each step is done
 ```
@@ -30,15 +41,15 @@ grep, same rule as the specification.
 ## Step 0 — Resolve the ticket
 
 `/pspt:ticket <name> <request>` — `<name>` is the first token, everything after
-it is the request.
+it is the request, and the request is the conversation's anchor.
 
 **Slug:** lowercase `<name>`, spaces and underscores to `-`, strip anything
 outside `[a-z0-9-]`, collapse repeated `-`. `Booking Ref v2` → `booking-ref-v2`.
 
 | `tickets/<slug>/` | Request given | Do |
 |---|---|---|
-| Absent | Yes | Create the folder, go to Step 1 |
-| Absent | No | Ask for the request in one line, then Step 1 |
+| Absent | Yes | Step 1, with the request as the anchor |
+| Absent | No | Step 1, and open by asking for it |
 | Present | Yes | **Refuse.** Print the existing ticket's status line and ask for another name, or `/pspt:ticket <name>` to resume it |
 | Present | No | Resume — read `request.md`'s `**Status:**` and continue from the matching step below |
 
@@ -46,30 +57,115 @@ outside `[a-z0-9-]`, collapse repeated `-`. `Booking Ref v2` → `booking-ref-v2
 > agreed and what was proven. A second request under the same name is a second
 > ticket, not a rewrite of the first.
 
+Nothing is written to disk during the conversation. The folder is created in
+Step 4, when the user has said ready. A conversation abandoned before then
+leaves nothing behind.
+
 The status line, kept current in all three files:
 
 | Status | Means | Resumes at |
 |---|---|---|
-| `open` | Request written, questions not all answered | Step 1 |
-| `planned` | Plan and phases written, waiting for approval | Step 4 |
-| `approved` | User approved; no phase started | Step 5 |
-| `in progress · P<n>` | Phase `<n>` is the current phase | Step 5, phase `<n>` |
-| `blocked · <reason>` | Stopped on an unplanned file or a red test | Step 5, after the user answers |
+| `planned` | Request, plan and phases written, waiting for approval | Step 6 |
+| `approved` | User approved; no phase started | Step 7 |
+| `in progress · P<n>` | Phase `<n>` is the current phase | Step 7, phase `<n>` |
+| `blocked · <reason>` | Stopped on an unplanned file or a red test | Step 7, after the user answers |
 | `done` | Closed out, every AC ticked | Nothing to do — print the report |
 
-## Step 1 — `request.md`
+## Step 1 — Open the conversation
 
-Write the user's request down **before** reading any code, so the plan answers
-the request instead of the request drifting toward whatever the code makes easy.
+If the request came with the command, restate it in one sentence and ask the
+first thing it leaves open. If it did not, start with one line and wait:
+
+> **What would you like to ticket?**
+
+Do not open with a numbered survey — the user has one thing in mind and a list
+buries it. Every question after the first is a follow-up on that anchor. If the
+anchor is vague ("clean up bookings", "make it faster"), ask what specifically
+they mean, in one plain sentence, before reading anything.
+
+## Step 2 — Dig, and read the code while you do
+
+Keep it conversational — one or two questions per turn, in the user's own
+words, the way `/pspt:enhance` §2 does. The difference is that **every turn is
+also a look at the code.** Before you ask, read what the answer depends on, so
+the question you put to the user is one the code cannot answer for you.
+
+Per turn:
+
+1. **Look first.** Find the route, component, rule, schema or test the current
+   topic touches. Read it whole, not a grep excerpt. Note `path:line`.
+2. **Settle what the code settles.** If the code already answers the question —
+   the field exists, the reference is already 8 characters, the endpoint is
+   already owner-only — do not ask it. Say what you found, with `path:line`,
+   and move on.
+3. **Say what is possible.** If the idea fits the code as it is, say so in one
+   line. If it does not — the column is referenced by three tables, the rule
+   reads the clock directly, the component is shared by two screens — say
+   exactly what is in the way and offer the real options, each with its cost.
+   Use `AskUserQuestion` when there are two or more candidates: the trade-off
+   and the trap, never an open "what do you want?".
+4. **Ask what only the user knows** — intent, priority, the number that matters
+   and why, what is deliberately out of scope.
+5. **Restate the current shape** in one short paragraph, so a misread is
+   caught now, not in `plan.md`.
+
+Before you ask "ready?", you need all of these, each backed either by the
+user's answer or by code you read:
+
+| Settled | Backed by |
+|---|---|
+| What changes, for whom, and why | The user |
+| Where it lives — the files and features involved | Code, `path:line` |
+| That it is possible as the code stands, or what must move first | Code |
+| Edge cases — the boundary, the empty input, the concurrent call, the other user's record | Code and the user |
+| What is out of scope | The user |
+| Who else depends on what changes — importers, shared components, mirrored tests | Code, found by searching importers (conventions §8 for test paths) |
+| The observable outcome of each acceptance criterion | The user, sharpened until a test can be written against it |
+| Whether the specification itself must change | `docs/`, and `/pspt:trace` in impact mode when it exists — use its output, do not re-derive it |
+
+**Route spec changes first.** If the conversation shows the specification itself
+must change — a new FR, a new column, a new error code, a tighter guarantee —
+the ticket is not the place to decide it. Say which skill owns it and pause:
+
+| The ticket needs | Run first |
+|---|---|
+| A new or changed requirement, column, contract or screen state | `/pspt:enhance` |
+| A new error code | `/pspt:code` |
+| A numbered regression for a defect this ticket closes | `/pspt:reg` |
+
+Then resume with the resulting id. The ticket implements the spec; it never
+quietly becomes it.
+
+**Run the existing suites once** during the conversation and say what is already
+red. A red test you inherit is raised now, as a question, not discovered in
+Phase 2 and blamed on the ticket.
+
+> The conversation is where every question gets answered, so the documents
+> contain none. A question left open until planning is a guess in `plan.md`.
+
+## Step 3 — Ready?
+
+When every row above is settled, ask once:
+
+> **Ready to write the ticket?**
+
+Yes / done / go → Step 4. Another detail or a new anchor → keep digging. It is a
+check-in, not a gate that forces the user to answer now.
+
+## Step 4 — `request.md`
+
+Create `tickets/<slug>/` (re-check it does not exist — refuse if it now does)
+and write the request from the conversation. Everything in it was said or
+confirmed in Steps 1–3; nothing new is introduced here.
 
 ```markdown
 # <Name> — Request
 
-**Ticket:** `<slug>` · **Status:** open · **Opened:** <ISO date>
+**Ticket:** `<slug>` · **Status:** planned · **Opened:** <ISO date>
 
 ## 1. Summary
 
-<one paragraph, the user's request in plain words — what changes for whom>
+<one paragraph, the request in plain words — what changes for whom>
 
 ## 2. Why
 
@@ -89,18 +185,21 @@ NFR-nnn, REG-nnn or E-code it touches when a pspt spec exists>
 - [ ] **AC1** — <observable, checkable statement: an input, an action, an outcome>
 - [ ] **AC2** — …
 
-## 5. Open questions
+## 5. Decisions
 
-| # | Question | Answer | Answered |
+What the conversation settled, and what settled it.
+
+| # | Question | Answer | Settled by |
 |---|---|---|---|
-| Q1 | <what the request does not say and the plan needs> | | |
+| D1 | Is the reference shown anywhere but the confirmation screen? | Also on the e-mail receipt | user |
+| D2 | Does anything parse the reference's format? | No — only compared for equality | code, `backend/src/features/bookings/bookings.repository.ts:41` |
 ```
 
 **Acceptance criteria follow the `phases.md` bar** in
 `references/stages/s6-phases.md` §Writing exit criteria: each names an input and
 an observable outcome, and a test can be written against it. "Works
-correctly", "is fast", "looks right" are goals — ask until they are numbers,
-responses or states.
+correctly", "is fast", "looks right" are goals — they should have been sharpened
+in Step 2; if one slipped through, go back and ask.
 
 | Good | Bad |
 |---|---|
@@ -108,48 +207,17 @@ responses or states.
 | **AC2** — A reference is 8 characters from `A-Z2-9`, and two bookings created in the same millisecond get different references | References are unique |
 | **AC3** — With the network off, the review screen shows the offline banner within 1 s and disables **Confirm** | Handles offline |
 
-**Open questions are answered before planning.** Ask them with
-`AskUserQuestion` — two or more real candidates with the trade-off, never an
-open "what do you want?" — and write each answer into §5 with the date. Edge
-cases the answers reveal become acceptance criteria, not footnotes.
+Every edge case settled in the conversation is its own AC, not a footnote.
+**§5 has no unanswered row** — an open question means Step 3 was premature.
 
-**Route spec changes first.** If an answer means the specification itself must
-change — a new FR, a new column, a new error code, a tighter guarantee — the
-ticket is not the place to decide it. Stop and say which skill owns it:
+## Step 5 — `plan.md`, then `phase.md`
 
-| The ticket needs | Run first |
-|---|---|
-| A new or changed requirement, column, contract or screen state | `/pspt:enhance` |
-| A new error code | `/pspt:code` |
-| A numbered regression for a defect this ticket closes | `/pspt:reg` |
-
-Then cite the resulting id in §2 and the AC it produces. The ticket implements
-the spec; it never quietly becomes it.
-
-When every §5 row has an answer, move on. Status stays `open` until the plan
-exists.
-
-## Step 2 — Research the code
-
-Read before you plan. Every claim in `plan.md` §1 carries a `path:line`.
-
-1. **Find the entry points** the request names — the route, the component, the
-   rule, the schema. Read them whole, not a grep excerpt.
-2. **Follow the call graph one hop each way.** What does the code you will edit
-   call, and what calls it?
-3. **Find the dependants.** For every file you expect to edit, search for its
-   importers (`from './<file>.js'`, the feature's `index.ts` exports, schema and
-   type re-exports) and for tests at the mirrored path (conventions §8). A file
-   that imports an edited file is **at risk**, even if you never open it in an
-   editor.
-4. **Walk the spec chain** when `docs/` exists — `/pspt:trace` in impact mode
-   gives the documents and regressions the change touches. Use its output; do
-   not re-derive it here.
-5. **Run the existing suites once** and note what is already red. A red test you
-   inherit is recorded in `plan.md` §5 as a risk, not discovered in Phase 2 and
-   blamed on the ticket.
-
-## Step 3 — `plan.md` and `phase.md`
+Written straight after `request.md`, from what the conversation read. The code
+was already looked at in Step 2; this step completes that reading — every file
+the change touches, every importer of those files, every mirrored test — and
+writes it down with `path:line`. If completing it raises a question the
+conversation did not settle, **do not write the question into the plan**: go
+back to Step 2, ask it, record the answer in `request.md` §5, then continue.
 
 ### `plan.md`
 
@@ -297,10 +365,9 @@ Ordering rules:
 Every phase lists its files (by F id), its tasks as checkboxes, the test ids that
 verify it, and a done-when a reviewer can check without asking.
 
-## Step 4 — Stop for approval
+## Step 6 — Stop for approval
 
-Set status to `planned` in all three files, commit them (see Commits), and
-print:
+All three files carry status `planned`. Commit them (see Commits), and print:
 
 ```
 Ticket booking-ref-v2 planned.  3 ACs · 3 files (1 new, 1 modify, 1 delete) · 1 at risk · 6 tests · 3 phases.  Committed: 7c1e0a2.
@@ -315,7 +382,7 @@ re-committed, then the gate is asked again. On approval, status → `approved`.
 > The plan is the cheapest place the change will ever be wrong. Every line of
 > code written before approval is a line the user did not agree to.
 
-## Step 5 — Implement, phase by phase
+## Step 7 — Implement, phase by phase
 
 Before P1, run every R row once and record the baseline in `Result`
 (`pass · baseline`). An R that is red before any edit is not this ticket's to
@@ -361,14 +428,14 @@ test is red.** Fix the code, or revert the task. If the test itself is wrong —
 it disagrees with an AC, or with the spec — that is a plan change: say so,
 propose the corrected row, and wait. Status → `blocked · <test id> red`.
 
-## Step 6 — Close out
+## Step 8 — Close out
 
 After the last phase:
 
 1. Run **every** T, R and S row in `plan.md` §6 on the final tree. Write each
    `Result`. Every row must read `pass`.
 2. Tick every AC in `request.md` §4 whose T rows all pass. An AC that cannot be
-   ticked means the ticket is not done — go back to Step 5, do not close.
+   ticked means the ticket is not done — go back to Step 7, do not close.
 3. Tick every box in `plan.md` §7.
 4. Status → `done` in all three files. Commit.
 5. Report:
@@ -396,9 +463,9 @@ Commits land at three moments:
 
 | Moment | Where | Paths |
 |---|---|---|
-| Plan written (Step 4), and each re-plan | parent | `tickets/<slug>/request.md`, `plan.md`, `phase.md` |
-| Each phase done (Step 5) | submodule(s), then parent | the phase's F files and tests; then the ticket files, any `docs/` write-back, the submodule pointers |
-| Close-out (Step 6) | parent | the three ticket files |
+| Ticket written (Step 6), and each re-plan | parent | `tickets/<slug>/request.md`, `plan.md`, `phase.md` |
+| Each phase done (Step 7) | submodule(s), then parent | the phase's F files and tests; then the ticket files, any `docs/` write-back, the submodule pointers |
+| Close-out (Step 8) | parent | the three ticket files |
 
 Message template:
 
@@ -433,6 +500,12 @@ staged (or unstaged) and stop.
 
 - **Never overwrite an existing ticket.** Refuse and ask for another name, or
   resume it.
+- **Never write a ticket file before the user says ready.** The conversation
+  leaves nothing on disk until Step 4.
+- **Never ask the user what the code can answer.** Read it, say what it shows
+  with `path:line`, and ask only what the code cannot know.
+- **Never leave a question in a document.** `request.md` §5 holds decisions,
+  not open items; a new question goes back to the conversation.
 - **Never touch code before approval.** Not a test file, not a scaffold, not a
   "quick look" edit.
 - **Never plan from memory.** Every §1 statement has a `path:line`; every

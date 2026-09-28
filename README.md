@@ -45,14 +45,17 @@ imagined ERD produces tables nobody renders.
 /pspt:trace       walk requirement → screen → column → endpoint → test
 /pspt:code        add an error code everywhere it must appear, at once
 /pspt:reg         reserve a numbered regression and wire its id into the specs
-/pspt:ticket      plan one change request test-first, get approval, build it in phases
+/pspt:ticket      talk a change through against the code, plan it test-first, build it in phases
 ```
 
 `/pspt:enhance` changes the spec; `/pspt:ticket` turns one request into a
 planned, approved piece of work; `/pspt:build` implements one exit criterion.
 Three skills, three jobs, no overlap.
 
-`/pspt:ticket <name> <request>` writes `tickets/<slug>/` — `request.md`
+`/pspt:ticket <name> <request>` starts as a conversation, like enhance: it asks
+one or two questions at a time and reads the code as it goes, so every question
+is settled — by you or by the code — before anything is written. When you say
+ready, it writes `tickets/<slug>/` — `request.md`
 (scope and checkable acceptance criteria), `plan.md` (the code as it is, every
 affected and at-risk file, and the test cases written before any code) and
 `phase.md` (additive first, then the minimal wire-in, then docs). It stops for
