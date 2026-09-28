@@ -62,6 +62,12 @@ affected and at-risk file, and the test cases written before any code) and
 your approval before touching code, then builds phase by phase, recording every
 test result, and stops again the moment a file outside the plan needs to change.
 
+`/pspt:ticket` reads code through [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/)
+(an MCP code index). If it is missing, the skill asks before installing it
+(`uv tool install jcodemunch-mcp`, `claude mcp add`) and adds its one-line policy
+to your `CLAUDE.md`; decline and the ticket does not start. jCodeMunch is free
+for non-commercial use; commercial use needs its own licence.
+
 ## What it requires
 
 Four inputs, and it refuses without them:

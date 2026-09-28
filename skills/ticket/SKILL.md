@@ -1,6 +1,6 @@
 ---
 name: ticket
-description: Plan one change conversationally before any code — ask what the user wants, dig one or two questions at a time while reading the code to check each idea is possible, until every question is settled and the user says "ready". Then write tickets/<slug>/request.md (summary, scope, checkable acceptance criteria), plan.md (current state, affected and at-risk files, test cases written before code, traceability check) and phase.md (additive → wire-in → docs), stop for approval, implement phase by phase, record every test result and close out. Use for "/pspt:ticket <name> <request>", "ticket this", "plan this change before touching code", or to resume an existing ticket with "/pspt:ticket <name>".
+description: Plan one change conversationally before any code (requires the jcodemunch MCP server — asks permission and installs it if missing) — ask what the user wants, dig one or two questions at a time while reading the code to check each idea is possible, until every question is settled and the user says "ready". Then write tickets/<slug>/request.md (summary, scope, checkable acceptance criteria), plan.md (current state, affected and at-risk files, test cases written before code, traceability check) and phase.md (additive → wire-in → docs), stop for approval, implement phase by phase, record every test result and close out. Use for "/pspt:ticket <name> <request>", "ticket this", "plan this change before touching code", or to resume an existing ticket with "/pspt:ticket <name>".
 ---
 
 # The ticket
@@ -37,6 +37,70 @@ any of the three. Tickets live in the working directory's `tickets/`, beside
 grep, same rule as the specification.
 
 ---
+
+## Before anything — jcodemunch
+
+Every code reading this skill does — the conversation, the plan, the at-risk
+search — goes through [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/), an
+MCP server that indexes the repository and returns symbols, importers and blast
+radius instead of whole files. It must be present **before** the ticket starts.
+
+**Check.** It is present when the session already has its tools (a
+`jcodemunch_guide` tool, or tools under an `mcp__jcodemunch__` prefix), or when
+`claude mcp list` shows a `jcodemunch` entry.
+
+**Missing → ask, never install silently.** Use `AskUserQuestion`:
+
+> jcodemunch is not installed, and `/pspt:ticket` reads code through it. Install
+> it now? It runs `uv tool install jcodemunch-mcp` and
+> `claude mcp add -s user jcodemunch jcodemunch-mcp`, and adds one line to this
+> project's `CLAUDE.md`. Licence: free for non-commercial use; commercial use
+> needs a paid jCodeMunch licence.
+
+| Answer | Do |
+|---|---|
+| **Yes** | Install (below), then continue to Step 0 |
+| **No** | **Stop.** The ticket does not start. Say it needs jcodemunch and that `/pspt:ticket` can be run again once it is installed |
+
+**Install, on yes:**
+
+1. `uv --version` — if `uv` is missing, print its install command
+   (`curl -LsSf https://astral.sh/uv/install.sh | sh`, or
+   `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"` on Windows)
+   and stop. Do not fall back to a bare `pip install` into system Python.
+2. `uv tool install jcodemunch-mcp`, then `jcodemunch-mcp --version` to confirm.
+3. `claude mcp add -s user jcodemunch jcodemunch-mcp`. If an entry named
+   `jcodemunch` already exists, leave it as it is.
+4. **Edit `CLAUDE.md`** at the working directory's root — create it if absent —
+   so every later session uses the tools instead of reading whole files. Add
+   this line once, under a `## Tools` heading; never duplicate it, never touch
+   anything else in the file:
+
+   ```markdown
+   Call the jcodemunch_guide tool and strictly follow its instructions.
+   ```
+
+5. Commit `CLAUDE.md` alone, same discipline as the Commits section below:
+
+   ```
+   chore(tooling): read code through jcodemunch
+
+   /pspt:ticket reads code through the jcodemunch MCP server; CLAUDE.md now
+   tells every session to follow jcodemunch_guide.
+   ```
+
+6. An MCP server added mid-session is loaded on the **next** session. If its
+   tools are not visible yet, say so, ask the user to restart Claude Code and
+   run `/pspt:ticket` again, and stop. Nothing about the ticket has been
+   written, so nothing is lost.
+
+**Present, but `CLAUDE.md` lacks the line** → add it (step 4), commit it (step
+5), tell the user in one line, and continue.
+
+**Then index.** Call `jcodemunch_guide` and follow it, and index the working
+directory (`index_folder`) before the conversation's first code read. The
+submodules `backend/` and `frontend/` are part of the working directory, so
+one index covers both.
 
 ## Step 0 — Resolve the ticket
 
@@ -92,8 +156,10 @@ the question you put to the user is one the code cannot answer for you.
 
 Per turn:
 
-1. **Look first.** Find the route, component, rule, schema or test the current
-   topic touches. Read it whole, not a grep excerpt. Note `path:line`.
+1. **Look first, through jcodemunch.** Find the route, component, rule, schema
+   or test the current topic touches — `search_symbols` to find it,
+   `get_symbol_source` to read it — and note `path:line`. Fall back to reading
+   a whole file only when jcodemunch returns nothing for it, and say so.
 2. **Settle what the code settles.** If the code already answers the question —
    the field exists, the reference is already 8 characters, the endpoint is
    already owner-only — do not ask it. Say what you found, with `path:line`,
@@ -119,7 +185,7 @@ user's answer or by code you read:
 | That it is possible as the code stands, or what must move first | Code |
 | Edge cases — the boundary, the empty input, the concurrent call, the other user's record | Code and the user |
 | What is out of scope | The user |
-| Who else depends on what changes — importers, shared components, mirrored tests | Code, found by searching importers (conventions §8 for test paths) |
+| Who else depends on what changes — importers, shared components, mirrored tests | Code — `find_importers` and `get_blast_radius` per file; mirrored tests by path transform (conventions §8) |
 | The observable outcome of each acceptance criterion | The user, sharpened until a test can be written against it |
 | Whether the specification itself must change | `docs/`, and `/pspt:trace` in impact mode when it exists — use its output, do not re-derive it |
 
@@ -215,7 +281,9 @@ Every edge case settled in the conversation is its own AC, not a footnote.
 Written straight after `request.md`, from what the conversation read. The code
 was already looked at in Step 2; this step completes that reading — every file
 the change touches, every importer of those files, every mirrored test — and
-writes it down with `path:line`. If completing it raises a question the
+writes it down with `path:line`. Use jcodemunch for it: `find_importers` and
+`get_blast_radius` fill §3, `check_edit_safe` backs every `modify` row and
+`check_delete_safe` every `delete` row in §2. If completing it raises a question the
 conversation did not settle, **do not write the question into the plan**: go
 back to Step 2, ask it, record the answer in `request.md` §5, then continue.
 
@@ -500,6 +568,8 @@ staged (or unstaged) and stop.
 
 - **Never overwrite an existing ticket.** Refuse and ask for another name, or
   resume it.
+- **Never start without jcodemunch, and never install it without a yes.**
+  Missing and declined means the ticket does not start.
 - **Never write a ticket file before the user says ready.** The conversation
   leaves nothing on disk until Step 4.
 - **Never ask the user what the code can answer.** Read it, say what it shows
