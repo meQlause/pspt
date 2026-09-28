@@ -386,39 +386,79 @@ format check, and the whole-tree check command. Always the last three rows.
 
 ## P1 — Additive
 
+- [ ] **Phase done**
+
 Nothing existing calls the new code yet. The tree behaves exactly as before.
 
 **Files:** F1, tests for T1–T2, R1 (characterisation, if new)
+
+### Tasks
 
 - [ ] Write T1, T2 — watch them fail for the right reason
 - [ ] Write R1 against current behaviour — green
 - [ ] Implement F1 — T1, T2 green
 
-**Verified by:** T1, T2, R1, S1–S3
-**Done when:** every listed test is green and `pnpm check` is clean, with no existing file edited
+### Verified by
+
+- [ ] T1
+- [ ] T2
+- [ ] R1
+- [ ] S1 lint · S2 format · S3 `pnpm check`
+
+### Done when
+
+- [ ] Every test above is ticked green
+- [ ] No existing file was edited
+- [ ] Committed — `<sha>`
 
 ## P2 — Wire-in
+
+- [ ] **Phase done**
 
 The smallest edit to existing code that connects P1.
 
 **Files:** F2, F3
 
+### Tasks
+
 - [ ] F2: line 88 swap
 - [ ] F3: delete
 
-**Verified by:** T1, T2, R1, S1–S3
-**Done when:** …
+### Verified by
+
+- [ ] T1 · T2 · R1
+- [ ] S1 · S2 · S3
+
+### Done when
+
+- [ ] …
+- [ ] Committed — `<sha>`
 
 ## P3 — Docs and full re-run
 
+- [ ] **Phase done**
+
 **Files:** spec corrections, README, code docs
+
+### Tasks
 
 - [ ] Write back any behaviour that diverged from `docs/` (as `/pspt:build` Step 7)
 - [ ] Re-run every T, R and S row in `plan.md` §6
 
-**Verified by:** all
-**Done when:** every `Result` in `plan.md` §6 reads pass on this commit
+### Verified by
+
+- [ ] All T · all R · all S
+
+### Done when
+
+- [ ] Every `Result` in `plan.md` §6 reads pass on this commit
+- [ ] Committed — `<sha>`
 ```
+
+Every line a reviewer would check is a checkbox — the phase itself, each task,
+each verifying test, each done-when condition — so `phase.md` is the live
+progress of the ticket, not a plan read once and forgotten. Every box starts
+unticked; Step 7 ticks them as the work happens.
 
 Ordering rules:
 
@@ -430,8 +470,8 @@ Ordering rules:
 | **The last phase re-runs every test** in `plan.md` §6 | A test that passed in P1 and was never run again proves nothing about the tree that ships |
 | Split a phase that lists more than one feature folder | One phase, one area, one reviewable diff |
 
-Every phase lists its files (by F id), its tasks as checkboxes, the test ids that
-verify it, and a done-when a reviewer can check without asking.
+Every phase lists its files (by F id) and, as checkboxes, its tasks, the test
+ids that verify it, and a done-when a reviewer can check without asking.
 
 ## Step 6 — Stop for approval
 
@@ -463,15 +503,27 @@ For each phase, in order:
    then green — `/pspt:build` Steps 3–6 are the method, applied per test; the
    architecture rules there (`*.rules.ts` purity, domain errors, schema-owned
    field rules) apply unchanged.
-3. Run every test the phase lists under **Verified by**, plus every R row.
-   Write each outcome into `plan.md` §6 `Result` — `pass · P<n> · <short sha>`
-   or `fail · P<n> · <one-line reason>`.
-4. Tick the phase's tasks in `phase.md` when its done-when holds.
-5. Commit (see Commits) and print one line:
+3. **Tick as you go.** The moment a task is finished, tick its box in
+   `phase.md` and save — before starting the next task, never in a batch at the
+   end. The same for each **Verified by** box the moment that test runs green,
+   with its `Result` written into `plan.md` §6 in the same edit —
+   `pass · P<n> · <short sha>`, or `fail · P<n> · <one-line reason>` and the
+   box stays unticked. Anyone opening `phase.md` mid-phase sees exactly where
+   the work is.
+4. Run every R row too, not only the phase's own tests; an R that goes red
+   stops the phase (see Red test).
+5. When every **Done when** box but the commit is ticked, commit (see
+   Commits), write the short sha into the last box and tick it, then tick
+   **Phase done**. Print one line:
 
    ```
    ✓ P2 wire-in — T1 T2 R1 S1–S3 green; committed backend@4f2d9e1, parent@9ab31c0. Next: P3 docs.
    ```
+
+**A box is ticked only for what actually happened.** Never pre-tick, never tick
+a test that was not run on the current tree, never tick a task that is half
+done. If a later task turns an earlier test red, untick its box and fix it
+before moving on — the file must never claim more than the tree proves.
 
 ### Unplanned file
 
@@ -481,7 +533,8 @@ turns out to depend on an edited one — **stop before editing it**:
 1. Add it to `plan.md` §2 (or §3) with the next F (or A) id, the exact edit, the
    AC it serves, and `added in P<n>` in the Change column.
 2. Add a test for it to §6 — a T if it serves an AC, an R if it is at risk.
-3. Add it to the current phase in `phase.md`.
+3. Add it to the current phase in `phase.md` as an unticked task, with its test
+   as an unticked **Verified by** box.
 4. Status → `blocked · unplanned <path>`, tell the user what was found and why,
    and wait for "go" before continuing.
 
@@ -505,8 +558,10 @@ After the last phase:
 2. Tick every AC in `request.md` §4 whose T rows all pass. An AC that cannot be
    ticked means the ticket is not done — go back to Step 7, do not close.
 3. Tick every box in `plan.md` §7.
-4. Status → `done` in all three files. Commit.
-5. Report:
+4. Confirm every box in `phase.md` is ticked. An unticked one means that work
+   did not happen — go back to Step 7.
+5. Status → `done` in all three files. Commit.
+6. Report:
 
    ```
    Ticket booking-ref-v2 done.
@@ -591,4 +646,7 @@ staged (or unstaged) and stop.
   was built is `/pspt:build` Step 7's write-back, and nothing more.
 - **Never write to `docs/phases.md`.** That file is S6's plan and
   `/pspt:build`'s checklist; a ticket keeps its own phases in its own folder.
-- **Never close with an unticked AC** or an empty `Result`.
+- **Never close with an unticked AC**, an unticked box in `phase.md`, or an
+  empty `Result`.
+- **Never tick a box in a batch, ahead of the work, or for a test that was not
+  run on the current tree.**
