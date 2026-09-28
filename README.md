@@ -45,12 +45,19 @@ imagined ERD produces tables nobody renders.
 /pspt:trace       walk requirement → screen → column → endpoint → test
 /pspt:code        add an error code everywhere it must appear, at once
 /pspt:reg         reserve a numbered regression and wire its id into the specs
+/pspt:ticket      plan one change request test-first, get approval, build it in phases
 ```
 
-> `/pspt:ticket` — turn spec items into phases.md exit criteria — is a
-> planned sibling of `/pspt:enhance`. Enhance changes the spec; ticket
-> turns spec into a work list; build implements one ticket. Three
-> skills, three jobs, no overlap.
+`/pspt:enhance` changes the spec; `/pspt:ticket` turns one request into a
+planned, approved piece of work; `/pspt:build` implements one exit criterion.
+Three skills, three jobs, no overlap.
+
+`/pspt:ticket <name> <request>` writes `tickets/<slug>/` — `request.md`
+(scope and checkable acceptance criteria), `plan.md` (the code as it is, every
+affected and at-risk file, and the test cases written before any code) and
+`phase.md` (additive first, then the minimal wire-in, then docs). It stops for
+your approval before touching code, then builds phase by phase, recording every
+test result, and stops again the moment a file outside the plan needs to change.
 
 ## What it requires
 
@@ -82,6 +89,7 @@ of what disagrees. Never a half-spec.
     strict-rules.md   data-spec.md   error-handling.md   phases.md      shared
     BE/  be-architecture.md  be-stack.md  testing.md  features/*.md
     FE/  fe-architecture.md  fe-stack.md  design-system.md  features/*.md
+  tickets/<slug>/  request.md  plan.md  phase.md               /pspt:ticket
   .gitmodules
   backend/     → <owner>/<slug>-backend   (git submodule)
   frontend/    → <owner>/<slug>-frontend  (git submodule)

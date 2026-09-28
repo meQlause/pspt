@@ -125,10 +125,10 @@ answer now. It is a check-in, not a bar.
 
 ## 5. Update the spec
 
-**Enhance changes the *specification*, not the *work list*.** The phase
-plan in `phases.md` — the tickets — is written *after* enhance closes,
-by whoever plans the next slice of work (or by re-running `/pspt:spec`
-at stage S6). Enhance never opens, closes, or adds an exit criterion.
+**Enhance changes the *specification*, not the *work list*.** The work
+that builds it is planned *after* enhance closes — as a ticket with
+`/pspt:ticket`, or by re-running `/pspt:spec` at stage S6 for
+`phases.md`. Enhance never opens, closes, or adds an exit criterion.
 It records what must be true, not what to do next.
 
 One enhancement, many files. Every file that has to reflect the change
@@ -154,11 +154,11 @@ After writing, print a short summary — files touched, new ids assigned
 plain next steps to pick from:
 
 - Run `/pspt:trace <new-id>` to see the chain the enhancement creates.
-- When they are ready to *build* what was enhanced, run `/pspt:ticket`
-  (the dedicated skill for turning spec items into phase exit criteria)
-  and then `/pspt:build` on each. Enhance does not do either step —
-  spec, ticket and build are three separate skills so each stays honest
-  about what it changes.
+- When they are ready to *build* what was enhanced, run
+  `/pspt:ticket <name> <request>` citing the new ids — it plans the
+  change test-first in `tickets/<slug>/`, stops for approval, then
+  builds it. Enhance does not do that step — spec, ticket and build are
+  separate skills so each stays honest about what it changes.
 
 ## 6. Commit the enhancement — automatic
 
@@ -209,10 +209,11 @@ workaround — leave the change staged (or unstaged) and stop.
   something must go: mark it `**superseded by <new-id>**` and leave
   the old row.
 - **Never write to `phases.md` at all.** Neither adding nor ticking.
-  Adding an exit criterion is `/pspt:ticket`'s job (turning spec into
-  work list); ticking one is `/pspt:build`'s job (marking work as
-  actually done). Enhance changes the *spec*; the ticket and the build
-  are separate skills, invoked in that order, after enhance closes.
+  Planning the work is `/pspt:ticket`'s job (in `tickets/<slug>/`, or
+  S6 for `phases.md`); ticking a criterion is `/pspt:build`'s job
+  (marking work as actually done). Enhance changes the *spec*; the
+  ticket and the build are separate skills, invoked after enhance
+  closes.
 - **Never write to a file the enhancement did not require.** If the
   scope is one endpoint, do not touch the design system just because
   the endpoint's payload has a colour name. Discipline earns the next
