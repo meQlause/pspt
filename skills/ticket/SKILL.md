@@ -485,7 +485,17 @@ Read tickets/booking-ref-v2/plan.md and phase.md. Say "approve" to start P1, or 
 
 Then **stop.** No code, no test file, no branch, no scaffold before the user
 approves. An answer that changes the plan is written into the three files and
-re-committed, then the gate is asked again. On approval, status → `approved`.
+re-committed, then the gate is asked again.
+
+On approval, status → `approved` in all three files, commit (`docs(ticket):
+approve <slug>`), and ask once:
+
+> **Build it now, or queue it for `/pspt:ticket-build`?**
+
+| Answer | Do |
+|---|---|
+| **Now** | Step 7 |
+| **Queue** | Stop. The ticket waits as `approved`; `/pspt:ticket-build` picks up every approved ticket, one by one |
 
 > The plan is the cheapest place the change will ever be wrong. Every line of
 > code written before approval is a line the user did not agree to.

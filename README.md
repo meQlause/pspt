@@ -46,6 +46,7 @@ imagined ERD produces tables nobody renders.
 /pspt:code        add an error code everywhere it must appear, at once
 /pspt:reg         reserve a numbered regression and wire its id into the specs
 /pspt:ticket      talk a change through against the code, plan it test-first, build it in phases
+/pspt:ticket-build  execute every approved ticket not yet built, one ticket at a time
 ```
 
 `/pspt:enhance` changes the spec; `/pspt:ticket` turns one request into a
@@ -61,6 +62,12 @@ affected and at-risk file, and the test cases written before any code) and
 `phase.md` (additive first, then the minimal wire-in, then docs). It stops for
 your approval before touching code, then builds phase by phase, recording every
 test result, and stops again the moment a file outside the plan needs to change.
+
+After approval you choose: build it now, or queue it. `/pspt:ticket-build` runs
+the queue — any ticket left in progress first, then approved tickets oldest
+first — re-checking each plan against the current code before building it, one
+ticket to close-out before the next starts. It stops on a stale plan, a red
+test or an unplanned file rather than skipping ahead.
 
 `/pspt:ticket` reads code through [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/)
 (an MCP code index). If it is missing, the skill asks before installing it
