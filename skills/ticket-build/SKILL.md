@@ -161,4 +161,7 @@ ticket: <slug>
   `/pspt:ticket`.
 - **Never edit a ticket's `request.md`** beyond its status line and AC ticks.
   What was asked is fixed once approved.
+- **Never apply a copy recommendation** (`COPY-nnn`, conventions §9.1) that the
+  user has not approved. Lorem ipsum stays until they do; the run does not wait
+  for it.
 - **Never push.** The user pushes when the run stops.

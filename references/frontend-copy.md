@@ -80,7 +80,10 @@ customer.
    `grep -rn "Lorem ipsum"` finds every one.
 4. **Record it** — a row in the screen document, or in the ticket's `plan.md`
    §5a — so replacing them is a list.
-5. **Never assert it in a test.** Find the element by role or test id.
+5. **Recommend the replacement** in `docs/FE/copy-recommendations.md`, one
+   `COPY-nnn` section per placeholder, with a comment in the copy constant
+   pointing at it. The user approves, then it replaces the lorem ipsum — see §6.
+6. **Never assert it in a test.** Find the element by role or test id.
 
 ## 4. Reading the image
 
@@ -103,6 +106,86 @@ Data is not copy. Names, prices, dates and references come from the API, and
 fixtures and examples use realistic values per
 [`house-style.md`](./house-style.md). `Rp 399.600` is never lorem ipsum. The
 rule is only about **written** text a person is supposed to author.
+
+## 6. Recommending the replacement
+
+**See:** the right panel, markers ① to ④ — each one gets a section below.
+
+Lorem ipsum is what the code carries. What the assistant *proposes* goes in
+`docs/FE/copy-recommendations.md`, one section per marker, and the copy constant
+points at it:
+
+```ts
+// review.copy.ts
+export const REVIEW_COPY = {
+  // COPY-001 · docs/FE/copy-recommendations.md#copy-001
+  PROMO_BANNER: 'Lorem ipsum dolor sit amet, consectetur adipiscing.',
+  // COPY-002 · docs/FE/copy-recommendations.md#copy-002
+  CANCEL_NOTE: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod.',
+  // COPY-003 · docs/FE/copy-recommendations.md#copy-003
+  TRUST_LINE: 'Lorem ipsum dolor sit amet',
+  // COPY-004 · docs/FE/copy-recommendations.md#copy-004
+  GUARANTEE_NOTE: 'Lorem ipsum dolor sit amet, consectetur.',
+} as const;
+```
+
+Compare each recommendation with the invented line from the left panel: the
+recommendation says only what a source says, and every missing fact is listed
+instead of made up. The full template and the status rules are conventions
+§9.1.
+
+### COPY-001 — marker ① · promo banner
+
+**Status:** proposed · **AI recommendation — not approved** · **Length:** one line
+
+| Option | Text |
+|---|---|
+| **A — recommended** | *Remove the banner.* |
+| B | Check the details below before you confirm. |
+
+**Why A:** no source defines any promotion. A banner with nothing true to say
+should not exist; B keeps the space with a neutral, fact-free line.
+**Facts to confirm:** is there a promotion at all? If yes, its exact terms.
+**Invented instead (left ①):** "Book today and get 20% off your next game!"
+
+### COPY-002 — marker ② · cancellation note
+
+**Status:** proposed · **AI recommendation — not approved** · **Length:** two sentences
+
+| Option | Text |
+|---|---|
+| **A — recommended** | You can cancel up to {cancellationWindowHours} hours before your slot starts. After that, the booking can no longer be changed. |
+| B | Need to cancel? Do it at least {cancellationWindowHours} hours before your slot. |
+
+**Based on:** the cancellation window rule (FR), value from configuration.
+**Facts to confirm:** whether a refund is given, and how much.
+**Invented instead (left ②):** "Free cancellation up to 24 hours before your slot. Full refund, no questions asked."
+
+### COPY-003 — marker ③ · trust line
+
+**Status:** proposed · **AI recommendation — not approved** · **Length:** short
+
+| Option | Text |
+|---|---|
+| **A — recommended** | *Remove the line.* |
+| B | {bookingCount} bookings made on lapangin — *only if the figure is served by the API* |
+
+**Why A:** social proof needs a real figure; none exists in any source.
+**Facts to confirm:** a real, current figure and where it comes from.
+**Invented instead (left ③):** "★ Trusted by 10,000+ players across Jakarta"
+
+### COPY-004 — marker ④ · guarantee note
+
+**Status:** proposed · **AI recommendation — not approved** · **Length:** one sentence
+
+| Option | Text |
+|---|---|
+| **A — recommended** | Once you confirm, this slot is held for you. |
+| B | *Remove the line.* |
+
+**Based on:** the non-overlap constraint in `data-spec.md` §6 — the slot cannot be booked twice once confirmed.
+**Facts to confirm:** whether "held" covers the payment window, or only after payment.
+**Invented instead (left ④):** "Your court is guaranteed — we never double-book."
 
 ---
 

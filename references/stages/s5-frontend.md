@@ -81,7 +81,8 @@ document, and each one has defined copy.
 **Copy comes from a source, never from the assistant.** Text already defined —
 in the mockup, `error-handling.md` §4, the PRD/SRS, or the user's words — is
 written verbatim. Only text nothing defines is lorem ipsum, recorded as a
-placeholder row in the screen document — `references/conventions.md` §9.
+placeholder row in the screen document with a `COPY-nnn` recommendation in
+`docs/FE/copy-recommendations.md` — `references/conventions.md` §9 and §9.1.
 
 **Nothing else on the response is read.** List the fields the screen consumes and
 say plainly that other fields arriving is fine — the contract is not trimmed for
@@ -117,4 +118,4 @@ wrong and this is when it is cheap to find out.
 - [ ] Design tokens are extracted from the mockup CSS, so the refactor cannot drift visually
 - [ ] Acceptance criteria are written in a form the browser suite can implement without interpretation
 - [ ] Every figure in an acceptance criterion matches the backend specification
-- [ ] No screen document contains invented copy — every text is from the mockup, the spec or the user, or is a recorded lorem ipsum placeholder (conventions §9)
+- [ ] No screen document contains invented copy — every text is from the mockup, the spec or the user, or is a recorded lorem ipsum placeholder with a `COPY-nnn` recommendation (conventions §9, §9.1)

@@ -199,8 +199,73 @@ one search: `grep -rn "Lorem ipsum"`. A `TODO` beside it is banned by the linter
 (§4) and is not needed — the lorem text *is* the marker.
 
 **Record every placeholder** in the screen document (or the ticket's `plan.md`)
-as a row — screen, element, expected length — so replacing them is a list, not
-an archaeology project.
+as a row — screen, element, expected length, `COPY-nnn` — so replacing them is a
+list, not an archaeology project.
+
+### 9.1 Recommending the replacement
+
+Lorem ipsum is what ships in the code; it is not the end of the job. For every
+placeholder the assistant **also writes a recommendation** for the text that
+should replace it — in a separate file, never in the code, and never used until
+the user approves it.
+
+| Piece | Where | Holds |
+|---|---|---|
+| The placeholder | The feature's copy constant | Lorem ipsum, plus one comment naming its section: `// COPY-003 · docs/FE/copy-recommendations.md#copy-003` |
+| The recommendation | `docs/FE/copy-recommendations.md` | One section per `COPY-nnn`: where it is, what it must say, the proposed wording, what it is based on, what to confirm |
+| The record | The screen document, or the ticket's `plan.md` §5a | The row for the placeholder, naming its `COPY-nnn` |
+
+Every placeholder has exactly one section, and every section names exactly one
+placeholder — the id is the link in both directions. Ids are the next free
+number, never reused, never renumbered, the same as `REG-nnn`.
+
+**Section template:**
+
+```markdown
+## COPY-003 — Review · cancellation note
+
+**Status:** proposed · **AI recommendation — not approved** · **Placeholder:** `frontend/src/features/bookings/review.copy.ts` `CANCEL_NOTE` · **Length:** two sentences · **Raised by:** ticket `booking-review`
+
+| Option | Text |
+|---|---|
+| **A — recommended** | You can cancel up to {cancellationWindowHours} hours before your slot starts. After that, the booking can no longer be changed. |
+| B | Need to cancel? Do it at least {cancellationWindowHours} hours before your slot. |
+
+**Why A:** matches the mockup's plain second-person tone ("Review your booking") and states only what FR-021 defines.
+**Based on:** FR-021 (cancellation window), `error-handling.md` §4 `E-BOOKINGS-WINDOW` wording.
+**Facts to confirm:** whether a refund is given, and how much — no source says, so no option claims one.
+**Decision:** —
+```
+
+**Rules for the wording:**
+
+| Rule | Why |
+|---|---|
+| **State no fact a source does not state.** No number, price, discount, deadline, policy, guarantee, legal claim or social proof that is not in the mockup, the spec, the PRD/SRS or the user's words | This is exactly how invented copy misleads. A recommendation that makes a promise is the left panel of [`frontend-copy.md`](./frontend-copy.md) with extra steps |
+| A value the text needs comes from configuration as a named slot — `{cancellationWindowHours}` — never typed in | Same rule as error copy (`/pspt:code` §Rules): the number has one home |
+| A fact the text needs that no source has goes under **Facts to confirm**, not into the wording | The user sees the missing decision instead of reading around it |
+| Match the vocabulary and tone of the copy already defined on the same screen | Defined copy is the product's voice; the recommendation extends it, not replaces it |
+| Fit the recorded length | The layout was built around the placeholder's size |
+| One to three options, one marked recommended with a one-line reason | A choice, not an essay |
+
+**Status and applying:**
+
+| Status | Means | Next |
+|---|---|---|
+| `proposed` | Written by the assistant, not seen yet | The user approves an option, edits one, or rejects it |
+| `approved · <option or edited>` | The user chose the text | Apply it |
+| `applied · <sha>` | The approved text replaced the lorem ipsum in the copy constant, verbatim | Nothing — it is now defined text |
+| `rejected · <reason>` | The user wants none of it | The user supplies the text, or the element is removed from the screen |
+
+**Apply** means: copy the approved text into the copy constant **exactly as
+approved**, keep the `COPY-nnn` comment as the trace, write the text into
+**Decision**, set the status to `applied`, and commit —
+`feat(copy): apply COPY-003 — review cancellation note`. A recommendation is
+never applied because it "looks fine"; only the user's approval applies it.
+
+> Lorem ipsum stops a guess from shipping. The recommendation stops the lorem
+> ipsum from staying: the user reviews a written proposal with its sources and
+> its open facts, instead of starting from a blank line.
 
 **Tests never assert placeholder text.** Find the element by role, label
 association or test id. A test that asserts `Lorem ipsum` locks the placeholder

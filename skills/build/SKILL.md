@@ -143,7 +143,9 @@ Respect the architecture while you do it:
 - **Frontend text is never invented.** Text already defined — the mockup, the
   spec, the PRD/SRS, an existing copy constant, the user — is written verbatim;
   only text nothing defines is lorem ipsum in the feature's copy constant,
-  recorded in the screen document. Tests find elements
+  recorded in the screen document, with a `COPY-nnn` comment pointing at its
+  recommendation in `docs/FE/copy-recommendations.md` (§9.1). Never apply a
+  recommendation the user has not approved. Tests find elements
   by role or test id, never by placeholder text — `references/conventions.md` §9.
 
 Run the test. Green.

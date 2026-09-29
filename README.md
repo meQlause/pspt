@@ -161,7 +161,10 @@ If the database is not PostgreSQL it says so rather than emitting
 
 If the text is already defined — mockup, spec, PRD/SRS, an existing copy file,
 or you — it is written as-is. If it is not, it is lorem ipsum, recorded so it is
-replaced before release. The assistant never writes copy it was not given.
+replaced before release. For each placeholder the assistant writes a proposed
+replacement in `docs/FE/copy-recommendations.md` (`COPY-nnn`, referenced from
+the code); it replaces the lorem ipsum only after you approve it. The assistant
+never puts copy it was not given on a screen.
 [`references/frontend-copy.md`](references/frontend-copy.md) shows why, side by
 side:
 

@@ -175,8 +175,9 @@ Per turn:
    **the text** — but only what is not already defined. Text the mockup, the
    spec, the PRD/SRS or an existing copy constant already gives is used as-is,
    not asked about. For the rest, ask once;
-   whatever the user does not supply becomes lorem ipsum
-   (`references/conventions.md` §9) — never text you made up.
+   whatever the user does not supply becomes lorem ipsum with a written
+   recommendation for its replacement (`references/conventions.md` §9, §9.1)
+   — never text you made up in the screen itself.
 5. **Restate the current shape** in one short paragraph, so a misread is
    caught now, not in `plan.md`.
 
@@ -335,9 +336,15 @@ Not edited, but they depend on a file that is.
 
 Text no source provided, filled with lorem ipsum per conventions §9.
 
-| Screen | Element | Expected length | Copy constant |
-|---|---|---|---|
-| Review | Offline banner body | one sentence | `review.copy.ts` `OFFLINE_BODY` |
+| Screen | Element | Expected length | Copy constant | Recommendation |
+|---|---|---|---|---|
+| Review | Offline banner body | one sentence | `review.copy.ts` `OFFLINE_BODY` | [COPY-007](../../docs/FE/copy-recommendations.md#copy-007) · proposed |
+
+Each row has its `COPY-nnn` section in `docs/FE/copy-recommendations.md`,
+written in this step alongside the plan (conventions §9.1). That file holds
+proposals, not specification, so writing it is not a spec change. The copy
+constant carries the lorem ipsum and the `COPY-nnn` comment; the approved text
+replaces it only after the user approves it.
 
 ## 6. Test cases
 
@@ -593,7 +600,7 @@ After the last phase:
      files  3 planned, 1 added in P2 (bookings.mapper.ts)
      tests  4 T · 2 R · 3 S — all pass on parent@b81e44d
      spec   docs/BE/features/bookings.md §1 corrected (reference format)
-     copy   1 lorem ipsum placeholder left — plan.md §5a (review offline banner body)
+     copy   1 lorem ipsum placeholder — COPY-007 proposed, waiting for your approval (docs/FE/copy-recommendations.md)
 
    Next: /pspt:trace FR-014 to confirm the chain, then push when ready.
    ```
@@ -610,7 +617,7 @@ Commits land at three moments:
 
 | Moment | Where | Paths |
 |---|---|---|
-| Ticket written (Step 6), and each re-plan | parent | `tickets/<slug>/request.md`, `plan.md`, `phase.md` |
+| Ticket written (Step 6), and each re-plan | parent | `tickets/<slug>/request.md`, `plan.md`, `phase.md`, and `docs/FE/copy-recommendations.md` when §5a has rows |
 | Each phase done (Step 7) | submodule(s), then parent | the phase's F files and tests; then the ticket files, any `docs/` write-back, the submodule pointers |
 | Close-out (Step 8) | parent | the three ticket files |
 
@@ -671,8 +678,12 @@ staged (or unstaged) and stop.
 - **Never write to `docs/phases.md`.** That file is S6's plan and
   `/pspt:build`'s checklist; a ticket keeps its own phases in its own folder.
 - **Never invent frontend text.** Defined text (mockup, spec, PRD/SRS, existing
-  copy constant, the user's words) is written as-is — otherwise lorem ipsum, recorded in `plan.md` §5a
+  copy constant, the user's words) is written as-is — otherwise lorem ipsum,
+  recorded in `plan.md` §5a with a `COPY-nnn` recommendation
   (`references/conventions.md` §9).
+- **Never apply a copy recommendation the user has not approved.** "Approve
+  COPY-007" (or an edited version) is the only trigger; the text is then applied
+  verbatim and committed (conventions §9.1).
 - **Never close with an unticked AC**, an unticked box in `phase.md`, or an
   empty `Result`.
 - **Never tick a box in a batch, ahead of the work, or for a test that was not
