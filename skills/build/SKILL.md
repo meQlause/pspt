@@ -140,6 +140,10 @@ Respect the architecture while you do it:
   `max-depth: 2` will reject the branching version anyway.
 - A feature reaches another only through its `index.ts`. Repositories are never
   exported.
+- **Frontend text is never invented.** Mockup copy verbatim, error sentences
+  from `error-handling.md` §4; anything with no source is lorem ipsum in the
+  feature's copy constant, recorded in the screen document. Tests find elements
+  by role or test id, never by placeholder text — `references/conventions.md` §9.
 
 Run the test. Green.
 

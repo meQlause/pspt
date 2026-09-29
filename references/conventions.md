@@ -161,3 +161,44 @@ tests/
 
 Naming: `<source>.test.ts` for unit and integration, `<journey>.spec.ts` for end
 to end. A test is found by transforming a path, not by searching.
+
+## 9. Frontend copy — never invent text
+
+Every piece of text a screen shows that a person wrote — a heading, a button
+label, a helper line, an empty-state sentence, a tooltip, a confirmation
+dialog, `alt` text — comes from a source. The assistant never writes it.
+
+| Source, in order | Use it |
+|---|---|
+| The mockup markup | Verbatim — the approved copy, already paid for. Never reworded, shortened or "improved" |
+| The specification | `error-handling.md` §4 for error sentences, the screen document for everything else |
+| The user, in the conversation or the ticket | Verbatim, recorded where the rule above says it lives |
+| **None of these** | **Lorem ipsum.** Never a guess |
+
+**Placeholder shape.** Match the expected length so the layout is honest: a
+label or a button is `Lorem ipsum`; a heading is `Lorem ipsum dolor sit`; a
+sentence is `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`; a
+paragraph is the standard two-sentence passage. Nothing else — no half-invented
+sentence with one lorem word, no `TBD`, no `Text here`.
+
+**One home per feature.** Placeholder copy lives in the feature's copy constant
+or message file, never inline in a component, so every placeholder is found by
+one search: `grep -rn "Lorem ipsum"`. A `TODO` beside it is banned by the linter
+(§4) and is not needed — the lorem text *is* the marker.
+
+**Record every placeholder** in the screen document (or the ticket's `plan.md`)
+as a row — screen, element, expected length — so replacing them is a list, not
+an archaeology project.
+
+**Tests never assert placeholder text.** Find the element by role, label
+association or test id. A test that asserts `Lorem ipsum` locks the placeholder
+in and fails on the day real copy arrives.
+
+> Invented copy looks finished. It passes review, reaches production and is
+> discovered by a customer. Lorem ipsum cannot be mistaken for approved text,
+> so it is replaced before release instead of after.
+
+This is about **written copy only**. Data values — names, prices, dates,
+references — come from the API, and fixtures and examples use realistic values
+per `house-style.md`. A price is `Rp 399.600`, never lorem ipsum; a heading
+nobody wrote is lorem ipsum, never a guess.

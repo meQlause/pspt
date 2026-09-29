@@ -78,6 +78,11 @@ const BEHAVIOUR = { SLOT_TAKEN: 'banner', VALIDATION_FAILED: 'field' } as const;
 state in the mockup is a row in the refactor map and a row in the screen
 document, and each one has defined copy.
 
+**Copy comes from a source, never from the assistant.** Mockup text is used
+verbatim; error sentences come from `error-handling.md` §4. Any text a state
+needs that neither provides is lorem ipsum, recorded as a placeholder row in
+the screen document — `references/conventions.md` §9.
+
 **Nothing else on the response is read.** List the fields the screen consumes and
 say plainly that other fields arriving is fine — the contract is not trimmed for
 one screen.
@@ -112,3 +117,4 @@ wrong and this is when it is cheap to find out.
 - [ ] Design tokens are extracted from the mockup CSS, so the refactor cannot drift visually
 - [ ] Acceptance criteria are written in a form the browser suite can implement without interpretation
 - [ ] Every figure in an acceptance criterion matches the backend specification
+- [ ] No screen document contains invented copy — every text is from the mockup, the spec or the user, or is a recorded lorem ipsum placeholder (conventions §9)

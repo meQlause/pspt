@@ -171,7 +171,11 @@ Per turn:
    Use `AskUserQuestion` when there are two or more candidates: the trade-off
    and the trap, never an open "what do you want?".
 4. **Ask what only the user knows** — intent, priority, the number that matters
-   and why, what is deliberately out of scope.
+   and why, what is deliberately out of scope. For frontend work that includes
+   **the text**: every heading, label, message or empty-state line the change
+   needs that the mockup and the spec do not already give. Ask once for it;
+   whatever the user does not supply becomes lorem ipsum
+   (`references/conventions.md` §9) — never text you made up.
 5. **Restate the current shape** in one short paragraph, so a misread is
    caught now, not in `plan.md`.
 
@@ -325,6 +329,14 @@ Not edited, but they depend on a file that is.
 
 | Risk | Likelihood | Mitigation | Rollback |
 |---|---|---|---|
+
+## 5a. Placeholder copy (frontend only)
+
+Text no source provided, filled with lorem ipsum per conventions §9.
+
+| Screen | Element | Expected length | Copy constant |
+|---|---|---|---|
+| Review | Offline banner body | one sentence | `review.copy.ts` `OFFLINE_BODY` |
 
 ## 6. Test cases
 
@@ -580,6 +592,7 @@ After the last phase:
      files  3 planned, 1 added in P2 (bookings.mapper.ts)
      tests  4 T · 2 R · 3 S — all pass on parent@b81e44d
      spec   docs/BE/features/bookings.md §1 corrected (reference format)
+     copy   1 lorem ipsum placeholder left — plan.md §5a (review offline banner body)
 
    Next: /pspt:trace FR-014 to confirm the chain, then push when ready.
    ```
@@ -656,6 +669,9 @@ staged (or unstaged) and stop.
   was built is `/pspt:build` Step 7's write-back, and nothing more.
 - **Never write to `docs/phases.md`.** That file is S6's plan and
   `/pspt:build`'s checklist; a ticket keeps its own phases in its own folder.
+- **Never invent frontend text.** Mockup copy verbatim, the spec's sentences,
+  the user's words — otherwise lorem ipsum, recorded in `plan.md` §5a
+  (`references/conventions.md` §9).
 - **Never close with an unticked AC**, an unticked box in `phase.md`, or an
   empty `Result`.
 - **Never tick a box in a batch, ahead of the work, or for a test that was not
