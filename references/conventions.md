@@ -164,16 +164,25 @@ to end. A test is found by transforming a path, not by searching.
 
 ## 9. Frontend copy — never invent text
 
-Every piece of text a screen shows that a person wrote — a heading, a button
-label, a helper line, an empty-state sentence, a tooltip, a confirmation
-dialog, `alt` text — comes from a source. The assistant never writes it.
+**If the text is already defined, write it.** If it is not, write lorem ipsum.
+The one thing never allowed is text the assistant made up.
 
-| Source, in order | Use it |
+"Written copy" is every piece of text a screen shows that a person wrote — a
+heading, a button label, a helper line, an empty-state sentence, a tooltip, a
+confirmation dialog, `alt` text. It is defined when any of these already says
+it:
+
+| Defined in | Use it |
 |---|---|
 | The mockup markup | Verbatim — the approved copy, already paid for. Never reworded, shortened or "improved" |
 | The specification | `error-handling.md` §4 for error sentences, the screen document for everything else |
-| The user, in the conversation or the ticket | Verbatim, recorded where the rule above says it lives |
+| The requirement documents | Wording the PRD or SRS states for the screen — a label, a message, a legal line |
+| The codebase | An existing copy constant or message file that already holds this text — reuse it, do not write a second copy |
+| The user, in the conversation or the ticket | Verbatim, recorded in the screen document or the ticket |
 | **None of these** | **Lorem ipsum.** Never a guess |
+
+Defined text is written as-is, without asking again — it is not a placeholder
+and is not recorded as one. Lorem ipsum is only for the gaps.
 
 **Placeholder shape.** Match the expected length so the layout is honest: a
 label or a button is `Lorem ipsum`; a heading is `Lorem ipsum dolor sit`; a

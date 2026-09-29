@@ -78,10 +78,10 @@ const BEHAVIOUR = { SLOT_TAKEN: 'banner', VALIDATION_FAILED: 'field' } as const;
 state in the mockup is a row in the refactor map and a row in the screen
 document, and each one has defined copy.
 
-**Copy comes from a source, never from the assistant.** Mockup text is used
-verbatim; error sentences come from `error-handling.md` §4. Any text a state
-needs that neither provides is lorem ipsum, recorded as a placeholder row in
-the screen document — `references/conventions.md` §9.
+**Copy comes from a source, never from the assistant.** Text already defined —
+in the mockup, `error-handling.md` §4, the PRD/SRS, or the user's words — is
+written verbatim. Only text nothing defines is lorem ipsum, recorded as a
+placeholder row in the screen document — `references/conventions.md` §9.
 
 **Nothing else on the response is read.** List the fields the screen consumes and
 say plainly that other fields arriving is fine — the contract is not trimmed for

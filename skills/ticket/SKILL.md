@@ -172,8 +172,9 @@ Per turn:
    and the trap, never an open "what do you want?".
 4. **Ask what only the user knows** — intent, priority, the number that matters
    and why, what is deliberately out of scope. For frontend work that includes
-   **the text**: every heading, label, message or empty-state line the change
-   needs that the mockup and the spec do not already give. Ask once for it;
+   **the text** — but only what is not already defined. Text the mockup, the
+   spec, the PRD/SRS or an existing copy constant already gives is used as-is,
+   not asked about. For the rest, ask once;
    whatever the user does not supply becomes lorem ipsum
    (`references/conventions.md` §9) — never text you made up.
 5. **Restate the current shape** in one short paragraph, so a misread is
@@ -669,8 +670,8 @@ staged (or unstaged) and stop.
   was built is `/pspt:build` Step 7's write-back, and nothing more.
 - **Never write to `docs/phases.md`.** That file is S6's plan and
   `/pspt:build`'s checklist; a ticket keeps its own phases in its own folder.
-- **Never invent frontend text.** Mockup copy verbatim, the spec's sentences,
-  the user's words — otherwise lorem ipsum, recorded in `plan.md` §5a
+- **Never invent frontend text.** Defined text (mockup, spec, PRD/SRS, existing
+  copy constant, the user's words) is written as-is — otherwise lorem ipsum, recorded in `plan.md` §5a
   (`references/conventions.md` §9).
 - **Never close with an unticked AC**, an unticked box in `phase.md`, or an
   empty `Result`.
