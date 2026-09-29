@@ -167,6 +167,9 @@ to end. A test is found by transforming a path, not by searching.
 **If the text is already defined, write it.** If it is not, write lorem ipsum.
 The one thing never allowed is text the assistant made up.
 
+The recommendation, shown on one screen with the invented version beside the
+correct one: [`frontend-copy.md`](./frontend-copy.md).
+
 "Written copy" is every piece of text a screen shows that a person wrote — a
 heading, a button label, a helper line, an empty-state sentence, a tooltip, a
 confirmation dialog, `alt` text. It is defined when any of these already says

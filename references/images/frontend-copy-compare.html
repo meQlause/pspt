@@ -1,0 +1,125 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--bg:#f4f2ec;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--bad:#b3261e;--bad-bg:#fde9e7;--good:#2f7a4f;--good-bg:#e6f3eb;--def:#3b6ea8;--def-bg:#e8f0f9;--brand:#0f5c4a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:40px 48px}
+h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:26px}
+.head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.badge{font-weight:800;font-size:15px;padding:6px 12px;border-radius:8px;color:#fff}
+.bad .badge{background:var(--bad)} .good .badge{background:var(--good)}
+.head .t{font-size:18px;font-weight:700}
+.head .d{color:var(--mute);font-size:14px}
+.browser{background:#fff;border:1.5px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.bar{display:flex;align-items:center;gap:7px;padding:10px 14px;background:#eceae3;border-bottom:1px solid var(--line)}
+.dot{width:11px;height:11px;border-radius:50%;background:#cfccc2}
+.url{margin-left:10px;flex:1;background:#fff;border-radius:6px;padding:4px 10px;font-size:12.5px;color:var(--mute);font-family:ui-monospace,Menlo,monospace}
+.page{padding:22px 26px 26px;position:relative}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.logo{font-weight:800;color:var(--brand);font-size:18px}
+.navl{font-size:13px;color:var(--mute)}
+.mark{position:relative;border-radius:6px;padding:2px 6px;margin:-2px -6px}
+.inv{background:var(--bad-bg);outline:2px dashed var(--bad)}
+.lor{background:var(--good-bg);outline:2px dashed var(--good);color:#4a5a50}
+.def{background:var(--def-bg);outline:1.5px solid var(--def)}
+.tag{position:absolute;right:-10px;top:50%;transform:translate(100%,-50%);font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:99px;white-space:nowrap;color:#fff;z-index:2}
+.tag.l{left:-10px;right:auto;transform:translate(-100%,-50%)}
+.inv .tag{background:var(--bad)} .lor .tag{background:var(--good)}
+h2.pt{font-size:24px;margin:4px 0 4px;display:inline-block}
+.promo{margin:10px 0 16px;display:inline-block;font-size:13.5px;font-weight:600;color:#7a4b00;background:#fff4d6;border-radius:8px;padding:7px 11px}
+.lor.promo{background:var(--good-bg);color:#4a5a50;font-weight:500}
+.card{border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-top:6px}
+.row{display:flex;justify-content:space-between;padding:6px 0;font-size:14.5px}
+.row.total{border-top:1px solid var(--line);margin-top:6px;padding-top:10px;font-weight:800;font-size:16px}
+.muted{color:var(--mute)}
+.note{margin-top:14px;font-size:13px;color:var(--mute)}
+.btn{margin-top:18px;display:inline-block;background:var(--brand);color:#fff;font-weight:700;border-radius:10px;padding:12px 20px;font-size:15px}
+.trust{margin-top:14px;font-size:13px}
+.callouts{margin-top:16px;display:grid;gap:8px}
+.co{display:grid;grid-template-columns:26px 1fr;gap:10px;font-size:14px;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px}
+.co .n{width:24px;height:24px;border-radius:50%;color:#fff;font-weight:800;font-size:12.5px;display:flex;align-items:center;justify-content:center}
+.bad .co .n{background:var(--bad)} .good .co .n{background:var(--good)}
+.co b{display:block}
+.co span{color:var(--mute)}
+.legend{display:flex;gap:22px;margin-top:26px;font-size:13.5px;color:var(--mute);align-items:center;flex-wrap:wrap}
+.sw{display:inline-block;width:34px;height:16px;border-radius:4px;vertical-align:-3px;margin-right:6px}
+#key{padding:10px 8px 8px;margin:14px -8px 0}
+#key .legend{margin-top:0}
+#left,#right{padding:4px}
+.bottom{margin-top:18px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 18px;font-size:15px}
+</style></head><body>
+
+<h1>Same screen, two assistants — frontend text nobody wrote</h1>
+<p class="sub">The mockup gave the heading, the labels and the button. The prices come from the API. Four lines were never defined anywhere.</p>
+
+<div class="cols">
+<!-- LEFT: invented -->
+<div class="bad" id="left">
+  <div class="head"><span class="badge">✗ ASSUMED</span><div><div class="t">The assistant filled the gaps itself</div><div class="d">Looks finished. Nobody can tell which lines were approved.</div></div></div>
+  <div class="browser">
+    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">lapangin.id/booking/review</span></div>
+    <div class="page">
+      <div class="nav"><span class="logo">lapangin</span><span class="navl">My bookings · Account</span></div>
+      <h2 class="pt"><span class="mark def">Review your booking</span></h2>
+      <div><span class="mark inv promo">🎉 Book today and get 20% off your next game!<span class="tag">1</span></span></div>
+      <div class="card">
+        <div class="row"><span class="muted">Court</span><span>Futsal A · Sat 27 Sep, 10:00–12:00</span></div>
+        <div class="row"><span class="muted">Rate</span><span>Rp 180.000 × 2 jam</span></div>
+        <div class="row"><span class="muted">Tax 11.00%</span><span>Rp 39.600</span></div>
+        <div class="row total"><span>Total</span><span>Rp 399.600</span></div>
+      </div>
+      <p class="note"><span class="mark inv">Free cancellation up to 24 hours before your slot. Full refund, no questions asked.<span class="tag">2</span></span></p>
+      <div class="btn"><span>Confirm booking</span></div>
+      <p class="trust"><span class="mark inv">★ Trusted by 10,000+ players across Jakarta<span class="tag">3</span></span></p>
+      <p class="note"><span class="mark inv">Your court is guaranteed — we never double-book.<span class="tag">4</span></span></p>
+    </div>
+  </div>
+  <div class="callouts">
+    <div class="co"><span class="n">1</span><div><b>A discount that doesn't exist</b><span>Customers will ask for 20% off at checkout.</span></div></div>
+    <div class="co"><span class="n">2</span><div><b>A refund policy nobody decided</b><span>The real window may be 6 hours, with a fee. Now it's a written promise.</span></div></div>
+    <div class="co"><span class="n">3</span><div><b>A number made up for marketing</b><span>False advertising, published under the company's name.</span></div></div>
+    <div class="co"><span class="n">4</span><div><b>A guarantee copied from nowhere</b><span>Passes review because it sounds right, then ships.</span></div></div>
+  </div>
+</div>
+
+<!-- RIGHT: lorem ipsum -->
+<div class="good" id="right">
+  <div class="head"><span class="badge">✓ PSPT RULE</span><div><div class="t">Defined text as-is, lorem ipsum in the gaps</div><div class="d">Obviously unfinished. Every gap is visible and listed.</div></div></div>
+  <div class="browser">
+    <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="url">lapangin.id/booking/review</span></div>
+    <div class="page">
+      <div class="nav"><span class="logo">lapangin</span><span class="navl">My bookings · Account</span></div>
+      <h2 class="pt"><span class="mark def">Review your booking</span></h2>
+      <div><span class="mark lor promo">Lorem ipsum dolor sit amet, consectetur adipiscing.<span class="tag">1</span></span></div>
+      <div class="card">
+        <div class="row"><span class="muted">Court</span><span>Futsal A · Sat 27 Sep, 10:00–12:00</span></div>
+        <div class="row"><span class="muted">Rate</span><span>Rp 180.000 × 2 jam</span></div>
+        <div class="row"><span class="muted">Tax 11.00%</span><span>Rp 39.600</span></div>
+        <div class="row total"><span>Total</span><span>Rp 399.600</span></div>
+      </div>
+      <p class="note"><span class="mark lor">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod.<span class="tag">2</span></span></p>
+      <div class="btn"><span>Confirm booking</span></div>
+      <p class="trust"><span class="mark lor">Lorem ipsum dolor sit amet<span class="tag">3</span></span></p>
+      <p class="note"><span class="mark lor">Lorem ipsum dolor sit amet, consectetur.<span class="tag">4</span></span></p>
+    </div>
+  </div>
+  <div class="callouts">
+    <div class="co"><span class="n">1</span><div><b>Promo banner · one line</b><span>Listed in plan.md §5a. Marketing writes it, or the banner is dropped.</span></div></div>
+    <div class="co"><span class="n">2</span><div><b>Cancellation note · two sentences</b><span>Waits for the real policy. Nothing false can ship.</span></div></div>
+    <div class="co"><span class="n">3</span><div><b>Trust line · short</b><span>No invented claim, just a visible hole in the layout.</span></div></div>
+    <div class="co"><span class="n">4</span><div><b>Guarantee note · one sentence</b><span><code>grep "Lorem ipsum"</code> finds all four before release.</span></div></div>
+  </div>
+</div>
+</div>
+
+<div id="key"><div class="legend">
+  <span><span class="sw" style="background:var(--def-bg);outline:1.5px solid var(--def)"></span>Defined in the mockup, written as-is (both sides)</span>
+  <span><span class="sw" style="background:var(--bad-bg);outline:2px dashed var(--bad)"></span>Invented by the assistant: misleading</span>
+  <span><span class="sw" style="background:var(--good-bg);outline:2px dashed var(--good)"></span>Lorem ipsum: undefined, recorded, replaced before release</span>
+  <span>Prices, dates, court: real data from the API on <b style="color:var(--ink)">both</b> sides, never lorem</span>
+</div>
+
+<div class="bottom"><b>The rule (conventions §9):</b> if the text is already defined (mockup, spec, PRD/SRS, an existing copy file, or you), write it as-is. If it isn't, write lorem ipsum. Never write text the assistant made up.</div></div>
+</body></html>

@@ -157,6 +157,16 @@ never as an open question.
 If the database is not PostgreSQL it says so rather than emitting
 `EXCLUDE USING gist` that will not run, and proposes the real alternative.
 
+## Frontend copy
+
+If the text is already defined — mockup, spec, PRD/SRS, an existing copy file,
+or you — it is written as-is. If it is not, it is lorem ipsum, recorded so it is
+replaced before release. The assistant never writes copy it was not given.
+[`references/frontend-copy.md`](references/frontend-copy.md) shows why, side by
+side:
+
+![Invented copy versus lorem ipsum on the same booking screen](references/images/frontend-copy-compare.png)
+
 ## Lint rules
 
 `references/lint/` holds one file per stack — Express, NestJS, Next.js, React.
