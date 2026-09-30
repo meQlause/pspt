@@ -1,0 +1,57 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#f7f6f2;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--spec:#3b6ea8;--spec-bg:#e8f0f9;--tick:#b0521f;--tick-bg:#fbeee6;--build:#2f7a4f;--build-bg:#e6f3eb;--bad:#b3261e;--bad-bg:#fde9e7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:40px 48px}
+.ver{display:inline-block;font:700 14px ui-monospace,Menlo,monospace;background:var(--ink);color:#fff;border-radius:7px;padding:4px 10px;margin-bottom:10px}
+h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+h2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:26px 0 11px}
+code,.m{font-family:ui-monospace,Menlo,monospace;font-size:.92em}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+.a{color:var(--mute);font-size:22px;padding:0 10px;display:flex;align-items:center}
+.n{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px}
+.n b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14.5px}
+.n span{color:var(--mute);font-size:13px;display:block}
+.s{border-color:var(--spec);background:var(--spec-bg)} .s b{color:var(--spec)}
+.t{border-color:var(--tick);background:var(--tick-bg)} .t b{color:var(--tick)}
+.g{border-color:var(--build);background:var(--build-bg)} .g b{color:var(--build)}
+.r{border-color:var(--bad);background:var(--bad-bg)} .r b{color:var(--bad)}
+.d{border-style:dashed}
+.k{border:2px solid var(--ink)}
+.grid{display:grid;gap:18px}
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p,.card li{font-size:13.5px;color:#3a3a36}
+.card ul{padding-left:18px}
+.pre{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;white-space:pre;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.pre .c{color:var(--mute)} .pre .h{color:var(--tick);font-weight:700} .pre .gg{color:var(--build);font-weight:700}
+.new{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--tick);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:system-ui}
+.foot{margin-top:22px;color:var(--mute);font-size:13px;display:flex;justify-content:space-between}
+</style></head><body><span class="ver">v0.2.0</span><h1>Submodules, auto-commit, and two new skills</h1><p class="sub">The first build creates the backend and frontend repositories; every writing skill now commits its own work.</p><div class="grid c2">
+<div><h2>Repository layout — created by the first /pspt:build</h2>
+<div class="pre">&lt;parent repo&gt;/
+  docs/        <span class="c">← the spec, one place, never copied</span>
+  .gitmodules
+  backend/     <span class="gg">→ &lt;owner&gt;/&lt;slug&gt;-backend</span>   <span class="c">gh repo create --private</span>
+  frontend/    <span class="gg">→ &lt;owner&gt;/&lt;slug&gt;-frontend</span>  <span class="c">code only</span></div>
+<p style="margin-top:8px;color:var(--mute);font-size:13.5px">Requires <code>gh</code>, authenticated (SR-3). Commit inside the submodule first, then the parent so the pointer moves in the same change.</p>
+<h2>Two new skills</h2>
+<div class="row">
+ <div class="n s" style="flex:1"><b>/pspt:enhance</b><span>grow the spec as a conversation, without breaking any FR, decision, contract or ticked criterion</span></div><div class="a"></div>
+ <div class="n g" style="flex:1"><b>/pspt:build-long</b><span>run /pspt:build in a loop until you say stop, or it cannot reach green</span></div>
+</div></div>
+<div><h2>Auto-commit across every writing skill</h2>
+<div class="row" style="flex-wrap:wrap;gap:8px">
+ <div class="n s"><b>spec</b></div><div class="n s"><b>enhance</b></div><div class="n"><b>reg</b></div><div class="n"><b>code</b></div><div class="n g"><b>build</b></div><div class="n g"><b>build-long</b></div>
+</div>
+<div class="card" style="margin-top:10px"><ul>
+<li><code>git status --porcelain</code> first · stage explicit paths · <b>never</b> <code>git add -A</code></li>
+<li>Never <code>git push</code> — you push on your own cadence</li>
+<li>"don't commit this one" skips once</li></ul></div>
+<h2>Stack and lint</h2>
+<div class="card"><ul>
+<li><b>TypeScript + Node</b> fixed · Express / NestJS / React + Vite / Next.js supported</li>
+<li>Any other framework needs an explicit opt-in, recorded as <code>noLinter</code></li>
+<li>Lint: identifiers ≥ 3 characters · no magic numbers outside [-1, 0, 1, 2] · no string repeated 3+ times</li></ul></div>
+</div></div><div class="foot"><span>meQlause/pspt · v0.2.0</span><span>8 skills · spec docs live only in ./docs/</span></div></body></html>

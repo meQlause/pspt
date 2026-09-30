@@ -184,6 +184,11 @@ Three of those rules change what a generated document may say:
 
 And `warn` is not advisory: the commit hook runs `--max-warnings=0`.
 
+## Changelog
+
+What changed in every version, with a picture of each:
+[`CHANGELOG.md`](CHANGELOG.md). Each release is a git tag, `v0.1.0` to `v0.3.2`.
+
 ## Credit
 
 Implements the *Rapid Development with SDD + TDD* method. The worked example the

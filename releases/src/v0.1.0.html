@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#f7f6f2;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--spec:#3b6ea8;--spec-bg:#e8f0f9;--tick:#b0521f;--tick-bg:#fbeee6;--build:#2f7a4f;--build-bg:#e6f3eb;--bad:#b3261e;--bad-bg:#fde9e7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:40px 48px}
+.ver{display:inline-block;font:700 14px ui-monospace,Menlo,monospace;background:var(--ink);color:#fff;border-radius:7px;padding:4px 10px;margin-bottom:10px}
+h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+h2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:26px 0 11px}
+code,.m{font-family:ui-monospace,Menlo,monospace;font-size:.92em}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+.a{color:var(--mute);font-size:22px;padding:0 10px;display:flex;align-items:center}
+.n{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px}
+.n b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14.5px}
+.n span{color:var(--mute);font-size:13px;display:block}
+.s{border-color:var(--spec);background:var(--spec-bg)} .s b{color:var(--spec)}
+.t{border-color:var(--tick);background:var(--tick-bg)} .t b{color:var(--tick)}
+.g{border-color:var(--build);background:var(--build-bg)} .g b{color:var(--build)}
+.r{border-color:var(--bad);background:var(--bad-bg)} .r b{color:var(--bad)}
+.d{border-style:dashed}
+.k{border:2px solid var(--ink)}
+.grid{display:grid;gap:18px}
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p,.card li{font-size:13.5px;color:#3a3a36}
+.card ul{padding-left:18px}
+.pre{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;white-space:pre;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.pre .c{color:var(--mute)} .pre .h{color:var(--tick);font-weight:700} .pre .gg{color:var(--build);font-weight:700}
+.new{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--tick);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:system-ui}
+.foot{margin-top:22px;color:var(--mute);font-size:13px;display:flex;justify-content:space-between}
+</style></head><body><span class="ver">v0.1.0</span><h1>pspt — spec-driven development for Claude Code</h1><p class="sub">Requirements and a static mockup go in; the engineering specification set comes out — then the build loop runs against it.</p><h2>Two gates, then one stage per invocation</h2>
+<div class="row">
+ <div class="n d"><b>brd · prd · srs</b><span>+ mockup/*.html, every state drawn</span></div><div class="a">→</div>
+ <div class="n k"><b>Gate 1 · complete</b><span>all four inputs present</span></div><div class="a">→</div>
+ <div class="n k"><b>Gate 2 · consistent</b><span>requirements ⇄ mockup, both ways</span></div><div class="a">→</div>
+ <div class="n s"><b>S2</b><span>data spec + ERD</span></div><div class="a">·</div>
+ <div class="n s"><b>S3</b><span>rules, errors, stack</span></div><div class="a">·</div>
+ <div class="n s"><b>S4</b><span>endpoints, tests</span></div><div class="a">·</div>
+ <div class="n s"><b>S5</b><span>screens</span></div><div class="a">·</div>
+ <div class="n s"><b>S6</b><span>phases.md</span></div>
+</div>
+<p style="margin-top:10px;color:var(--mute);font-size:13.5px">A gap in either gate stops everything: either a complete, traceable document set, or a list of what disagrees — never a half-spec.</p>
+<h2>The build loop</h2>
+<div class="row">
+ <div class="n"><b>phases.md</b><span>one exit criterion</span></div><div class="a">→</div>
+ <div class="n r"><b>RED</b><span>test first, fails for the right reason</span></div><div class="a">→</div>
+ <div class="n g"><b>GREEN</b><span>minimum code</span></div><div class="a">→</div>
+ <div class="n"><b>CLEAN</b><span>refactor, tests stay green</span></div><div class="a">→</div>
+ <div class="n k"><b>CHECK</b><span>whole tree, zero warnings</span></div>
+</div>
+<h2>Six skills · fixed conventions</h2>
+<div class="grid c2">
+<div class="card"><ul>
+<li><code>/pspt:status</code> — where the project stands, read-only</li>
+<li><code>/pspt:spec</code> — the next stage of the specification set</li>
+<li><code>/pspt:build</code> — one criterion through red → green → clean → check</li>
+<li><code>/pspt:trace</code> — requirement → screen → column → endpoint → test</li>
+<li><code>/pspt:code</code> — an error code in every place it must appear</li>
+<li><code>/pspt:reg</code> — a numbered regression, wired into the specs</li></ul></div>
+<div class="card"><ul>
+<li><b>TypeScript</b>, feature-based architecture — fixed, never asked</li>
+<li>A pure <code>*.rules.ts</code> decision layer the linter enforces — no I/O, no <code>Date</code>, no <code>fetch</code></li>
+<li>Stack asked in dependency order, each answer deleting later questions</li>
+<li>Lint rules selected from <code>references/lint/</code> — Express, NestJS, Next.js, React — never authored</li></ul></div>
+</div><div class="foot"><span>meQlause/pspt · v0.1.0</span><span>first release · 6 skills</span></div></body></html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--bg:#f7f6f2;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--card:#fff;
+--spec:#3b6ea8;--spec-bg:#e8f0f9;--tick:#b0521f;--tick-bg:#fbeee6;--build:#2f7a4f;--build-bg:#e6f3eb;--warn:#a3302a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:44px 52px}
+h1{font-size:30px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+h2{font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:30px 0 12px}
+code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;font-size:.92em}
+.flow{display:grid;grid-template-columns:repeat(9,auto);align-items:center;gap:0;justify-content:start}
+.node{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;min-width:150px}
+.node b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:15px}
+.node span{color:var(--mute);font-size:13px}
+.arrow{color:var(--mute);font-size:22px;padding:0 10px}
+.spec{border-color:var(--spec);background:var(--spec-bg)} .spec b{color:var(--spec)}
+.tick{border-color:var(--tick);background:var(--tick-bg)} .tick b{color:var(--tick)}
+.build{border-color:var(--build);background:var(--build-bg)} .build b{color:var(--build)}
+.src{border-style:dashed}
+.lanes{display:grid;grid-template-columns:1fr;gap:14px}
+.lane{display:flex;align-items:center;gap:14px}
+.lane .tag{width:120px;font-size:12px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.06em}
+.split{display:flex;flex-direction:column;gap:8px}
+.pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:99px;border:1px solid var(--line);background:#fff;color:var(--mute)}
+.life{display:flex;align-items:center;gap:0;flex-wrap:nowrap}
+.st{padding:9px 13px;border-radius:9px;background:#fff;border:1.5px solid var(--line);font-size:14px}
+.st small{display:block;color:var(--mute);font-size:12px}
+.st.hot{border-color:var(--tick)} .st.ok{border-color:var(--build)} .st.bad{border-color:var(--warn);color:var(--warn)}
+.gate{border:2px solid var(--ink);font-weight:600}
+table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;font-size:14px}
+th{background:#efede6;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-family:ui-monospace,Menlo,monospace;font-weight:700;white-space:nowrap}
+tr.t td:first-child{color:var(--tick)} tr.b td:first-child{color:var(--build)} tr.s td:first-child{color:var(--spec)}
+tr.t{background:#fffaf6}
+.grid2{display:grid;grid-template-columns:1.25fr 1fr;gap:26px}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px 18px}
+.card ul{list-style:none}
+.card li{padding:6px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.card li:last-child{border:0}
+.card li b{color:var(--ink)}
+.files{font-family:ui-monospace,Menlo,monospace;font-size:13.5px;line-height:1.7;white-space:pre;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px 18px}
+.files .c{color:var(--mute)}
+.copy{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.copy div{border-radius:9px;padding:10px 12px;font-size:13.5px}
+.copy .yes{background:var(--build-bg);border:1px solid var(--build)}
+.copy .lor{background:var(--tick-bg);border:1px solid var(--tick)}
+.copy3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.copy3 div{border-radius:9px;padding:9px 11px;font-size:12.5px;line-height:1.4}
+.copy3 .yes{background:var(--build-bg);border:1px solid var(--build)}
+.copy3 .lor{background:var(--tick-bg);border:1px solid var(--tick)}
+.copy3 .dat{background:var(--spec-bg);border:1px solid var(--spec)}
+.foot{margin-top:26px;color:var(--mute);font-size:13px;display:flex;justify-content:space-between}
+</style></head><body>
+
+<span style="display:inline-block;font:700 14px ui-monospace,Menlo,monospace;background:#1d1d1b;color:#fff;border-radius:7px;padding:4px 10px;margin-bottom:10px">v0.3.0</span><h1>The ticket track — /pspt:ticket and /pspt:ticket-build</h1>
+<p class="sub">Two ways work reaches code: the <b style="color:var(--build)">phases.md track</b> from the spec set, and the new <b style="color:var(--tick)">ticket track</b> for one change request at a time.</p>
+
+<h2>The flow</h2>
+<div class="lanes">
+  <div class="lane"><div class="tag">Spec</div>
+    <div class="node src"><b>brd · prd · srs</b><span>+ mockup/*.html</span></div><div class="arrow">→</div>
+    <div class="node spec"><b>/pspt:spec</b><span>S2–S6 → docs/</span></div><div class="arrow">→</div>
+    <div class="node spec"><b>/pspt:enhance</b><span>grows the spec, never code</span></div>
+  </div>
+  <div class="lane"><div class="tag">Phases track</div>
+    <div class="node src"><b>docs/phases.md</b><span>exit criteria from S6</span></div><div class="arrow">→</div>
+    <div class="node build"><b>/pspt:build</b><span>one exit criterion</span></div><div class="arrow">→</div>
+    <div class="node build"><b>/pspt:build-long</b><span>loops build until stop</span></div>
+  </div>
+  <div class="lane"><div class="tag">Ticket track · new</div>
+    <div class="node src"><b>"/pspt:ticket name …"</b><span>one change request</span></div><div class="arrow">→</div>
+    <div class="node tick"><b>/pspt:ticket</b><span>talk → request → plan → phase</span></div><div class="arrow">→</div>
+    <div class="node gate" style="border-radius:12px;padding:12px 14px;background:#fff"><b style="font-family:inherit">approve</b><span style="color:var(--mute);font-size:13px">you decide</span></div><div class="arrow">→</div>
+    <div class="split">
+      <div class="node tick" style="padding:8px 12px"><b>build now</b><span>/pspt:ticket builds it</span></div>
+      <div class="node tick" style="padding:8px 12px"><b>queue it</b><span>→ /pspt:ticket-build</span></div>
+    </div><div class="arrow">→</div>
+    <div class="node tick"><b>/pspt:ticket-build</b><span>approved tickets, one by one</span></div>
+  </div>
+</div>
+
+<h2>The difference</h2>
+<table>
+<tr><th>Skill</th><th>Starts from</th><th>Unit of work</th><th>Writes</th><th>Stops when</th></tr>
+<tr class="s"><td>/pspt:enhance</td><td>an idea for the spec</td><td>one spec change</td><td><code>docs/</code> only — never code, never phases.md</td><td>you say "ready" and it is written</td></tr>
+<tr class="t"><td>/pspt:ticket</td><td><code>&lt;name&gt; &lt;request&gt;</code></td><td>one change request, planned test-first</td><td><code>tickets/&lt;slug&gt;/</code> request · plan · phase — code only after approval</td><td>approval gate · unplanned file · red test</td></tr>
+<tr class="t"><td>/pspt:ticket-build</td><td>every <b>approved</b> ticket not yet built</td><td>one whole ticket at a time, oldest first</td><td>code, live ticks in phase.md, Results in plan.md</td><td>queue empty · stale plan · blocked · red test · you say stop</td></tr>
+<tr class="b"><td>/pspt:build</td><td><code>docs/phases.md</code></td><td>one exit criterion</td><td>code, ticks phases.md</td><td>that criterion is green and committed</td></tr>
+<tr class="b"><td>/pspt:build-long</td><td><code>docs/phases.md</code></td><td>criteria in a loop</td><td>same as build</td><td>you say stop · all ticked · blocked</td></tr>
+</table>
+
+<div class="grid2">
+<div>
+<h2>Ticket lifecycle</h2>
+<div class="life">
+  <div class="st">conversation<small>no files yet</small></div><div class="arrow">→</div>
+  <div class="st hot">planned<small>request · plan · phase</small></div><div class="arrow">→</div>
+  <div class="st gate">approved<small>your yes</small></div><div class="arrow">→</div>
+  <div class="st hot">in progress · P1…Pn<small>boxes ticked live</small></div><div class="arrow">→</div>
+  <div class="st ok">done<small>every AC ✓</small></div>
+</div>
+<div class="life" style="margin-top:10px;padding-left:410px">
+  <div class="st bad">blocked<small>unplanned file · red test · stale plan</small></div>
+</div>
+
+<h2>Phases inside a ticket</h2>
+<div class="life">
+  <div class="st">P1 additive<small>new code, nothing calls it</small></div><div class="arrow">→</div>
+  <div class="st">P2 wire-in<small>smallest edit to existing</small></div><div class="arrow">→</div>
+  <div class="st">P3 docs<small>+ re-run every test</small></div>
+</div>
+<p style="margin-top:10px;color:var(--mute);font-size:13.5px">Tests written before code: <b style="color:var(--ink)">T</b> ≥1 per AC + edge cases · <b style="color:var(--ink)">R</b> ≥1 per at-risk file · <b style="color:var(--ink)">S</b> lint, format, check</p>
+</div>
+
+<div>
+<h2>What a ticket leaves behind</h2>
+<div class="files">tickets/booking-ref-v2/
+  request.md   <span class="c">summary · scope · AC1… · decisions</span>
+  plan.md      <span class="c">path:line · F/A files · T/R/S tests</span>
+  phase.md     <span class="c">☐ → ☑ ticked as the work happens</span></div>
+
+<h2>Rules on the ticket track</h2>
+<div class="card"><ul>
+<li><b>jcodemunch first</b> — missing? ask, install on yes, add CLAUDE.md line</li>
+<li><b>Never</b> weaken a test, never tick ahead of the work</li>
+<li><b>Commits</b> — semantic <code>type(scope): subject</code>, no co-author, no push by the skill</li>
+</ul>
+</div></div>
+</div>
+</div>
+
+<div class="foot"><span>meQlause/pspt · v0.3.0</span><span>enhance changes the spec · ticket plans the work · build writes the code</span></div>
+</body></html>

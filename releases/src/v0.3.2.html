@@ -1,0 +1,60 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#f7f6f2;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--spec:#3b6ea8;--spec-bg:#e8f0f9;--tick:#b0521f;--tick-bg:#fbeee6;--build:#2f7a4f;--build-bg:#e6f3eb;--bad:#b3261e;--bad-bg:#fde9e7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:40px 48px}
+.ver{display:inline-block;font:700 14px ui-monospace,Menlo,monospace;background:var(--ink);color:#fff;border-radius:7px;padding:4px 10px;margin-bottom:10px}
+h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+h2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:26px 0 11px}
+code,.m{font-family:ui-monospace,Menlo,monospace;font-size:.92em}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+.a{color:var(--mute);font-size:22px;padding:0 10px;display:flex;align-items:center}
+.n{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px}
+.n b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14.5px}
+.n span{color:var(--mute);font-size:13px;display:block}
+.s{border-color:var(--spec);background:var(--spec-bg)} .s b{color:var(--spec)}
+.t{border-color:var(--tick);background:var(--tick-bg)} .t b{color:var(--tick)}
+.g{border-color:var(--build);background:var(--build-bg)} .g b{color:var(--build)}
+.r{border-color:var(--bad);background:var(--bad-bg)} .r b{color:var(--bad)}
+.d{border-style:dashed}
+.k{border:2px solid var(--ink)}
+.grid{display:grid;gap:18px}
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p,.card li{font-size:13.5px;color:#3a3a36}
+.card ul{padding-left:18px}
+.pre{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;white-space:pre;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.pre .c{color:var(--mute)} .pre .h{color:var(--tick);font-weight:700} .pre .gg{color:var(--build);font-weight:700}
+.new{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--tick);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:system-ui}
+.foot{margin-top:22px;color:var(--mute);font-size:13px;display:flex;justify-content:space-between}
+</style></head><body><span class="ver">v0.3.2</span><h1>A recommendation for every lorem ipsum</h1><p class="sub">Lorem ipsum stays in the code. The assistant writes a proposed replacement beside it — and nothing replaces the lorem until you approve it.</p><h2>Code and recommendation point at each other</h2>
+<div class="grid c2">
+<div class="pre"><span class="c">// frontend/src/features/bookings/review.copy.ts</span>
+export const REVIEW_COPY = {
+  <span class="h">// COPY-002 · docs/FE/copy-recommendations.md#copy-002</span>
+  CANCEL_NOTE:
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod.',
+} as const;</div>
+<div class="pre"><span class="c">docs/FE/copy-recommendations.md</span>
+<span class="h">## COPY-002 — Review · cancellation note</span>
+Status: proposed · AI recommendation — not approved · two sentences
+A (recommended)  You can cancel up to {cancellationWindowHours} hours
+                 before your slot starts. After that, the booking
+                 can no longer be changed.
+Based on         the cancellation-window FR, value from config
+Facts to confirm whether a refund is given, and how much</div>
+</div>
+<h2>You decide</h2>
+<div class="row">
+ <div class="n t"><b>proposed</b><span>written by the assistant</span></div><div class="a">→</div>
+ <div class="n k"><b>"approve COPY-002"</b><span>or option B, or your own text</span></div><div class="a">→</div>
+ <div class="n g"><b>applied · &lt;sha&gt;</b><span>verbatim into the copy constant · feat(copy)</span></div>
+ <div class="a" style="padding:0 18px">or</div>
+ <div class="n r"><b>rejected</b><span>you supply the text, or the element goes</span></div>
+</div>
+<h2>The wording rule — no fact a source does not state</h2>
+<div class="grid c2">
+ <div class="n r"><b>✗ invented</b><span style="color:var(--ink);font-size:14px">"Free cancellation up to 24 hours before your slot. Full refund, no questions asked."</span><span>a window and a refund policy nobody decided</span></div>
+ <div class="n g"><b>✓ recommended</b><span style="color:var(--ink);font-size:14px">"You can cancel up to {cancellationWindowHours} hours before your slot starts."</span><span>the number from config · the refund listed under Facts to confirm</span></div>
+</div><div class="foot"><span>meQlause/pspt · v0.3.2</span><span>conventions §9.1 · references/frontend-copy.md</span></div></body></html>
