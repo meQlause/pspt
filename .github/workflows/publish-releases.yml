@@ -1,0 +1,46 @@
+# Publishes one GitHub Release per version, with the text and picture from
+# releases/notes/<tag>.md. Creates the tag on its release commit when it is
+# missing, and updates the Release when it already exists, so it is safe to
+# re-run. Add a row to RELEASES below when a new version ships.
+name: Publish releases
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "releases/notes/**"
+      - ".github/workflows/publish-releases.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create or update each release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASES: |
+            v0.1.0|d040fb1fb30c874ebbb40cde2633256fd3a35746|v0.1.0 — first release: spec-driven development for Claude Code
+            v0.2.0|e1739a3b37f926a21b15949638b4a6aa5ec32281|v0.2.0 — submodules, auto-commit, /pspt:enhance, /pspt:build-long
+            v0.3.0|f1c328e410e73bfa3537646d35f16c6e28a53e7b|v0.3.0 — the ticket track: /pspt:ticket and /pspt:ticket-build
+            v0.3.1|5d4c5716f42f6bf4391fb10deedd74d02207bfd0|v0.3.1 — never invent frontend copy
+            v0.3.2|b118201670c3ec528f3c7b2107bd87c5b8fe618c|v0.3.2 — a recommendation for every lorem ipsum
+        run: |
+          set -euo pipefail
+          latest=$(printf '%s\n' "$RELEASES" | sed '/^$/d' | tail -1 | cut -d'|' -f1)
+          printf '%s\n' "$RELEASES" | sed '/^$/d' | while IFS='|' read -r tag sha title; do
+            notes="releases/notes/${tag}.md"
+            [ "$tag" = "$latest" ] && is_latest=true || is_latest=false
+            if gh release view "$tag" >/dev/null 2>&1; then
+              gh release edit "$tag" --title "$title" --notes-file "$notes" --latest="$is_latest"
+              echo "updated $tag"
+            else
+              gh release create "$tag" --target "$sha" --title "$title" --notes-file "$notes" --latest="$is_latest"
+              echo "created $tag at ${sha:0:7}"
+            fi
+          done
