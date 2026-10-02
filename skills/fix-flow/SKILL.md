@@ -154,9 +154,13 @@ would reject it, and they are right to: a red tree is never committed, and
 `--no-verify` is never used. Leave the changes in the working tree, print the
 findings, and offer once:
 
-> **Open a ticket for the remaining findings?** `/pspt:ticket toolchain-debt`
-> with these findings as the request — the toolchain files land in its first
-> phase, and the tree reaches green before anything is committed.
+> **Fix the remaining findings now?**
+> - **`/pspt:fix-flow-proceed`** (recommended) — loops file by file until
+>   tests, types, lint and knip are all green, then commits everything,
+>   this toolchain change first.
+> - **`/pspt:ticket toolchain-debt`** — plan the cleanup first, with the
+>   findings as the request, when it is large or touches code that needs
+>   decisions.
 
 ## Step 6 — Report
 
@@ -172,7 +176,7 @@ backend/   express · JavaScript   ✗ drifted → fixed
   autofix   prettier 41 files · eslint --fix 63 findings
   check     ✗ 118 left — id-length 52 · no-magic-numbers 31 · sonarjs/no-duplicate-string 14 · …
             knip: 3 unused files · 9 unused exports · 2 unused dependencies
-  commit    not committed — tree is red · ticket offered
+  commit    not committed — tree is red · /pspt:fix-flow-proceed offered
   note      pspt project: the spec requires TypeScript — migration belongs in a ticket
 
 frontend/  react · TypeScript     ✓ matches pspt react exactly — nothing to fix

@@ -48,6 +48,7 @@ imagined ERD produces tables nobody renders.
 /pspt:ticket      talk a change through against the code, plan it test-first, build it in phases
 /pspt:ticket-build  execute every approved ticket not yet built, one ticket at a time
 /pspt:fix-flow    detect the stack and language, and install or repair pspt's toolchain
+/pspt:fix-flow-proceed  loop over the code until tests, types, lint and knip are all green
 ```
 
 `/pspt:enhance` changes the spec; `/pspt:ticket` turns one request into a
@@ -192,7 +193,9 @@ TypeScript strict. Any difference is drift: reported, never silently "fixed" in
 either direction. **`/pspt:fix-flow`** is the repair: it detects each package's
 stack and language, says "nothing to fix" when the toolchain already matches,
 and otherwise installs pspt's version, applies the safe autofixes and reports
-what is left. The plugin never authors a tool config in your project, so
+what is left. **`/pspt:fix-flow-proceed`** then clears what is left: one file
+per iteration, tests first, behaviour unchanged, never an `eslint-disable` —
+until the whole check and the test suite are green, then commits. The plugin never authors a tool config in your project, so
 there is one source and nothing to drift. `toolchain/verify/` proves each
 ESLint config fires every rule; see
 [`references/toolchain/README.md`](references/toolchain/README.md).

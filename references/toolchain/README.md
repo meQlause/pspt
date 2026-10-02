@@ -94,5 +94,10 @@ format would read as drift. The ESLint configs ignore `eslint.config.mjs` and
 `commitlint.config.mjs`: pspt's own files are verified by hash, not linted as
 project code. JavaScript sets declare Jest and Vitest globals for `tests/`.
 
+`findings.mjs` is the work queue behind `/pspt:fix-flow-proceed`: it runs
+`tsc`, ESLint and knip and prints what is left grouped by file, worst gate
+first — `--file <path>` re-checks one file. The loop reads that summary, never
+raw tool output.
+
 After changing any file here: format it with `shared/.prettierrc.json`,
 re-run `verify/`, then regenerate `manifest.json`.
