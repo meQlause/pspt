@@ -11,9 +11,16 @@ specifies the suite that holds the finished app to it: the same fonts, the same
 sizes and weights, the same padding and margins, the same assets, and every
 behaviour the mockup demonstrates working for real.
 
-The mockup is the baseline, never the app. Every number in this stage is read
-off the mockup **rendered in Chromium**, not off its CSS by eye and not off the
-app after the fact.
+Two principles shape everything below:
+
+1. **The mockup is the baseline, never the app.** Every number is read off the
+   mockup rendered in Chromium — not off its CSS by eye, not off the app after
+   the fact.
+2. **Analyse first, define once.** A mockup is mostly repetition: twenty
+   buttons, six cards, one heading style used forty times. S7 finds the
+   repetition **with a script**, defines each pattern **once**, and lets every
+   instance inherit it. Nothing is specified per element unless it is genuinely
+   one of a kind.
 
 ---
 
@@ -24,174 +31,243 @@ screen document, and `phases.md` exists. If the mockup changed since S5, stop an
 re-run S5 first — a baseline taken from a mockup the spec does not describe
 measures the wrong thing.
 
+## Token discipline
+
+The cost of this stage is reading. Keep it bounded:
+
+| Do | Never |
+|---|---|
+| Run the extractor (§10) and read its **summary** — classes, components, counts, outliers | Paste mockup HTML or CSS into context to read values by eye |
+| Write **token names and component names** into `fidelity.md` | Copy computed values into the document — they live in `baseline/*.json`, generated |
+| Define a component once, list where it is used by count | Write a row per instance |
+| Read one representative instance when a summary is ambiguous | Read every screen to "check" the script |
+
+> A value typed into a document is a second source of truth for a number the
+> mockup already holds. The generated baseline is the only copy.
+
 ## Required sections
 
 | # | Section | Content |
 |---|---|---|
-| 1 | Matrix | Every mockup file × every state × every viewport. One row per combination. This is what "the whole app" means |
-| 2 | Render parity | The conditions both sides render under, so a difference is a defect and never noise |
-| 3 | Element map | Mockup selector → app `data-testid`, for every element the comparison names |
-| 4 | Typography | Per text role, the computed values read from the mockup |
-| 5 | Box model | Per element, padding, margin, gap, size, border, radius, shadow read from the mockup |
-| 6 | Assets | Every image, SVG, icon, font file and favicon, with its hash and dimensions |
-| 7 | Behaviour | Every interaction the mockup demonstrates, and the real mechanism that replaces its dummy script |
-| 8 | Comparison and tolerances | How each section is compared, and the tolerance for each |
-| 9 | Allowed deviations | Every intended difference from the mockup, with its reason and the user's approval |
-| 10 | Harness | The `tests/fidelity/` layout, the extraction script, the commands |
+| 1 | Matrix | Every mockup file × state × viewport. This is what "the whole app" means |
+| 2 | Render parity | The conditions both sides render under, so a difference is a defect, never noise |
+| 3 | Pattern analysis | What the extractor found: style classes, components, variants, outliers — and the decisions they raised |
+| 4 | Component catalog | Each component and variant **once**: anatomy, states, tokens, instance count |
+| 5 | Text roles | Each typography class **once**, by token |
+| 6 | Mapping convention | One rule that pairs mockup and app elements — no per-element map |
+| 7 | One-offs | The few elements that match no pattern, each with its own row |
+| 8 | Assets | Generated inventory — the document holds only the rules and the exceptions |
+| 9 | Behaviour | Per component once, then per screen only the flows that are the screen's own |
+| 10 | Comparison and harness | Tolerances, the `tests/fidelity/` layout, the extractor, the commands |
+| 11 | Allowed deviations | Every intended difference from the mockup, user-approved |
 
 ### §1 Matrix
 
-| Mockup file | State | Viewports | App route | Fixture |
+| Mockup file | States | Viewports | App route | Fixture |
 |---|---|---|---|---|
-| `booking-review.html` | `?state=default` | 375 · 768 · 1280 | `/bookings/:id/review` | `reviewDraft()` |
-| `booking-review.html` | `?state=window` | 375 · 768 · 1280 | `/bookings/:id/review` | `reviewDraft({ startsIn: '2h' })` |
+| `booking-review.html` | default · window · conflict · error · success | 375 · 768 · 1280 | `/bookings/:id/review` | `reviewDraft()` |
 
-Every row of the S5 refactor map appears here once per viewport. Viewports are
-the mockup's own breakpoints, read from its `@media` rules — one width inside
-each range. If the mockup has no media queries, ask (see Decisions).
-
-> The matrix is the definition of done for fidelity. A state with no row is a
-> state nobody will compare, which is exactly the state that ships broken.
+One row per **screen**, its states listed — the matrix multiplies itself out in
+the harness. Viewports are the mockup's own breakpoints, read from its `@media`
+rules, one width inside each range; if it has none, ask (Decisions).
 
 ### §2 Render parity
-
-A screenshot difference must mean a defect. These make it so:
 
 | Condition | Both sides |
 |---|---|
 | Browser | Chromium, the version Playwright pins (SR-4) |
 | Viewport and scale | The §1 width, a fixed height, `deviceScaleFactor: 1` |
-| Data | The app renders **the values the mockup shows** — a fixture builder per row reproduces the mockup's dummy data exactly (`Futsal A`, `Rp 399.600`), served through the real API |
-| Clock and locale | Frozen to the instant and locale the mockup implies; timezone from the row, never the machine |
-| Fonts | Loaded before capture (`document.fonts.ready`); no fallback font may render |
-| Motion | Animations and transitions disabled for capture only; §7 tests them separately |
-| Network | No third-party request; anything the mockup loads remotely is vendored as an asset (§6) |
+| Data | The app renders **the values the mockup shows**, via one fixture builder per screen through the real API |
+| Clock and locale | Frozen to what the mockup implies; timezone from the row, never the machine |
+| Fonts | Loaded before capture (`document.fonts.ready`); no fallback face may render |
+| Motion | Disabled for capture only; §9 tests it separately |
+| Network | No third-party request; remote mockup assets are vendored (§8) |
 
-### §3 Element map
+### §3 Pattern analysis
 
-The comparison names elements, so both sides must be addressable:
+Run `pnpm fidelity:analyse` (§10). It renders every §1 row of the mockup and
+reports, without the assistant reading the markup:
 
-| Key | Mockup selector | App selector |
+| Finding | How the extractor finds it | What S7 does with it |
 |---|---|---|
-| `review.title` | `#review h1` | `[data-testid="review-title"]` |
-| `review.total` | `.summary .total .amount` | `[data-testid="review-total"]` |
-| `review.confirm` | `#confirm` | `[data-testid="review-confirm"]` |
+| **Style classes** | Groups text elements by their computed type signature (family, size, weight, line-height, letter-spacing, transform, colour) | Each class becomes one §5 text role |
+| **Components** | Groups repeated subtrees by structure and class names — the same shape appearing two or more times | Each becomes one §4 component, matched against the S5 UI kit |
+| **Variants** | Within a component, instances whose signatures differ in a consistent way (`.btn` vs `.btn.secondary`) | Each becomes one variant row under its component |
+| **Near-duplicates** | Instances of one component that differ by a small amount (padding `16px` vs `18px`, colour off by one step) | **A question, never a silent choice** — see below |
+| **One-offs** | Elements matching no group | §7, one row each |
+| **Untokenised values** | A computed value with no token in `design-system.md` §2 | Add the token in S5 first, then continue |
 
-Map every text role, every component the S5 UI kit extracted, every control, and
-every asset. The mockup is **never edited** to add test ids — it is the signed-off
-artifact; the mapping lives here.
+Report the summary in `fidelity.md` §3 as counts, not values:
 
-### §4 Typography
+```
+analysed   5 screens · 18 states · 3 viewports · 1,412 elements
+classes    9 text roles cover 97% of text (41 one-off text nodes → 3 real one-offs, 38 are data)
+components 11 components, 19 variants, 268 instances  (S5 UI kit: 11 ✓)
+near-dup   2 — Card padding 16px (4 inst.) vs 18px (2 inst.); Button/secondary border 1px vs 1.5px
+one-offs   6 elements
+assets     14 files, 2 remote
+```
 
-Read with `getComputedStyle` from the rendered mockup, one row per text role.
-Values are what the browser computed, in `px` — not the CSS as written.
+**Near-duplicates are asked, one `AskUserQuestion` each:** *unify* (the minority
+instances are a mockup slip; the app uses the majority value and the difference
+is recorded in §11) or *keep as a variant* (the difference is intentional; a new
+variant row is added). The assistant never decides which pixel was meant.
 
-| Key | font-family (first resolved face) | size | weight | style | line-height | letter-spacing | transform | color |
-|---|---|---|---|---|---|---|---|---|
-| `review.title` | `Inter` | 24px | 700 | normal | 32px | -0.48px | none | `rgb(29, 29, 27)` |
-| `review.total` | `Inter` | 16px | 800 | normal | 24px | normal | none | `rgb(29, 29, 27)` |
+> This is where modularising pays twice: one definition instead of many, and a
+> mockup inconsistency surfaced as a decision instead of faithfully copied into
+> six components.
 
-Every value must also exist as a token in `design-system.md` §2. A computed value
-with no token is a gap in S5 — add the token there first.
+### §4 Component catalog
 
-### §5 Box model
+One section per component, written once. Instances are counted, not listed.
 
-| Key | padding | margin | gap | width / height | border | radius | shadow |
-|---|---|---|---|---|---|---|---|
-| `review.card` | 16px 18px | 6px 0 0 | — | auto / auto | 1px solid `rgb(217, 214, 204)` | 12px | none |
-| `review.confirm` | 12px 20px | 18px 0 0 | — | auto / 44px | none | 10px | none |
+```markdown
+#### Button  · S5 UI kit · 64 instances on 5 screens
 
-Also read per interactive state — `:hover`, `:focus-visible`, `:active`,
-`:disabled` — for every control, by driving the state in the browser, not by
-reading the stylesheet.
+| Variant | Tokens | States compared | Instances |
+|---|---|---|---|
+| primary   | `color.brand` bg · `text.button` · `space.3`/`space.5` padding · `radius.md` | default · hover · focus-visible · active · disabled · loading | 31 |
+| secondary | `color.surface` bg · `border.subtle` · `text.button` · same padding · `radius.md` | default · hover · focus-visible · active · disabled | 27 |
+| link      | no bg · `text.link` · no padding | default · hover · focus-visible | 6 |
 
-### §6 Assets
+Anatomy: label, optional leading icon (`icon.sm`), spinner in `loading`.
+Behaviour: §9 Button.
+```
 
-Inventory every file the mockup renders — `<img>`, `<picture>` sources, CSS
-`background-image`, inline and external SVG, icon fonts, `@font-face` files,
-favicon and touch icons.
+Every value is a **token name**; the measured numbers for each variant × state
+live in `baseline/components.json`, generated. One comparison per variant ×
+state × viewport covers every instance — the harness checks each instance
+against its variant's baseline, so a single drifted instance still fails, but
+nobody wrote a row for it.
 
-| Asset | Used by | Intrinsic size | Rendered size | `alt` | sha256 |
+### §5 Text roles
+
+| Role | Token | Used by | Instances |
+|---|---|---|---|
+| `title` | `text.title` | screen headings | 18 |
+| `body` | `text.body` | paragraphs, table cells | 402 |
+| `label` | `text.label` | field labels, row labels | 96 |
+| `amount` | `text.amount` | money values | 54 |
+
+Family, size, weight, style, line-height, letter-spacing, transform and colour
+for each role are in `baseline/text-roles.json`, generated.
+
+### §6 Mapping convention
+
+One rule replaces the per-element map:
+
+| Side | How an element identifies itself |
+|---|---|
+| App | Every component root renders `data-component="<Component>"` and, when it has one, `data-variant="<variant>"`; every text role renders `data-role="<role>"` |
+| Mockup | The extractor's §3 grouping assigns the same component, variant and role to each mockup element — the mockup is **never edited** |
+
+The harness pairs instances by screen + state + component + variant + document
+order. Only §7 one-offs need an explicit selector. A component that renders
+without its attributes is a failing test, not a missing row.
+
+### §7 One-offs
+
+| Key | Screen | Mockup selector | App selector | What makes it unique |
+|---|---|---|---|---|
+| `review.hero` | booking-review | `.hero` | `[data-testid="review-hero"]` | full-bleed image with gradient overlay, appears once |
+
+Expect a handful. If this table grows past a dozen rows, the analysis missed a
+pattern — re-run §3 with the grouping loosened before writing more rows.
+
+### §8 Assets
+
+The inventory — every `<img>`, `<picture>` source, CSS `background-image`, SVG,
+icon font, `@font-face` file and favicon, with hash and dimensions — is generated
+into `baseline/assets.json`. `fidelity.md` holds only the rules and exceptions:
+
+| Rule | |
+|---|---|
+| The app ships the **same file**, sha256-equal | default |
+| Or a derivative with identical intrinsic dimensions | only if listed in §11 |
+| Every face and weight the mockup loads is loaded | no fallback renders |
+| Remote assets are vendored | or a §11 deviation |
+| `alt` text | is copy — conventions §9 |
+
+Icons used through a component (Button's leading icon) are covered by that
+component; they are not listed again.
+
+### §9 Behaviour
+
+Behaviour is modular too. Define it **once per component**, then per screen only
+what belongs to that screen.
+
+**Per component** — once, applies to every instance:
+
+| Component | Behaviour | Test |
+|---|---|---|
+| Button | hover / focus-visible / active / disabled styles (§4); `loading` blocks a second click | `components/button.behaviour.spec.ts` |
+| Modal | opens on trigger, traps focus, closes on Esc and backdrop, returns focus | `components/modal.behaviour.spec.ts` |
+| Field | shows the mirrored validation message on blur; clears on fix | `components/field.behaviour.spec.ts` |
+
+**Per screen** — only flows that are the screen's own:
+
+| Id | Screen flow | Trigger | Outcome | Real mechanism | Test |
 |---|---|---|---|---|---|
-| `img/court-futsal-a.jpg` | `review.hero` | 1600×900 | 640×360 | Futsal A court | `9f2c…e41a` |
-| `fonts/Inter-Bold.woff2` | all 700 text | — | — | — | `51b0…7c03` |
+| B-01 | Confirm submits and shows success | click Confirm | success state, reference shown | `POST /bookings` (bookings.md §1) | `booking-review.flow.spec.ts` |
+| B-02 | Window banner near the cut-off | open within 2h of start | banner, Confirm disabled | `E-BOOKINGS-WINDOW` → advisory banner | same file |
 
-The app ships **the same file** — equal hash — or a derivative listed in §9 with
-identical intrinsic dimensions and the reason (e.g. AVIF conversion). Every face
-and weight the mockup loads is loaded by the app; nothing renders in a fallback.
-`alt` text is copy, and follows conventions §9.
+The extractor lists every inline handler, toggled class and `?state=` value in
+the mockup; each must land in exactly one of the two tables. A state reachable
+only through `?state=` is **not** implemented — every state has a real trigger.
 
-### §7 Behaviour
-
-The mockup demonstrates behaviour with dummy scripts and `?state=` switches. The
-app must do the same things **for real**. One row per behaviour:
-
-| Id | Behaviour in the mockup | Trigger | Outcome | Real mechanism in the app | Test |
-|---|---|---|---|---|---|
-| B-01 | Confirm submits and shows the success state | click `review.confirm` | success screen, reference shown | `POST /bookings` (bookings.md §1) | `tests/fidelity/booking-review.behaviour.spec.ts` |
-| B-02 | Window banner appears near the cut-off | open within 2h of start | banner, confirm disabled | server `E-BOOKINGS-WINDOW` → advisory banner (error-handling §5) | same file |
-| B-03 | Confirm shows hover and focus rings | hover / Tab | §5 hover and focus values | CSS | same file |
-
-Read the mockup's inline scripts and every `?state=` value to build this table —
-every handler, every toggled class, every state reachable by a control. Include
-keyboard order, focus management, sticky and scroll behaviour, transitions
-(duration and easing, read from the mockup), and form validation messages.
-
-A behaviour that only works because the app reads `?state=` is **not**
-implemented — each state is reached through its real trigger.
-
-### §8 Comparison and tolerances
+### §10 Comparison and harness
 
 | What | Compared by | Tolerance |
 |---|---|---|
-| Whole screen | Screenshot of mockup vs app per §1 row, pixel diff | `maxDiffPixelRatio` from Decisions — default **0.001** |
-| Typography (§4) | Computed style of each key, both sides | **Exact** |
-| Box model (§5) | Computed style of each key, each interactive state | **Exact** |
-| Assets (§6) | sha256, or §9 derivative with equal intrinsic size | **Exact** |
-| Behaviour (§7) | End-to-end assertion per row | Pass / fail |
-
-Masks are allowed only for a region §9 lists, never to make a run pass. The
-pixel diff catches what the inventories missed; the inventories say *what* is
-wrong when the pixel diff fails. Both are required — a pixel diff alone says
-"12% different" and nothing else.
-
-### §9 Allowed deviations
-
-| Id | Element | Mockup | App | Reason | Approved by |
-|---|---|---|---|---|---|
-| FD-01 | `review.hero` | JPEG 412 KB | AVIF 96 KB, same 1600×900 | page weight budget (NFR) | user, `<date>` |
-
-Empty by default. Every row is a decision the user made, asked with
-`AskUserQuestion` — the assistant never grants itself a deviation. A difference
-not listed here is a defect.
-
-### §10 Harness
+| Whole screen | Screenshot per §1 screen × state × viewport | `maxDiffPixelRatio` from Decisions — default **0.001** |
+| Text roles (§5) | Every `data-role` instance vs its role's baseline | **Exact** |
+| Components (§4) | Every `data-component` instance vs its variant × state baseline | **Exact** |
+| One-offs (§7) | Each vs its own baseline | **Exact** |
+| Assets (§8) | sha256, or §11 derivative | **Exact** |
+| Behaviour (§9) | e2e assertion per row | Pass / fail |
 
 ```
 tests/fidelity/
-  baseline/                       ← generated from the MOCKUP, committed
-    <screen>.<state>.<vw>.png
-    styles.json                   §4 + §5, per key, per interactive state
-    assets.json                   §6 hashes and sizes
-  extract.ts                      renders the mockup, writes baseline/
-  <screen>.visual.spec.ts         §1 × §8 pixel comparison
-  <screen>.style.spec.ts          §4 + §5 exact comparison
-  <screen>.behaviour.spec.ts      §7 rows
-  assets.spec.ts                  §6 hashes
+  analyse.ts                 renders the mockup, groups, writes baseline/ + the §3 summary
+  baseline/                  generated from the MOCKUP, committed
+    screens/<screen>.<state>.<vw>.png
+    text-roles.json          per role
+    components.json          per component × variant × state
+    one-offs.json            per §7 key
+    assets.json              hash, dimensions, used-by
+  components/<component>.behaviour.spec.ts   §9 per component — written once
+  <screen>.visual.spec.ts    pixel comparison
+  <screen>.style.spec.ts     iterates data-component / data-role instances — no per-element code
+  <screen>.flow.spec.ts      §9 per-screen rows
+  assets.spec.ts
 ```
 
 | Command | Does |
 |---|---|
-| `pnpm fidelity:baseline` | Serves `mockup/` statically, renders every §1 row, writes `baseline/` |
-| `pnpm test:fidelity` | Renders the app under §2, compares against `baseline/` |
+| `pnpm fidelity:analyse` | Serves `mockup/`, renders every §1 row, groups, writes `baseline/` and prints the §3 summary |
+| `pnpm test:fidelity` | Renders the app under §2 and compares against `baseline/`; `-- <screen>` limits it to one screen |
+
+The style specs are **generic**: one loop over every `data-component` and
+`data-role` element on the page, looking up its baseline by name. Adding a
+screen adds a §1 row and a fixture, not test code.
 
 The baseline is regenerated **only when the mockup changes**, in the same commit
 as the mockup change and the S5 update. Regenerating it from the app, or to make
 a failing run pass, is lowering the bar (SR-5).
 
+### §11 Allowed deviations
+
+| Id | Applies to | Mockup | App | Reason | Approved by |
+|---|---|---|---|---|---|
+| FD-01 | Card (2 instances) | padding 18px | 16px, as the other 4 | near-duplicate unified (§3) | user, `<date>` |
+| FD-02 | `review.hero` | JPEG 412 KB | AVIF 96 KB, same 1600×900 | page-weight budget (NFR) | user, `<date>` |
+
+Empty until the user decides otherwise. A difference not listed here is a defect.
+
 ## Appending to `phases.md`
 
-Add one phase at the end of the frontend track, after the last screen phase:
+Add one phase at the end of the frontend track. Criteria follow the modules, so
+the shared parts are proven once, before the screens that reuse them:
 
 ```markdown
 ## Phase F<n> — Mockup parity
@@ -200,46 +276,41 @@ Add one phase at the end of the frontend track, after the last screen phase:
 
 | Area | Files |
 |------|-------|
-| Harness | `tests/fidelity/extract.ts`, `tests/fidelity/baseline/` |
-| Suites | `tests/fidelity/*.spec.ts` |
+| Harness | `tests/fidelity/analyse.ts`, `tests/fidelity/baseline/` |
+| Suites | `tests/fidelity/**/*.spec.ts` |
 
 ### Exit criteria
 
-- [ ] `pnpm fidelity:baseline` regenerates `baseline/` from `mockup/` with no diff to the committed baseline
-- [ ] `booking-review` — pixel diff ≤ 0.001 for all 5 states at 375 · 768 · 1280 (`booking-review.visual.spec.ts`)
-- [ ] `booking-review` — §4 typography and §5 box model equal for every key and interactive state (`booking-review.style.spec.ts`)
-- [ ] `booking-review` — behaviours B-01 … B-07 pass against the real API (`booking-review.behaviour.spec.ts`)
-- [ ] Every §6 asset hash-equal or listed in §9 (`assets.spec.ts`)
-- [ ] `docs/FE/fidelity.md` §9 lists every remaining difference, each approved
-
-> Parity is proven once at the end because it needs every screen built — but it
-> is **checked** on every frontend criterion before that (see Definition of done).
+- [ ] `pnpm fidelity:analyse` regenerates `baseline/` from `mockup/` with no diff to the committed baseline
+- [ ] Text roles — every `data-role` instance equals its role baseline (`*.style.spec.ts`)
+- [ ] Button — every variant × state equals its baseline; behaviour spec green (`components/button.behaviour.spec.ts`)
+- [ ] Modal — … (one criterion per §4 component)
+- [ ] `booking-review` — pixel diff ≤ 0.001, all states × widths; flows B-01 … B-07 green (one criterion per screen)
+- [ ] Every asset hash-equal or listed in §11 (`assets.spec.ts`)
 ```
-
-One exit criterion per screen per comparison kind, naming its spec file, so
-`/pspt:build` can take them one at a time.
 
 Add one row to `phases.md` §2 Definition of done:
 
 | Area | Requirement |
 |---|---|
-| Fidelity | A criterion that touches a screen runs that screen's `tests/fidelity/` suites once they exist; a parity regression is a red test |
+| Fidelity | A criterion that touches a component or screen runs its `tests/fidelity/` suites once they exist; a parity regression is a red test |
 
 ## Decisions to ask
 
 | Decision | What to put in front of the user |
 |---|---|
-| Viewports | The widths read from the mockup's `@media` rules; if it has none, candidates (375 · 768 · 1280 vs 390 · 1440) with the trade-off: more widths, more baselines to maintain |
-| Pixel tolerance | 0 (any pixel fails — brittle across font rasterisers) · **0.001** (recommended — catches a 1px padding change on a full screen) · 0.01 (lenient — misses small spacing drift) |
-| Deviations | Every place the app *cannot* match — an asset the budget forbids, an animation the a11y NFR removes — each as its own question |
-| Remote assets | Anything the mockup loads from a CDN: vendor it, or approve a §9 deviation |
+| Near-duplicates | Each one from §3: unify to the majority value, or keep as a variant |
+| Viewports | Widths from the mockup's `@media` rules; if none, candidates (375 · 768 · 1280 vs 390 · 1440) — more widths, more baselines |
+| Pixel tolerance | 0 (brittle across rasterisers) · **0.001** (recommended — catches a 1px padding change) · 0.01 (misses small drift) |
+| Deviations | Each place the app cannot match — an asset the budget forbids, an animation an a11y NFR removes |
+| Remote assets | Vendor them, or approve a §11 deviation |
 
 ## Exit criteria
 
-- [ ] Every refactor-map row from S5 appears in §1 at every viewport
-- [ ] §4 and §5 values were read from the rendered mockup, and each maps to a `design-system.md` token
-- [ ] Every element named in §4–§7 has a §3 mapping on both sides
-- [ ] Every asset the mockup renders is in §6 with its hash
-- [ ] Every handler, toggled class and `?state=` value in the mockup has a §7 row with a real mechanism and a test
-- [ ] Tolerances are decided, and §9 contains only user-approved deviations
-- [ ] `phases.md` has the Mockup parity phase, one criterion per screen per comparison, and the Fidelity row in its definition of done
+- [ ] `pnpm fidelity:analyse` ran, and §3 holds its summary as counts
+- [ ] Every §3 component is a §4 catalog entry, and matches the S5 UI kit — or S5 is updated
+- [ ] Every near-duplicate was decided by the user: unified (§11) or a variant (§4)
+- [ ] Text roles and components are defined once, by token name; no computed value is typed into `fidelity.md`
+- [ ] §7 one-offs are few, each with a reason
+- [ ] Every handler, toggled class and `?state=` value lands in exactly one §9 table, with a real mechanism and a test
+- [ ] `phases.md` has the Mockup parity phase — components first, then screens — and the Fidelity row in its definition of done

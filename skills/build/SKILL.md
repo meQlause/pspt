@@ -140,6 +140,10 @@ Respect the architecture while you do it:
   `max-depth: 2` will reject the branching version anyway.
 - A feature reaches another only through its `index.ts`. Repositories are never
   exported.
+- **Frontend components identify themselves.** A component root renders
+  `data-component` and `data-variant`, a text element its `data-role`, exactly
+  as `docs/FE/fidelity.md` §4–§6 names them. That one convention is what lets
+  the fidelity suite check every instance without a row per element.
 - **Frontend text is never invented.** Text already defined — the mockup, the
   spec, the PRD/SRS, an existing copy constant, the user — is written verbatim;
   only text nothing defines is lorem ipsum in the feature's copy constant,
@@ -168,10 +172,10 @@ npx eslint --max-warnings=0 --no-warn-ignored <changed files>
 ```
 
 In the frontend submodule, once `tests/fidelity/` exists (S7), also run the
-fidelity suites of every screen the criterion touched:
+fidelity suites of every screen and shared component the criterion touched:
 
 ```
-pnpm test:fidelity -- <screen>
+pnpm test:fidelity -- <screen-or-component>
 ```
 
 A pixel, style, asset or behaviour difference from the mockup baseline is a red

@@ -28,7 +28,8 @@ off. Status colours are for status only, never decoration.
 
 List the components the mockup has already proven — the ones that appear more
 than once with a consistent shape. That is the UI kit, derived rather than
-invented.
+invented. S7's analysis re-derives it from the rendered mockup and checks the two
+agree, so name components and variants here the way the app will name them.
 
 ### Refactor map
 
