@@ -17,7 +17,17 @@ import prettier from 'eslint-config-prettier';
 const SOURCE = ['**/*.{ts,tsx}'];
 
 export default [
-  { ignores: ['dist/**', 'coverage/**', 'node_modules/**', 'src/generated/**'] },
+  {
+    ignores: [
+      'dist/**',
+      'coverage/**',
+      'node_modules/**',
+      'src/generated/**',
+      // pspt's own toolchain files — verified by sha256, not project code
+      'eslint.config.mjs',
+      'commitlint.config.mjs',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   react.configs.flat.recommended, // NOT .configs.recommended (legacy)
@@ -85,24 +95,35 @@ export default [
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'error',
-      'unused-imports/no-unused-vars': ['warn', {
-        vars: 'all', varsIgnorePattern: '^_',
-        args: 'after-used', argsIgnorePattern: '^_',
-      }],
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-explicit-any': 'warn',
 
       // Identifier length
-      'id-length': ['error', { min: 3, properties: 'never', exceptions: ['id', 'db', 'to', 'up', 'fn'] }],
+      'id-length': [
+        'error',
+        { min: 3, properties: 'never', exceptions: ['id', 'db', 'to', 'up', 'fn'] },
+      ],
 
       // Magic values
-      'no-magic-numbers': ['error', {
-        ignore: [-1, 0, 1, 2],
-        ignoreArrayIndexes: true,
-        ignoreDefaultValues: true,
-        ignoreClassFieldInitialValues: true,
-        enforceConst: true,
-        detectObjects: false,
-      }],
+      'no-magic-numbers': [
+        'error',
+        {
+          ignore: [-1, 0, 1, 2],
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          ignoreClassFieldInitialValues: true,
+          enforceConst: true,
+          detectObjects: false,
+        },
+      ],
       'sonarjs/no-duplicate-string': ['error', { threshold: 3 }],
     },
   },

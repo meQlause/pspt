@@ -42,7 +42,8 @@ there is nothing to compare across repos. Two cross-checks remain:
   `/pspt:build` against `references/toolchain/manifest.json` — every file's
   sha256 (ESLint, knip, Prettier, commitlint, husky hooks), no second config,
   pinned dependencies, scripts, hooks active, TypeScript strict with no `.js`
-  under `src/` / `tests/`. Read-only: report, never repair. A `toolchainDrift`
+  under `src/` / `tests/`. Read-only: report, never repair — name
+  `/pspt:fix-flow` as the next step when anything differs. A `toolchainDrift`
   entry in `docs/.pspt.json` is a drift the user chose to keep — show it with
   its reason.
 - **`noLinter`.** If it names an unsupported framework, surface that so the

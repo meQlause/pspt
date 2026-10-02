@@ -1,43 +1,56 @@
-// pspt canonical ESLint config — nextjs.
-// Source of truth: references/lint/nextjs.md. Copied VERBATIM into the project by
+// pspt canonical ESLint config — react-js (JavaScript variant of react: the TypeScript-only
+// presets and @typescript-eslint rules are dropped; every other rule is identical).
+// Source of truth: references/lint/react.md. Copied VERBATIM into the project by
 // /pspt:build; never edited there. A change is a change to pspt, not to the project.
 // /pspt:build and /pspt:status compare this file's sha256 against
 // references/toolchain/manifest.json — any difference is drift and fails CHECK.
 
-import nextVitals from 'eslint-config-next/core-web-vitals';
-import nextTs from 'eslint-config-next/typescript';
+import js from '@eslint/js';
+import globals from 'globals';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
+import importPlugin from 'eslint-plugin-import';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unusedImports from 'eslint-plugin-unused-imports';
 import prettier from 'eslint-config-prettier';
 
-const SOURCE = ['**/*.{ts,tsx}'];
+const SOURCE = ['**/*.{js,jsx}'];
 
 export default [
   {
     ignores: [
-      '.next/**',
-      'out/**',
+      'dist/**',
       'coverage/**',
       'node_modules/**',
-      'next-env.d.ts',
       'src/generated/**',
       // pspt's own toolchain files — verified by sha256, not project code
       'eslint.config.mjs',
       'commitlint.config.mjs',
     ],
   },
-  ...nextVitals, // registers react, react-hooks, jsx-a11y, import, @next/next
-  ...nextTs, // registers @typescript-eslint
+  js.configs.recommended,
+  react.configs.flat.recommended, // NOT .configs.recommended (legacy)
+  react.configs.flat['jsx-runtime'],
+  reactHooks.configs.flat['recommended-latest'], // 7.x: configs['recommended-latest'] is the legacy shape
+  jsxA11y.flatConfigs.recommended,
   sonarjs.configs.recommended,
+  importPlugin.flatConfigs.recommended,
   {
     files: SOURCE,
     plugins: { 'unused-imports': unusedImports },
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: globals.browser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+    },
+    settings: {
+      react: { version: 'detect' },
+      // the JavaScript counterpart of the TypeScript import resolver
+      'import/resolver': { node: { extensions: ['.js', '.jsx'] } },
+    },
     rules: {
-      // jsx-a11y/recommended in full — its .rules can be spread here only because
-      // eslint-config-next already registered the plugin (react.md §8 trap)
-      ...jsxA11y.flatConfigs.recommended.rules,
-
       // §1 Size
       'max-lines-per-function': ['error', { max: 100, skipBlankLines: true, skipComments: true }],
       'max-lines': ['error', { max: 500, skipBlankLines: true, skipComments: true }],
@@ -62,9 +75,8 @@ export default [
       // §4 React-specific
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      '@next/next/no-img-element': 'warn',
-      '@next/next/no-html-link-for-pages': 'off', // App Router — no pages/ dir
-      'jsx-a11y/anchor-is-valid': 'off', // conflicts with next/link
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
 
       // §5 Duplication and dead logic — all error, none downgraded
       'sonarjs/no-identical-conditions': 'error',
@@ -90,7 +102,6 @@ export default [
 
       // §7 Unused code
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
         'warn',
@@ -101,7 +112,6 @@ export default [
           argsIgnorePattern: '^_',
         },
       ],
-      '@typescript-eslint/no-explicit-any': 'warn',
 
       // Identifier length
       'id-length': [
@@ -127,11 +137,13 @@ export default [
 
   // Magic-value exemptions — test tables and Zod schemas keep their literals
   {
-    files: ['tests/**/*.{ts,tsx}'],
+    files: ['tests/**/*.{js,jsx}'],
+    // JavaScript has no type checker to switch off no-undef: declare the test-runner globals
+    languageOptions: { globals: { ...globals.jest, ...globals.vitest } },
     rules: { 'no-magic-numbers': 'off', 'sonarjs/no-duplicate-string': 'off' },
   },
   {
-    files: ['**/*.schema.ts'],
+    files: ['**/*.schema.js'],
     rules: { 'no-magic-numbers': 'off' },
   },
 

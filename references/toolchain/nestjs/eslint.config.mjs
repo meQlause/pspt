@@ -13,7 +13,17 @@ import prettier from 'eslint-config-prettier';
 const SOURCE = ['**/*.ts'];
 
 export default [
-  { ignores: ['dist/**', 'coverage/**', 'node_modules/**', 'src/generated/**'] },
+  {
+    ignores: [
+      'dist/**',
+      'coverage/**',
+      'node_modules/**',
+      'src/generated/**',
+      // pspt's own toolchain files — verified by sha256, not project code
+      'eslint.config.mjs',
+      'commitlint.config.mjs',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   sonarjs.configs.recommended,
@@ -76,24 +86,35 @@ export default [
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'error',
-      'unused-imports/no-unused-vars': ['warn', {
-        vars: 'all', varsIgnorePattern: '^_',
-        args: 'after-used', argsIgnorePattern: '^_',
-      }],
+      'unused-imports/no-unused-vars': [
+        'warn',
+        {
+          vars: 'all',
+          varsIgnorePattern: '^_',
+          args: 'after-used',
+          argsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-explicit-any': 'warn',
 
       // §9 Identifier length
-      'id-length': ['error', { min: 3, properties: 'never', exceptions: ['id', 'db', 'tx', 'to', 'up'] }],
+      'id-length': [
+        'error',
+        { min: 3, properties: 'never', exceptions: ['id', 'db', 'tx', 'to', 'up'] },
+      ],
 
       // §10 Magic values
-      'no-magic-numbers': ['error', {
-        ignore: [-1, 0, 1, 2],
-        ignoreArrayIndexes: true,
-        ignoreDefaultValues: true,
-        ignoreClassFieldInitialValues: true,
-        enforceConst: true,
-        detectObjects: false,
-      }],
+      'no-magic-numbers': [
+        'error',
+        {
+          ignore: [-1, 0, 1, 2],
+          ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          ignoreClassFieldInitialValues: true,
+          enforceConst: true,
+          detectObjects: false,
+        },
+      ],
       'sonarjs/no-duplicate-string': ['error', { threshold: 3 }],
     },
   },
@@ -102,19 +123,50 @@ export default [
   {
     files: ['**/*.rules.ts'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: [{ group: [
-        '@prisma/*', '.prisma/*', '**/prisma*',
-        '@nestjs/*',
-        'axios', 'node-fetch', 'undici',
-        'node:fs', 'node:fs/*', 'fs', 'fs/*',
-        'node:child_process', 'child_process',
-      ], message: 'A *.rules.ts file must stay pure — no I/O, no framework. Move this to the sibling *.service.ts.' }] }],
-      'no-restricted-globals': ['error',
-        { name: 'Date', message: 'Pass the instant in as an argument so the rule is deterministic under test.' },
-        { name: 'fetch', message: 'A *.rules.ts file must stay pure. Move the call to the sibling *.service.ts.' },
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '@prisma/*',
+                '.prisma/*',
+                '**/prisma*',
+                '@nestjs/*',
+                'axios',
+                'node-fetch',
+                'undici',
+                'node:fs',
+                'node:fs/*',
+                'fs',
+                'fs/*',
+                'node:child_process',
+                'child_process',
+              ],
+              message:
+                'A *.rules.ts file must stay pure — no I/O, no framework. Move this to the sibling *.service.ts.',
+            },
+          ],
+        },
       ],
-      'no-restricted-properties': ['error',
-        { object: 'Math', property: 'random', message: 'Non-deterministic — inject the value so the rule is testable.' },
+      'no-restricted-globals': [
+        'error',
+        {
+          name: 'Date',
+          message: 'Pass the instant in as an argument so the rule is deterministic under test.',
+        },
+        {
+          name: 'fetch',
+          message: 'A *.rules.ts file must stay pure. Move the call to the sibling *.service.ts.',
+        },
+      ],
+      'no-restricted-properties': [
+        'error',
+        {
+          object: 'Math',
+          property: 'random',
+          message: 'Non-deterministic — inject the value so the rule is testable.',
+        },
       ],
     },
   },

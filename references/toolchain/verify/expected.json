@@ -125,5 +125,86 @@
     "tests/unit/fee.test.ts": [
       "sonarjs/no-empty-test-file"
     ]
+  },
+  "express-js": {
+    "src/features/bookings/booking.schema.js": [],
+    "src/features/bookings/branch.js": [
+      "curly",
+      "max-depth",
+      "no-else-return",
+      "no-negated-condition",
+      "sonarjs/no-collapsible-if",
+      "sonarjs/no-nested-conditional"
+    ],
+    "src/features/bookings/long.js": [
+      "max-lines-per-function",
+      "max-statements"
+    ],
+    "src/features/bookings/pricing.rules.js": [
+      "no-restricted-globals",
+      "no-restricted-imports",
+      "no-restricted-properties",
+      "sonarjs/pseudo-random"
+    ],
+    "src/features/bookings/size.js": [
+      "max-classes-per-file",
+      "max-nested-callbacks",
+      "max-params",
+      "no-magic-numbers"
+    ],
+    "src/features/bookings/unused.js": [
+      "sonarjs/no-unused-vars",
+      "sonarjs/unused-import",
+      "unused-imports/no-unused-imports",
+      "unused-imports/no-unused-vars"
+    ],
+    "src/features/bookings/values.js": [
+      "id-length",
+      "no-else-return",
+      "no-lonely-if",
+      "no-magic-numbers",
+      "sonarjs/no-duplicate-string",
+      "sonarjs/todo-tag"
+    ],
+    "tests/unit/fee.test.js": [
+      "sonarjs/no-empty-test-file"
+    ]
+  },
+  "react-js": {
+    "src/features/review/Review.jsx": [
+      "react-hooks/rules-of-hooks",
+      "react/jsx-max-depth",
+      "sonarjs/no-nested-conditional"
+    ],
+    "src/features/review/booking.schema.js": [],
+    "src/features/review/values.js": [
+      "curly",
+      "id-length",
+      "no-magic-numbers",
+      "sonarjs/no-duplicate-string",
+      "sonarjs/todo-tag"
+    ],
+    "tests/unit/fee.test.js": [
+      "sonarjs/no-empty-test-file"
+    ]
+  },
+  "nextjs-js": {
+    "src/features/review/Review.jsx": [
+      "@next/next/no-img-element",
+      "react-hooks/rules-of-hooks",
+      "react/jsx-max-depth",
+      "sonarjs/no-nested-conditional"
+    ],
+    "src/features/review/booking.schema.js": [],
+    "src/features/review/values.js": [
+      "curly",
+      "id-length",
+      "no-magic-numbers",
+      "sonarjs/no-duplicate-string",
+      "sonarjs/todo-tag"
+    ],
+    "tests/unit/fee.test.js": [
+      "sonarjs/no-empty-test-file"
+    ]
   }
 }

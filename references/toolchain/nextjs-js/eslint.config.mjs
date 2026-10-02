@@ -1,17 +1,18 @@
-// pspt canonical ESLint config — nextjs.
+// pspt canonical ESLint config — nextjs-js (JavaScript variant of nextjs: the TypeScript-only
+// presets and @typescript-eslint rules are dropped; every other rule is identical).
 // Source of truth: references/lint/nextjs.md. Copied VERBATIM into the project by
 // /pspt:build; never edited there. A change is a change to pspt, not to the project.
 // /pspt:build and /pspt:status compare this file's sha256 against
 // references/toolchain/manifest.json — any difference is drift and fails CHECK.
 
 import nextVitals from 'eslint-config-next/core-web-vitals';
-import nextTs from 'eslint-config-next/typescript';
+import globals from 'globals';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unusedImports from 'eslint-plugin-unused-imports';
 import prettier from 'eslint-config-prettier';
 
-const SOURCE = ['**/*.{ts,tsx}'];
+const SOURCE = ['**/*.{js,jsx}'];
 
 export default [
   {
@@ -20,7 +21,6 @@ export default [
       'out/**',
       'coverage/**',
       'node_modules/**',
-      'next-env.d.ts',
       'src/generated/**',
       // pspt's own toolchain files — verified by sha256, not project code
       'eslint.config.mjs',
@@ -28,7 +28,6 @@ export default [
     ],
   },
   ...nextVitals, // registers react, react-hooks, jsx-a11y, import, @next/next
-  ...nextTs, // registers @typescript-eslint
   sonarjs.configs.recommended,
   {
     files: SOURCE,
@@ -90,7 +89,6 @@ export default [
 
       // §7 Unused code
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'error',
       'unused-imports/no-unused-vars': [
         'warn',
@@ -101,7 +99,6 @@ export default [
           argsIgnorePattern: '^_',
         },
       ],
-      '@typescript-eslint/no-explicit-any': 'warn',
 
       // Identifier length
       'id-length': [
@@ -127,11 +124,13 @@ export default [
 
   // Magic-value exemptions — test tables and Zod schemas keep their literals
   {
-    files: ['tests/**/*.{ts,tsx}'],
+    files: ['tests/**/*.{js,jsx}'],
+    // JavaScript has no type checker to switch off no-undef: declare the test-runner globals
+    languageOptions: { globals: { ...globals.jest, ...globals.vitest } },
     rules: { 'no-magic-numbers': 'off', 'sonarjs/no-duplicate-string': 'off' },
   },
   {
-    files: ['**/*.schema.ts'],
+    files: ['**/*.schema.js'],
     rules: { 'no-magic-numbers': 'off' },
   },
 

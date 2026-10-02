@@ -1,5 +1,5 @@
 {
-  "//": "pspt toolchain \u2014 merge into the project's package.json exactly. Verified with TypeScript >=4.8.4 <6.1.0 (typescript-eslint 8.71 peer range).",
+  "//": "pspt toolchain — merge into the project's package.json exactly. Verified with TypeScript >=4.8.4 <6.1.0 (typescript-eslint 8.71 peer range).",
   "devDependencies": {
     "eslint": "9.39.5",
     "@eslint/js": "9.39.5",
@@ -20,7 +20,7 @@
     "lint:files": "eslint --max-warnings=0 --no-warn-ignored",
     "typecheck": "tsc --noEmit",
     "knip": "knip",
-    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip",
+    "check": "prettier --check . && eslint --max-warnings=0 . && tsc --noEmit && knip",
     "prepare": "husky"
   }
 }

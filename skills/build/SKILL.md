@@ -99,10 +99,9 @@ The `.md` files in `references/lint/` explain the lint rules; the files in
 ends up with a config nobody chose, and without knip at all.
 
 **Install** (a file from the manifest is missing — on the first invocation,
-all of them): copy each `files` entry for the stack byte for byte; merge the
-stack's `package.toolchain.json` `devDependencies` (exact versions) and
-`scripts` into `package.json`; `pnpm install` (the `prepare` script installs
-the hooks). Commit as `chore(toolchain): install pspt <stack> toolchain`.
+all of them): run **`/pspt:fix-flow`** for that submodule. It detects the stack
+and language, copies every `files` entry byte for byte, merges the pinned
+`devDependencies` and `scripts`, installs, activates the hooks and commits.
 
 **Check for drift** — every one of these must hold:
 
@@ -118,7 +117,8 @@ the hooks). Commit as `chore(toolchain): install pspt <stack> toolchain`.
 
 **On drift, stop.** Print every failed check — for the ESLint config, the rules
 that differ (`npx eslint --print-config src/<any>.ts` against the canonical
-file's) — and ask once: **restore pspt's toolchain**, or **keep the project's**
+file's) — and ask once: **restore pspt's toolchain** (runs `/pspt:fix-flow`
+for that submodule), or **keep the project's**
 for the named files (recorded in `docs/.pspt.json` → `toolchainDrift` with the
 user's reason, and reported by `/pspt:status` until resolved). Never edit a
 project file to make a check pass, and never edit a canonical file to match the

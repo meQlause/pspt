@@ -1,9 +1,8 @@
 {
-  "//": "pspt toolchain — merge into the project's package.json exactly. Verified with TypeScript >=4.8.4 <6.1.0 (typescript-eslint 8.71 peer range).",
+  "//": "pspt toolchain (express-js, JavaScript) — merge into the project's package.json exactly. No TypeScript: the check script skips typecheck.",
   "devDependencies": {
     "eslint": "9.39.5",
     "@eslint/js": "9.39.5",
-    "typescript-eslint": "8.71.0",
     "eslint-plugin-sonarjs": "4.2.2",
     "eslint-plugin-unused-imports": "4.4.1",
     "eslint-config-prettier": "10.1.8",
@@ -11,16 +10,16 @@
     "knip": "6.39.0",
     "husky": "9.1.7",
     "@commitlint/cli": "21.2.3",
-    "@commitlint/config-conventional": "21.2.3"
+    "@commitlint/config-conventional": "21.2.3",
+    "globals": "17.13.0"
   },
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint --max-warnings=0 .",
     "lint:files": "eslint --max-warnings=0 --no-warn-ignored",
-    "typecheck": "tsc --noEmit",
     "knip": "knip",
-    "check": "prettier --check . && eslint --max-warnings=0 . && tsc --noEmit && knip",
+    "check": "prettier --check . && eslint --max-warnings=0 . && knip",
     "prepare": "husky"
   }
 }

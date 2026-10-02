@@ -47,6 +47,7 @@ imagined ERD produces tables nobody renders.
 /pspt:reg         reserve a numbered regression and wire its id into the specs
 /pspt:ticket      talk a change through against the code, plan it test-first, build it in phases
 /pspt:ticket-build  execute every approved ticket not yet built, one ticket at a time
+/pspt:fix-flow    detect the stack and language, and install or repair pspt's toolchain
 ```
 
 `/pspt:enhance` changes the spec; `/pspt:ticket` turns one request into a
@@ -178,7 +179,9 @@ side:
 Express, NestJS, Next.js, React: why each threshold, and what it forces into the
 spec.
 
-`references/toolchain/` **is** the toolchain, as files: per stack a complete,
+`references/toolchain/` **is** the toolchain, as files — for Express, NestJS,
+React and Next.js in TypeScript, and Express, React and Next.js in JavaScript.
+Per stack a complete,
 verified `eslint.config.mjs` and `knip.json`, shared Prettier, commitlint
 (with SR-6 as a rule) and husky hooks, pinned `devDependencies`, and the one
 `check` script — format, lint, types, knip. `/pspt:build` copies them into each
@@ -186,7 +189,10 @@ submodule **byte for byte** and, on every invocation — as do `build-long`,
 `ticket` and `ticket-build` — checks them against `toolchain/manifest.json`:
 every file's sha256, no second config, exact versions, hooks active,
 TypeScript strict. Any difference is drift: reported, never silently "fixed" in
-either direction. The plugin never authors a tool config in your project, so
+either direction. **`/pspt:fix-flow`** is the repair: it detects each package's
+stack and language, says "nothing to fix" when the toolchain already matches,
+and otherwise installs pspt's version, applies the safe autofixes and reports
+what is left. The plugin never authors a tool config in your project, so
 there is one source and nothing to drift. `toolchain/verify/` proves each
 ESLint config fires every rule; see
 [`references/toolchain/README.md`](references/toolchain/README.md).

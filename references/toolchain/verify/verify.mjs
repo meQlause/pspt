@@ -1,5 +1,5 @@
 // Re-proves a canonical config against its fixtures.
-//   cd references/toolchain/verify/<backend|frontend>
+//   cd references/toolchain/verify/<backend|frontend|backend-js|frontend-js>
 //   npm i -D <devDependencies from ../../<stack>/package.toolchain.json>
 //   cp ../../<stack>/eslint.config.mjs . && node ../verify.mjs <stack>
 // Exit 1 when any fixture's rule set differs from expected.json.
