@@ -8,6 +8,7 @@ GitHub Release text for each version, with absolute image links, is in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.4.0](#v040--2026-10-02) | 2026-10-02 | S7 — the finished app matches the mockup |
 | [0.3.2](#v032--2026-09-29) | 2026-09-29 | A recommendation for every lorem ipsum |
 | [0.3.1](#v031--2026-09-29) | 2026-09-29 | Never invent frontend copy |
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
@@ -15,6 +16,42 @@ GitHub Release text for each version, with absolute image links, is in
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
 
 ---
+
+## v0.4.0 — 2026-10-02
+
+**S7 — the finished app matches the mockup.** A new last stage of
+`/pspt:spec` measures the app against the mockup itself: fonts, sizes, weights,
+padding, margins, assets and every interaction.
+
+![v0.4.0 — the mockup baseline, the four checks, what fidelity.md holds, how it is enforced](releases/v0.4.0.png)
+
+**Added**
+
+- **Stage S7, mockup fidelity** ([`s7-fidelity.md`](references/stages/s7-fidelity.md))
+  — writes `docs/FE/fidelity.md`. Every value is read from the mockup rendered
+  in Chromium, never from its CSS by eye and never from the app:
+  - **Look** — every mockup file × state × viewport (from the mockup's own
+    breakpoints), screenshot-compared; pixel diff ≤ 0.001 by default
+  - **Type and spacing** — font family, size, weight, line-height,
+    letter-spacing, colour, padding, margin, gap, radius and shadow via
+    `getComputedStyle`, per interactive state; exact match
+  - **Assets** — every image, SVG, icon, font file and favicon by sha256
+  - **Behaviour** — every handler, toggled class and `?state=` in the mockup
+    mapped to its real mechanism and an e2e test against the real API
+- **Render parity** — same data through fixtures, frozen clock, fonts loaded,
+  motion off for capture, so a difference is always a defect.
+- **Deviations** — only the ones you approve, each listed with its reason.
+- **`tests/fidelity/`** — the fifth test suite; the baseline is generated from
+  the mockup and moves only when the mockup changes.
+
+**Changed**
+
+- S7 appends a **Mockup parity** phase and a Fidelity definition-of-done row to
+  `phases.md`.
+- `/pspt:build` runs a touched screen's fidelity suites in CHECK;
+  `/pspt:ticket` adds them as an S row.
+- `/pspt:spec`, `/pspt:status`, conventions §8, S5 and the README list the
+  new stage; `/pspt:status` reports build progress on its own row.
 
 ## v0.3.2 — 2026-09-29
 

@@ -30,6 +30,7 @@ jobs:
             v0.3.0|f1c328e410e73bfa3537646d35f16c6e28a53e7b|v0.3.0 — the ticket track: /pspt:ticket and /pspt:ticket-build
             v0.3.1|5d4c5716f42f6bf4391fb10deedd74d02207bfd0|v0.3.1 — never invent frontend copy
             v0.3.2|b118201670c3ec528f3c7b2107bd87c5b8fe618c|v0.3.2 — a recommendation for every lorem ipsum
+            v0.4.0|a47edefe36d03a13be849b707db9e7be29b3fe26|v0.4.0 — S7: the finished app matches the mockup
         run: |
           set -euo pipefail
           latest=$(printf '%s\n' "$RELEASES" | sed '/^$/d' | tail -1 | cut -d'|' -f1)

@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#f7f6f2;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--spec:#3b6ea8;--spec-bg:#e8f0f9;--tick:#b0521f;--tick-bg:#fbeee6;--build:#2f7a4f;--build-bg:#e6f3eb;--bad:#b3261e;--bad-bg:#fde9e7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:40px 48px}
+.ver{display:inline-block;font:700 14px ui-monospace,Menlo,monospace;background:var(--ink);color:#fff;border-radius:7px;padding:4px 10px;margin-bottom:10px}
+h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+h2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:26px 0 11px}
+code,.m{font-family:ui-monospace,Menlo,monospace;font-size:.92em}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+.a{color:var(--mute);font-size:22px;padding:0 10px;display:flex;align-items:center}
+.n{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px}
+.n b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14.5px}
+.n span{color:var(--mute);font-size:13px;display:block}
+.s{border-color:var(--spec);background:var(--spec-bg)} .s b{color:var(--spec)}
+.t{border-color:var(--tick);background:var(--tick-bg)} .t b{color:var(--tick)}
+.g{border-color:var(--build);background:var(--build-bg)} .g b{color:var(--build)}
+.r{border-color:var(--bad);background:var(--bad-bg)} .r b{color:var(--bad)}
+.d{border-style:dashed}
+.k{border:2px solid var(--ink)}
+.grid{display:grid;gap:18px}
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p,.card li{font-size:13.5px;color:#3a3a36}
+.card ul{padding-left:18px}
+.pre{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;white-space:pre;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.pre .c{color:var(--mute)} .pre .h{color:var(--tick);font-weight:700} .pre .gg{color:var(--build);font-weight:700}
+.new{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--tick);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:system-ui}
+.foot{margin-top:22px;color:var(--mute);font-size:13px;display:flex;justify-content:space-between}
+</style></head><body><span class="ver">v0.4.0</span><h1>S7 — the finished app matches the mockup</h1><p class="sub">A new last stage of /pspt:spec: fonts, sizes, weights, padding, margins, assets and every interaction, measured against the mockup itself.</p><h2>The mockup is the baseline — measured in Chromium, never by eye</h2>
+<div class="row">
+ <div class="n d"><b>mockup/*.html</b><span>signed off, never edited</span></div><div class="a">→</div>
+ <div class="n k"><b>pnpm fidelity:baseline</b><span>render every screen × state × width</span></div><div class="a">→</div>
+ <div class="n s"><b>tests/fidelity/baseline/</b><span>screenshots · styles.json · assets.json</span></div><div class="a">→</div>
+ <div class="n t"><b>pnpm test:fidelity</b><span>the app, same data, same clock, same fonts</span></div><div class="a">→</div>
+ <div class="n g"><b>pass / red test</b><span>a difference is a defect</span></div>
+</div>
+<h2>Four checks, one per way an app drifts from its mockup</h2>
+<div class="grid" style="grid-template-columns:repeat(4,1fr)">
+ <div class="card"><h3>① Look</h3><p>Screenshot of mockup vs app for every file × state × width from the mockup's own breakpoints.</p><p style="margin-top:6px"><b>Pixel diff ≤ 0.1%</b> — still catches a 1px padding change.</p></div>
+ <div class="card"><h3>② Type & spacing</h3><p><code>getComputedStyle</code> on both sides: font family, size, weight, line-height, letter-spacing, colour; padding, margin, gap, radius, shadow — incl. hover, focus, active, disabled.</p><p style="margin-top:6px"><b>Exact match.</b></p></div>
+ <div class="card"><h3>③ Assets</h3><p>Every image, SVG, icon, font file and favicon the mockup renders, inventoried with its dimensions.</p><p style="margin-top:6px"><b>sha256 identical</b> — or an approved derivative.</p></div>
+ <div class="card"><h3>④ Behaviour</h3><p>Every handler, toggled class and <code>?state=</code> in the mockup → a row → an e2e test against the <b>real API</b>.</p><p style="margin-top:6px"><b>Reached by its real trigger</b>, never <code>?state=</code>.</p></div>
+</div>
+<div class="grid c2" style="margin-top:4px">
+<div><h2>docs/FE/fidelity.md — written by S7</h2>
+<div class="pre">§1  Matrix            file × state × viewport
+§2  Render parity     fixtures, frozen clock, fonts loaded
+§3  Element map       mockup selector → data-testid
+§4  Typography        computed, per text role
+§5  Box model         computed, per interactive state
+§6  Assets            hash + dimensions
+§7  Behaviour         B-01… → real mechanism → test
+§8  Tolerances        0.001 pixels · exact styles · exact hashes
+§9  Deviations        <span class="h">only the ones you approve</span>
+§10 Harness           tests/fidelity/</div></div>
+<div><h2>Enforced, not hoped for</h2>
+<div class="card"><ul>
+<li><b>phases.md</b> gains a final <b>Mockup parity</b> phase — one exit criterion per screen per check</li>
+<li><b>/pspt:build</b> runs a touched screen's fidelity suites in CHECK</li>
+<li><b>/pspt:ticket</b> adds them as an S row</li>
+<li>The baseline moves <b>only when the mockup changes</b> — never regenerated from the app, never to make a run pass</li>
+</ul></div></div>
+</div><div class="foot"><span>meQlause/pspt · v0.4.0</span><span>references/stages/s7-fidelity.md</span></div></body></html>
