@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.4.1](#v041--2026-10-02) | 2026-10-02 | S7 analyses the mockup and defines each pattern once |
 | [0.4.0](#v040--2026-10-02) | 2026-10-02 | S7 — the finished app matches the mockup |
 | [0.3.2](#v032--2026-09-29) | 2026-09-29 | A recommendation for every lorem ipsum |
 | [0.3.1](#v031--2026-09-29) | 2026-09-29 | Never invent frontend copy |
@@ -17,6 +18,34 @@ absolute image links. Versions are listed in
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
 
 ---
+
+## v0.4.1 — 2026-10-02
+
+**S7 analyses the mockup and defines each pattern once.** Text roles, components
+and variants are found by a script and specified once — not one row per
+element. Fewer tokens, one source of truth.
+
+![v0.4.1 — before: one row per element; now: analyse, then define once](releases/v0.4.1.png)
+
+**Changed**
+
+- **Analyse first** — `pnpm fidelity:analyse` renders the mockup and groups
+  elements into text roles (by computed type signature), components (repeated
+  structures) and variants, and reports counts, near-duplicates, one-offs and
+  untokenised values. The assistant reads that summary, never the raw markup.
+- **Define once** — each text role and each component variant × state is
+  written once by token name; every instance inherits it. Measured values live
+  only in generated `baseline/*.json`, never typed into `fidelity.md`.
+- **One mapping convention** — the app renders `data-component`,
+  `data-variant` and `data-role`; generic style specs loop over them, so a
+  drifted instance still fails without a row of its own, and a new screen adds
+  a fixture, not test code.
+- **Behaviour once per component** — screens list only their own flows.
+- **Near-duplicates are your call** — unify (an approved deviation) or keep as
+  a variant; never guessed.
+- **Components before screens** in the Mockup parity phase.
+- `/pspt:build` renders the attributes and runs touched components' suites;
+  S5 names its UI kit the way S7 and the app will.
 
 ## v0.4.0 — 2026-10-02
 
