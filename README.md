@@ -71,14 +71,20 @@ first — re-checking each plan against the current code before building it, one
 ticket to close-out before the next starts. It stops on a stale plan, a red
 test or an unplanned file rather than skipping ahead.
 
-Every pspt skill reads code through [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/)
-(an MCP code index) — see [`references/prerequisites.md`](references/prerequisites.md).
-If it is missing, the skill asks once, then installs it itself (`uv` too, if
-needed) and registers it **for the project**: `.mcp.json`, `.claude/settings.json`,
-and one instruction line in `CLAUDE.md` and `AGENTS.md` — so the next session
-and every teammate get it. Decline and the skill does not start;
-`/pspt:status` only reports. jCodeMunch is free for non-commercial use;
-commercial use needs its own licence.
+Every pspt skill requires two tools — see [`references/prerequisites.md`](references/prerequisites.md):
+
+| | |
+|---|---|
+| [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/) | an MCP code index: every code read goes through it, so skills read symbols, not whole files |
+| [Ponytail](https://github.com/DietrichGebert/ponytail) | a coding-agent plugin: every change is the smallest one that works — but pspt's spec, conventions, lint rules and tests always win |
+
+If either is missing, the skill asks once, then installs it itself (`uv` too, if
+needed) and registers it **for the project** — `.mcp.json` and
+`.claude/settings.json` for Claude Code, `CLAUDE.md`, `AGENTS.md` and
+`.agents/rules/ponytail.md` for every other agent — so the next session and
+every teammate get it. Decline and the skill does not start; `/pspt:status`
+only reports. jCodeMunch is free for non-commercial use (commercial use needs
+its own licence); Ponytail is MIT.
 
 ## What it requires
 

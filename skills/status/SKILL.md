@@ -12,8 +12,8 @@ Read-only. Inspect and report; **write nothing**, ask nothing.
 ## Before anything — prerequisites
 
 Check the tools in [`references/prerequisites.md`](../../references/prerequisites.md)
-§1 and report each one: `✓ jcodemunch` or `✗ jcodemunch — missing; the next
-writing skill will offer to install it`. Read-only: never ask, never install.
+§1 and report each one: `✓ jcodemunch · ✓ ponytail`, or `✗ ponytail — missing; the
+next writing skill will offer to install it`. Read-only: never ask, never install.
 
 ## What to check
 

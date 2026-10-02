@@ -20,9 +20,9 @@ who wrote it.
 ## Before anything — prerequisites
 
 Run [`references/prerequisites.md`](../../references/prerequisites.md): the tools
-every pspt skill needs (jcodemunch) must be present. Missing → ask once, then
+every pspt skill needs (jcodemunch and ponytail) must be present. Missing → ask once, then
 install and register them yourself for the project (`.mcp.json`,
-`.claude/settings.json`, `CLAUDE.md`, `AGENTS.md`); declined → this skill does
+`.claude/settings.json`, `CLAUDE.md`, `AGENTS.md`, `.agents/rules/`); declined → this skill does
 not start. Read code through jcodemunch from here on.
 
 ## Which direction

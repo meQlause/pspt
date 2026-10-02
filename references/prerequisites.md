@@ -7,33 +7,43 @@ every teammate gets it too. A skill never starts without them.
 
 | Tool | What it is for | Licence |
 |---|---|---|
-| [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/) (`jcodemunch-mcp`) | An MCP server that indexes the repository and answers with symbols, importers and blast radius instead of whole files — every code read goes through it, which is what keeps the skills cheap and exact | Free for non-commercial use; commercial use needs a paid jCodeMunch licence |
+| [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/) (`jcodemunch-mcp`) | An MCP server that indexes the repository and answers with symbols, importers and blast radius instead of whole files — every code read goes through it, which keeps the skills cheap and exact | Free for non-commercial use; commercial use needs a paid jCodeMunch licence |
+| [Ponytail](https://github.com/DietrichGebert/ponytail) (`ponytail@ponytail`) | A coding-agent plugin that makes every change the smallest one that works: skip it, reuse what exists, stdlib, native feature, installed dependency, one line — and never cuts validation, error handling, security or accessibility | MIT |
+
+**Precedence.** Ponytail decides *how little code* a change needs; it never
+decides *what* the change must do. Where the two meet, pspt's specification,
+`references/conventions.md`, the lint rules and the tests win: a requirement,
+an acceptance criterion, a guarantee or a test is never trimmed as "not needed".
 
 ---
 
 ## 1. Check
 
-A tool is **present** when either holds:
+| Tool | Present when |
+|---|---|
+| jcodemunch | the session has its tools (`jcodemunch_guide`, or tools under `mcp__jcodemunch__`), or `.mcp.json` has a `jcodemunch` entry, or `claude mcp list` shows it |
+| ponytail | `enabledPlugins` in `.claude/settings.json` has `"ponytail@ponytail": true`, or `claude plugin list` shows `ponytail@ponytail` enabled |
 
-- the session already has its tools — for jcodemunch, a `jcodemunch_guide` tool
-  or tools under an `mcp__jcodemunch__` prefix;
-- it is registered for this project — a `jcodemunch` entry in `.mcp.json` —
-  or for the user — `claude mcp list` shows it.
+And the project tells every agent about them — the lines in §3.4 are in
+`CLAUDE.md` and `AGENTS.md`, and `.agents/rules/ponytail.md` exists. A tool that
+is present with a line or file missing → add just that (§3.4), commit, say so in
+one line, and continue.
 
-Present and its instruction line already in `CLAUDE.md` → nothing to do; go to
-§4. Present but the line is missing → add it (§3 step 4), commit, say so in one
-line, and continue.
+Everything present → go to §4.
 
 ## 2. Ask — once, for everything missing
 
-One `AskUserQuestion`, covering every missing tool and everything installing it
+One `AskUserQuestion` naming every missing tool and everything installing it
 involves, so the answer is one decision:
 
-> **jcodemunch is required by pspt and isn't installed. Install it now?**
-> I'll install `uv` if it is missing, run `uv tool install jcodemunch-mcp`,
-> register it for this project in `.mcp.json` and `.claude/settings.json`, and
-> add one instruction line to `CLAUDE.md` and `AGENTS.md`.
-> Licence: free for non-commercial use; commercial use needs a paid licence.
+> **pspt needs jcodemunch and ponytail, and they aren't installed. Install them now?**
+> I'll install `uv` if needed and `jcodemunch-mcp`, add the ponytail plugin,
+> register both **for this project** (`.mcp.json`, `.claude/settings.json`),
+> and tell other agents too (`CLAUDE.md`, `AGENTS.md`, `.agents/rules/`).
+> Licences: jcodemunch is free for non-commercial use (commercial needs a paid
+> licence); ponytail is MIT.
+
+Name only the tools actually missing.
 
 | Answer | Do |
 |---|---|
@@ -41,76 +51,110 @@ involves, so the answer is one decision:
 | **No** | **Stop.** The skill does not start. Say which tool is missing and that the skill can be run again once it is installed |
 
 `/pspt:status` is read-only: it reports a missing tool and names the skill that
-will offer to install it, and never asks or installs itself.
+will offer to install it; it never asks or installs.
 
 ## 3. Install — yourself, on yes
+
+Merge into every file — never overwrite what is there.
+
+### 3.1 jcodemunch
 
 1. **uv** — `uv --version`. If missing, install it:
    `curl -LsSf https://astral.sh/uv/install.sh | sh`
    (Windows: `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`),
    then confirm `uv --version`. Never fall back to a bare `pip install` into
    system Python.
-2. **The tool** — `uv tool install jcodemunch-mcp`, then confirm
-   `jcodemunch-mcp --version`.
-3. **Register it for the project** — merge, never overwrite what is there.
-   Prefer the CLI, which merges into an existing `.mcp.json` for you:
+2. `uv tool install jcodemunch-mcp`, then confirm `jcodemunch-mcp --version`.
+3. Register it for the project — the CLI merges into `.mcp.json`:
 
    ```
    claude mcp add -s project jcodemunch -- uvx jcodemunch-mcp
    ```
 
-   Without the CLI, write the same entry `.mcp.json` gets from it:
+   Without the CLI, write the same entry it writes:
 
    ```json
-   {
-     "mcpServers": {
-       "jcodemunch": { "type": "stdio", "command": "uvx", "args": ["jcodemunch-mcp"], "env": {} }
-     }
-   }
+   { "mcpServers": { "jcodemunch": { "type": "stdio", "command": "uvx", "args": ["jcodemunch-mcp"], "env": {} } } }
    ```
 
-   `uvx` runs it from uv's cache, so a teammate with `uv` needs no separate
-   install step.
-
-   Then `.claude/settings.json` — add `"jcodemunch"` to
-   `enabledMcpjsonServers` ("approved MCP servers from .mcp.json"), so the
-   project's server loads without an approval prompt:
+   Then approve it in `.claude/settings.json`, so it loads without a prompt:
 
    ```json
    { "enabledMcpjsonServers": ["jcodemunch"] }
    ```
 
-4. **Tell every agent to use it** — add this line once, under a `## Tools`
-   heading, to `CLAUDE.md` (Claude Code) and to `AGENTS.md` (other coding
-   agents), creating either file if absent. Never duplicate the line, never
-   touch anything else in the file:
+### 3.2 ponytail
 
-   ```markdown
-   Call the jcodemunch_guide tool and strictly follow its instructions.
-   ```
-
-5. **Commit** those files alone — `git status --porcelain` first, explicit
-   paths, no push, SR-6 (no co-author trailer):
+1. `node --version` — ponytail's two lifecycle hooks need Node on the PATH. If
+   it is missing, say so; the plugin still installs, its always-on activation
+   just stays quiet until Node is there.
+2. Add its marketplace and install it for the project:
 
    ```
-   chore(tooling): require jcodemunch for this project
-
-   pspt reads code through the jcodemunch MCP server. Registered for the
-   project in .mcp.json and approved in .claude/settings.json; CLAUDE.md and
-   AGENTS.md tell every agent to follow jcodemunch_guide.
+   claude plugin marketplace add DietrichGebert/ponytail --scope project
+   claude plugin install ponytail@ponytail --scope project
    ```
 
-6. **Reload.** An MCP server registered mid-session is loaded by the **next**
-   session. If its tools are not visible yet, say so: ask the user to restart
-   Claude Code (or run `/mcp` to reconnect) and to run the same skill again,
-   then stop. Nothing the skill would have written exists yet, so nothing is
-   lost.
+   That writes `.claude/settings.json`:
 
-## 4. Use it
+   ```json
+   {
+     "extraKnownMarketplaces": {
+       "ponytail": { "source": { "source": "github", "repo": "DietrichGebert/ponytail" } }
+     },
+     "enabledPlugins": { "ponytail@ponytail": true }
+   }
+   ```
 
-Call `jcodemunch_guide` and follow it; index the working directory
-(`index_folder`) before the skill's first code read. In a pspt project the
-`backend/` and `frontend/` submodules are inside the working directory, so one
-index covers both. Read code through its tools — `search_symbols`,
-`get_symbol_source`, `find_importers`, `get_blast_radius`, `check_edit_safe` —
-and read a whole file only when jcodemunch returns nothing for it, saying so.
+   Teammates who open the repository are offered the same plugin.
+
+### 3.3 Other agents — `.agents/`
+
+Copy ponytail's agent ruleset from the version the CLI just installed —
+`~/.claude/plugins/cache/ponytail/ponytail/<version>/.agents/rules/ponytail.md`
+— to `.agents/rules/ponytail.md`, unchanged, and add one line above it:
+
+```markdown
+<!-- ponytail <version> · MIT · https://github.com/DietrichGebert/ponytail — copied by pspt from the installed plugin; when the plugin updates, re-copy it -->
+```
+
+### 3.4 Tell every agent
+
+Under a `## Tools` heading in `CLAUDE.md` (Claude Code) and `AGENTS.md` (other
+coding agents) — create either file if absent, add each line once, never touch
+anything else:
+
+```markdown
+Call the jcodemunch_guide tool and strictly follow its instructions.
+Follow ponytail (.agents/rules/ponytail.md): the smallest change that works — but pspt's spec, conventions, lint rules and tests always win.
+```
+
+### 3.5 Commit and reload
+
+Commit those files alone — `git status --porcelain` first, explicit paths, no
+push, SR-6 (no co-author trailer):
+
+```
+chore(tooling): require jcodemunch and ponytail for this project
+
+pspt reads code through the jcodemunch MCP server and writes the smallest
+change that works with ponytail. Both are registered for the project in
+.mcp.json and .claude/settings.json; CLAUDE.md, AGENTS.md and
+.agents/rules/ponytail.md tell every agent to use them.
+```
+
+An MCP server or plugin installed mid-session loads in the **next** session.
+If their tools or hooks are not active yet, say so — ask the user to restart
+Claude Code (or `/mcp` and `/plugin` to reload) and run the same skill again —
+and stop. Nothing the skill would have written exists yet, so nothing is lost.
+
+## 4. Use them
+
+- **jcodemunch** — call `jcodemunch_guide` and follow it; index the working
+  directory (`index_folder`) before the skill's first code read. In a pspt
+  project the `backend/` and `frontend/` submodules are inside the working
+  directory, so one index covers both. Read code through `search_symbols`,
+  `get_symbol_source`, `find_importers`, `get_blast_radius`, `check_edit_safe`;
+  read a whole file only when jcodemunch returns nothing for it, and say so.
+- **ponytail** — always on once installed: before writing code, stop at the
+  first rung that holds. pspt's precedence rule above decides every conflict.
