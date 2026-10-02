@@ -312,6 +312,44 @@ service-and-rules glob and leave `*.schema.ts` on the default.
 
 ---
 
+## Disable directives
+
+A rule may be switched off for one line or one block — **never silently**:
+
+```js
+'@eslint-community/eslint-comments/require-description': ['error', { ignore: ['eslint-enable'] }],
+'@eslint-community/eslint-comments/no-unlimited-disable': 'error',
+'@eslint-community/eslint-comments/disable-enable-pair': ['error', { allowWholeFile: false }],
+'@eslint-community/eslint-comments/no-duplicate-disable': 'error',
+'@eslint-community/eslint-comments/no-aggregating-enable': 'error',
+'@typescript-eslint/ban-ts-comment': ['error', {
+  'ts-expect-error': 'allow-with-description', 'ts-ignore': true, 'ts-nocheck': true,
+  'ts-check': false, minimumDescriptionLength: 10,
+}],
+// plus linterOptions: { reportUnusedDisableDirectives: 'error' }
+```
+
+```ts
+// ✗ no rule named, no reason
+// eslint-disable-next-line
+// ✗ no reason
+// eslint-disable-next-line no-magic-numbers
+
+// ✓ the rule, then the reason after --
+// eslint-disable-next-line no-magic-numbers -- the vendor API encodes "settled" as status 7
+if (status === 7) { … }
+
+// ✓ TypeScript: @ts-expect-error with a description; @ts-ignore is never allowed
+// @ts-expect-error -- the vendor typings declare a number, the API sends a string
+```
+
+A blanket disable, a disable without a reason, a block disable never
+re-enabled, and a disable that suppresses nothing are each an error. A disable
+is the last resort, not the first — but it never blocks work: it is allowed with
+its reason and **always reported** to the user (`references/conventions.md` §10).
+
+---
+
 ## 12. `warn` is not advisory
 
 `max-params`, `max-statements`, `no-negated-condition`,

@@ -8,6 +8,7 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unusedImports from 'eslint-plugin-unused-imports';
+import eslintComments from '@eslint-community/eslint-plugin-eslint-comments';
 import prettier from 'eslint-config-prettier';
 
 const SOURCE = ['**/*.ts'];
@@ -29,8 +30,34 @@ export default [
   sonarjs.configs.recommended,
   {
     files: SOURCE,
-    plugins: { 'unused-imports': unusedImports },
+    linterOptions: { reportUnusedDisableDirectives: 'error' },
+    plugins: {
+      'unused-imports': unusedImports,
+      '@eslint-community/eslint-comments': eslintComments,
+    },
     rules: {
+      // Disable directives — allowed, never silent: name the rule and give a reason
+      // after `--`. A blanket, unpaired or unused disable is itself an error
+      // (conventions §10).
+      '@eslint-community/eslint-comments/require-description': [
+        'error',
+        { ignore: ['eslint-enable'] },
+      ],
+      '@eslint-community/eslint-comments/no-unlimited-disable': 'error',
+      '@eslint-community/eslint-comments/disable-enable-pair': ['error', { allowWholeFile: false }],
+      '@eslint-community/eslint-comments/no-duplicate-disable': 'error',
+      '@eslint-community/eslint-comments/no-aggregating-enable': 'error',
+      '@typescript-eslint/ban-ts-comment': [
+        'error',
+        {
+          'ts-expect-error': 'allow-with-description',
+          'ts-ignore': true,
+          'ts-nocheck': true,
+          'ts-check': false,
+          minimumDescriptionLength: 10,
+        },
+      ],
+
       // §1 Size
       'max-lines-per-function': ['error', { max: 70, skipBlankLines: true, skipComments: true }],
       'max-lines': ['error', { max: 450, skipBlankLines: true, skipComments: true }],

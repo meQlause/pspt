@@ -16,7 +16,7 @@ try {
 }
 const actual = Object.fromEntries(JSON.parse(raw).map((file) => [
   file.filePath.replace(`${process.cwd()}/`, ''),
-  [...new Set(file.messages.map((msg) => msg.ruleId))].sort(),
+  [...new Set(file.messages.map((msg) => msg.ruleId ?? 'unused-disable-directive'))].sort(),
 ]));
 let failed = false;
 for (const [file, rules] of Object.entries(expected)) {

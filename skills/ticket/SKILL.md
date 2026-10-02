@@ -694,6 +694,10 @@ staged (or unstaged) and stop.
 - **Never apply a copy recommendation the user has not approved.** "Approve
   COPY-007" (or an edited version) is the only trigger; the text is then applied
   verbatim and committed (conventions §9.1).
+- **Never disable a rule silently.** A disable is allowed under
+  `references/conventions.md` §10 — one rule, a reason — and it never blocks a
+  phase; it is reported in the phase line, the close-out report and the
+  commit body.
 - **Never close with an unticked AC**, an unticked box in `phase.md`, or an
   empty `Result`.
 - **Never tick a box in a batch, ahead of the work, or for a test that was not

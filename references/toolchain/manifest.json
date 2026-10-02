@@ -6,7 +6,7 @@
       "files": {
         "eslint.config.mjs": {
           "source": "references/toolchain/express/eslint.config.mjs",
-          "sha256": "95b5e04175cd8ca02b1fbd7767c40c23dcc1a1d4d8cef1f90dc634a9713aad4c"
+          "sha256": "bea97525b2de56ed2ba03f4efbe2f3c3c514faba4ab3c11cb4f63785e846e6a6"
         },
         "knip.json": {
           "source": "references/toolchain/express/knip.json",
@@ -44,7 +44,8 @@
         "knip": "6.39.0",
         "husky": "9.1.7",
         "@commitlint/cli": "21.2.3",
-        "@commitlint/config-conventional": "21.2.3"
+        "@commitlint/config-conventional": "21.2.3",
+        "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
       },
       "scripts": {
         "format": "prettier --write .",
@@ -62,7 +63,7 @@
       "files": {
         "eslint.config.mjs": {
           "source": "references/toolchain/express-js/eslint.config.mjs",
-          "sha256": "c64d2c7c951c48cf37098b8773b20df0b073ead1678fd8cdf8e887f5ed3590d9"
+          "sha256": "08d3092f6830329e8848bed3557411b6a6d4c0538b9da40e6d16055f5d5dec57"
         },
         "knip.json": {
           "source": "references/toolchain/express-js/knip.json",
@@ -100,7 +101,8 @@
         "husky": "9.1.7",
         "@commitlint/cli": "21.2.3",
         "@commitlint/config-conventional": "21.2.3",
-        "globals": "17.13.0"
+        "globals": "17.13.0",
+        "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
       },
       "scripts": {
         "format": "prettier --write .",
@@ -117,7 +119,7 @@
       "files": {
         "eslint.config.mjs": {
           "source": "references/toolchain/nestjs/eslint.config.mjs",
-          "sha256": "cc0c5bb9a1a5491f05ac8e76a6964940a20d7cbc0cb63d47fbfeea671eeb5526"
+          "sha256": "a926ea0ef4cf655b6cb91125c2ce66d44a055fb719bde1804d6ac0839780a0b1"
         },
         "knip.json": {
           "source": "references/toolchain/nestjs/knip.json",
@@ -155,7 +157,8 @@
         "knip": "6.39.0",
         "husky": "9.1.7",
         "@commitlint/cli": "21.2.3",
-        "@commitlint/config-conventional": "21.2.3"
+        "@commitlint/config-conventional": "21.2.3",
+        "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
       },
       "scripts": {
         "format": "prettier --write .",
@@ -173,7 +176,7 @@
       "files": {
         "eslint.config.mjs": {
           "source": "references/toolchain/react/eslint.config.mjs",
-          "sha256": "086b5a9e6bbdc9cf3ccea243301667c0864c2e58b0fba944ba058e51486b7d30"
+          "sha256": "24a784da34d81c7b7cff5c04a7922f0e797399f03562a8ebbb3e2ffdd5df0432"
         },
         "knip.json": {
           "source": "references/toolchain/react/knip.json",
@@ -215,7 +218,8 @@
         "knip": "6.39.0",
         "husky": "9.1.7",
         "@commitlint/cli": "21.2.3",
-        "@commitlint/config-conventional": "21.2.3"
+        "@commitlint/config-conventional": "21.2.3",
+        "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
       },
       "scripts": {
         "format": "prettier --write .",
@@ -233,7 +237,7 @@
       "files": {
         "eslint.config.mjs": {
           "source": "references/toolchain/react-js/eslint.config.mjs",
-          "sha256": "7ace254b7b4a80182ba26b4ed60b66decdac9d10654fd4c1eac3c7d8e98ea940"
+          "sha256": "f5d94143f1adb32d9dc90c1030caf126fa84d4f5d8f34a84ac03399614de8d4f"
         },
         "knip.json": {
           "source": "references/toolchain/react-js/knip.json",
@@ -275,7 +279,8 @@
         "husky": "9.1.7",
         "@commitlint/cli": "21.2.3",
         "@commitlint/config-conventional": "21.2.3",
-        "globals": "17.13.0"
+        "globals": "17.13.0",
+        "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
       },
       "scripts": {
         "format": "prettier --write .",
@@ -292,7 +297,7 @@
       "files": {
         "eslint.config.mjs": {
           "source": "references/toolchain/nextjs/eslint.config.mjs",
-          "sha256": "b1102485cf373b2f097701338175b3d6fab02579ed2053cc7f7533d6a43f2ba2"
+          "sha256": "97e1dd9d6a80501f2ab090ddab11b225d446e478ee2d1e9e875643ece926184b"
         },
         "knip.json": {
           "source": "references/toolchain/nextjs/knip.json",
@@ -330,7 +335,8 @@
         "knip": "6.39.0",
         "husky": "9.1.7",
         "@commitlint/cli": "21.2.3",
-        "@commitlint/config-conventional": "21.2.3"
+        "@commitlint/config-conventional": "21.2.3",
+        "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
       },
       "scripts": {
         "format": "prettier --write .",
@@ -348,7 +354,7 @@
       "files": {
         "eslint.config.mjs": {
           "source": "references/toolchain/nextjs-js/eslint.config.mjs",
-          "sha256": "ccef87ca46cc989745e366ce48f06e5caab7d68aa1fbddb550c9b36040d73001"
+          "sha256": "9c785af7038d99a20da83d4400697545538ba5993c16d08e448163cd0ac4a25e"
         },
         "knip.json": {
           "source": "references/toolchain/nextjs-js/knip.json",
@@ -387,7 +393,8 @@
         "husky": "9.1.7",
         "@commitlint/cli": "21.2.3",
         "@commitlint/config-conventional": "21.2.3",
-        "globals": "17.13.0"
+        "globals": "17.13.0",
+        "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
       },
       "scripts": {
         "format": "prettier --write .",

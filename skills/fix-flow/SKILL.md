@@ -176,6 +176,7 @@ backend/   express · JavaScript   ✗ drifted → fixed
   autofix   prettier 41 files · eslint --fix 63 findings
   check     ✗ 118 left — id-length 52 · no-magic-numbers 31 · sonarjs/no-duplicate-string 14 · …
             knip: 3 unused files · 9 unused exports · 2 unused dependencies
+  disables  4 already in the code — 3 with reasons, 1 without (lint now rejects it)
   commit    not committed — tree is red · /pspt:fix-flow-proceed offered
   note      pspt project: the spec requires TypeScript — migration belongs in a ticket
 
@@ -192,8 +193,11 @@ frontend/  react · TypeScript     ✓ matches pspt react exactly — nothing to
   ship. Report it and leave that package alone.
 - **Never change a project's language** — no JavaScript → TypeScript conversion,
   no `tsconfig.json` edits, no deleted source files. Those are tickets.
-- **Never edit code beyond the safe autofixes**, never add `eslint-disable`,
-  never loosen a config to make `check` pass.
+- **Never edit code beyond the safe autofixes**, and never loosen a config to
+  make `check` pass. This skill adds no disable directives — that is
+  `/pspt:fix-flow-proceed`'s job, under conventions §10 — but its report lists
+  the ones already in the package (`findings.mjs`), so none hides behind a
+  newly installed toolchain.
 - **Never remove a dependency that is not a lint, format or hook tool.**
 - **Never commit a red tree, never `--no-verify`, never push.**
 - **SR-6:** no `Co-Authored-By` trailer, no tool attribution — the commit-msg

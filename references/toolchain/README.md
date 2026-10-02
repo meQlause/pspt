@@ -99,5 +99,13 @@ project code. JavaScript sets declare Jest and Vitest globals for `tests/`.
 first — `--file <path>` re-checks one file. The loop reads that summary, never
 raw tool output.
 
+**Disable directives** are allowed and never silent (`references/conventions.md`
+§10). Every ESLint config enforces it with `@eslint-community/eslint-comments`
+— a disable must name its rule and give a reason after `--`; blanket, unpaired
+and unused disables are errors — and the TypeScript sets allow
+`@ts-expect-error` only with a description and never `@ts-ignore`. `findings.mjs`
+lists every directive in the package with its reason on every run. Each case is
+a `disables` fixture in `verify/`.
+
 After changing any file here: format it with `shared/.prettierrc.json`,
 re-run `verify/`, then regenerate `manifest.json`.

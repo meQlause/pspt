@@ -194,7 +194,8 @@ either direction. **`/pspt:fix-flow`** is the repair: it detects each package's
 stack and language, says "nothing to fix" when the toolchain already matches,
 and otherwise installs pspt's version, applies the safe autofixes and reports
 what is left. **`/pspt:fix-flow-proceed`** then clears what is left: one file
-per iteration, tests first, behaviour unchanged, never an `eslint-disable` —
+per iteration, tests first, behaviour unchanged; a disable only with its rule
+and reason, and always reported —
 until the whole check and the test suite are green, then commits. The plugin never authors a tool config in your project, so
 there is one source and nothing to drift. `toolchain/verify/` proves each
 ESLint config fires every rule; see

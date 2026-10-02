@@ -243,9 +243,11 @@ service reading the clock directly, a `TODO` left in the source.
 
 **If check surfaces a finding outside the files you touched** — a file added by
 an earlier iteration, a config change from someone else's session, an untracked
-file that snuck in — do **not** ignore it and do **not** paper over it with an
-`eslint-disable` on someone else's code. Fix it in place (or revert it) so the
-whole tree is green. A submodule that is red anywhere cannot be committed,
+file that snuck in — do **not** ignore it and do **not** paper over it with a
+disable you have not investigated. Fix it in place (or revert it) so the whole
+tree is green. A disable is allowed only as `references/conventions.md` §10
+says: one rule, a reason, and reported — in the Step 7 report and as a
+`disables:` trailer in the commit. A submodule that is red anywhere cannot be committed,
 whether you introduced the red or found it there.
 
 ## Step 7 — Close it
@@ -317,6 +319,7 @@ Message template (identical in the submodule and the parent):
 spec: <document> §<section>
 phase: <phase>
 closes: <REG-nnn, if any>
+disables: <file:line rule — reason, one per directive added, if any>
 ```
 
 `<type>` is `feat` for a new behaviour, `fix` for a defect closed by a

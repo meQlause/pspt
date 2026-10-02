@@ -9,6 +9,12 @@
       "sonarjs/no-collapsible-if",
       "sonarjs/no-nested-conditional"
     ],
+    "src/features/bookings/disables.ts": [
+      "@eslint-community/eslint-comments/no-unlimited-disable",
+      "@eslint-community/eslint-comments/require-description",
+      "@typescript-eslint/ban-ts-comment",
+      "unused-disable-directive"
+    ],
     "src/features/bookings/long.ts": [
       "max-lines-per-function",
       "max-statements"
@@ -54,6 +60,12 @@
       "sonarjs/no-collapsible-if",
       "sonarjs/no-nested-conditional"
     ],
+    "src/features/bookings/disables.ts": [
+      "@eslint-community/eslint-comments/no-unlimited-disable",
+      "@eslint-community/eslint-comments/require-description",
+      "@typescript-eslint/ban-ts-comment",
+      "unused-disable-directive"
+    ],
     "src/features/bookings/long.ts": [
       "max-lines-per-function",
       "max-statements"
@@ -96,6 +108,12 @@
       "sonarjs/no-nested-conditional"
     ],
     "src/features/review/booking.schema.ts": [],
+    "src/features/review/disables.ts": [
+      "@eslint-community/eslint-comments/no-unlimited-disable",
+      "@eslint-community/eslint-comments/require-description",
+      "@typescript-eslint/ban-ts-comment",
+      "unused-disable-directive"
+    ],
     "src/features/review/values.ts": [
       "curly",
       "id-length",
@@ -115,6 +133,12 @@
       "sonarjs/no-nested-conditional"
     ],
     "src/features/review/booking.schema.ts": [],
+    "src/features/review/disables.ts": [
+      "@eslint-community/eslint-comments/no-unlimited-disable",
+      "@eslint-community/eslint-comments/require-description",
+      "@typescript-eslint/ban-ts-comment",
+      "unused-disable-directive"
+    ],
     "src/features/review/values.ts": [
       "curly",
       "id-length",
@@ -135,6 +159,11 @@
       "no-negated-condition",
       "sonarjs/no-collapsible-if",
       "sonarjs/no-nested-conditional"
+    ],
+    "src/features/bookings/disables.js": [
+      "@eslint-community/eslint-comments/no-unlimited-disable",
+      "@eslint-community/eslint-comments/require-description",
+      "unused-disable-directive"
     ],
     "src/features/bookings/long.js": [
       "max-lines-per-function",
@@ -177,6 +206,11 @@
       "sonarjs/no-nested-conditional"
     ],
     "src/features/review/booking.schema.js": [],
+    "src/features/review/disables.js": [
+      "@eslint-community/eslint-comments/no-unlimited-disable",
+      "@eslint-community/eslint-comments/require-description",
+      "unused-disable-directive"
+    ],
     "src/features/review/values.js": [
       "curly",
       "id-length",
@@ -196,6 +230,11 @@
       "sonarjs/no-nested-conditional"
     ],
     "src/features/review/booking.schema.js": [],
+    "src/features/review/disables.js": [
+      "@eslint-community/eslint-comments/no-unlimited-disable",
+      "@eslint-community/eslint-comments/require-description",
+      "unused-disable-directive"
+    ],
     "src/features/review/values.js": [
       "curly",
       "id-length",

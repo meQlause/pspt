@@ -68,6 +68,28 @@ Each iteration:
    green, or the change is reverted and redone.
 5. Append the batch to the progress log, then print:
    `✓ 14/23 · pricing.rules.js — 5 fixed · tests green · 104 → 99 left`
+   and one line per disable added in this batch:
+   `⚑ disabled no-magic-numbers at pricing.rules.js:14 — the vendor API encodes "settled" as 7`
+
+## When a finding cannot be fixed — disable it, with a reason
+
+Some findings are right in general and wrong for one line: a status code a
+vendor protocol defines, a third-party type that lies. Then — and only after a
+real fix was tried — disable that one rule on that one line, with the reason,
+per `references/conventions.md` §10:
+
+```js
+// eslint-disable-next-line no-magic-numbers -- the vendor API encodes "settled" as status 7
+if (status === 7) {
+```
+
+**This never stops the loop** — no question, no pause. It is **always
+reported**: the `⚑` line above, the final report, and the commit body. The
+toolchain rejects a disable that names no rule, gives no reason, or suppresses
+nothing, so a lazy disable fails `check` like any other finding.
+
+`findings.mjs` lists every disable in the package on every run — added by this
+loop or already there — so none can hide.
 
 Re-read the queue every few iterations: fixing one file can clear or create a
 finding in another (an export that becomes unused, a renamed import).
@@ -79,7 +101,7 @@ finding in another (an export that becomes unused, a renamed import).
 | Finding | Fix |
 |---|---|
 | Failing test | Find out which side is wrong. A code defect is fixed in the code. A test asserting outdated behaviour is a **question for the user**, never an edit to make it pass |
-| Type error | Type it correctly. Never `any`, `@ts-ignore`, `@ts-expect-error` or `as unknown as` |
+| Type error | Type it correctly. Never `any`, `as unknown as` or `@ts-ignore`; `@ts-expect-error -- <reason>` only as a disable (below) |
 | `id-length` | Rename to what the value is (`hours`, not `h`; `court`, not `c`), everywhere it is used |
 | `no-magic-numbers` | Extract a named `const` whose name says what the number means (`HOURLY_RATE_IDR`, `MAX_PAGE_SIZE`). If the meaning cannot be read from the code, **ask** — a wrong name is worse than a number |
 | `sonarjs/no-duplicate-string` | One named `const` per repeated literal, in that file |
@@ -127,7 +149,9 @@ explicit paths, never `git add -A`, no push:
 | `refactor(<area>): satisfy pspt lint rules` | the lint and type fixes, one commit per feature folder |
 | `chore(deps): remove unused code and dependencies` | the knip fixes, including newly listed dependencies |
 
-Each body lists the files and the rules cleared. Every hook run sees the green
+Each body lists the files and the rules cleared, and ends with one
+`disables:` trailer per directive the loop added —
+`disables: src/payments/status.js:14 no-magic-numbers — vendor status code`. Every hook run sees the green
 working tree, so each commit passes; the final one is the state that was proven
 green from scratch in Step 2's last gate. Then delete the progress log.
 
@@ -144,6 +168,8 @@ fix-flow-proceed · backend/ (express-js)
   lint    104 → 0   id-length 52 · no-magic-numbers 31 · no-duplicate-string 14 · …
   knip    14 → 0    3 files deleted · 9 exports removed · 2 dependencies removed
   asked   2 — HOURLY_RATE_IDR meaning (user) · legacy/export.js deleted (user)
+  ⚑ disabled 1 — payments/status.js:14 no-magic-numbers — the vendor API encodes "settled" as 7
+            (project total: 3 disables, all with reasons — see findings.mjs)
   check   ✓ green · tests ✓ green
   commits 6 — 4f2a9c1 … e81d07b
 ```
@@ -152,9 +178,12 @@ fix-flow-proceed · backend/ (express-js)
 
 ## Never
 
-- **Never lower the bar** — no `eslint-disable`, no `@ts-ignore` /
-  `@ts-expect-error`, no `any`, no skipped, deleted or weakened test, no edit
-  to a toolchain file. `/pspt:fix-flow` owns those files.
+- **Never lower the bar** — no skipped, deleted or weakened test, no `any`,
+  no `@ts-ignore`, no edit to a toolchain file (`/pspt:fix-flow` owns those).
+  A disable is not lowering the bar only when it follows conventions §10:
+  one rule, one line or block, a reason — and reported.
+- **Never disable silently.** Every disable the loop adds appears in its `⚑`
+  line, the report and the commit body.
 - **Never change behaviour** while fixing a finding. A behaviour change is a
   failing test fixed on purpose, with its own commit — or a ticket.
 - **Never batch many files into one iteration**, and never one rule across the

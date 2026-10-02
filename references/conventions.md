@@ -280,3 +280,40 @@ This is about **written copy only**. Data values — names, prices, dates,
 references — come from the API, and fixtures and examples use realistic values
 per `house-style.md`. A price is `Rp 399.600`, never lorem ipsum; a heading
 nobody wrote is lorem ipsum, never a guess.
+
+## 10. Disable directives — allowed, never silent
+
+A lint rule may be switched off for one line or one block, and so may a
+TypeScript error. It never blocks work. It is never silent.
+
+| Allowed | Never |
+|---|---|
+| `// eslint-disable-next-line <rule> -- <reason>` | a blanket disable that names no rule |
+| `/* eslint-disable <rule> -- <reason> */ … /* eslint-enable <rule> */` | a disable with no reason |
+| `// @ts-expect-error -- <reason>` (TypeScript) | a block disable never re-enabled, or a whole-file disable |
+| | a disable that suppresses nothing — delete it |
+| | `@ts-ignore` or `@ts-nocheck` |
+
+The toolchain enforces every row (`references/lint/<stack>.md` §Disable
+directives): a disable that breaks one of them is itself a lint error.
+
+**When to use one.** Last resort, after a real fix was tried: the rule is
+wrong for this exact line (a protocol constant a vendor defines, a third-party
+type that lies), and the reason can say why in one sentence a reviewer can
+check. "It was faster" is not a reason.
+
+**Never blocking.** A skill that needs a disable — `/pspt:build`,
+`/pspt:ticket`, `/pspt:fix-flow-proceed` — adds it with its reason and carries
+on. It does not stop to ask.
+
+**Always reported.** Every skill that adds or finds one tells the user:
+
+| Where | What |
+|---|---|
+| The iteration's progress line | `⚑ disabled no-magic-numbers at pricing.rules.ts:14 — vendor status code` |
+| The skill's final report | every disable it added, and the project total |
+| The commit body | a `disables:` trailer per directive added — file, line, rule, reason |
+| `references/toolchain/findings.mjs` | lists every directive in the package with its reason, on every run |
+
+> A disable with a reason is a decision someone can review. A disable without
+> one is a defect someone will copy.

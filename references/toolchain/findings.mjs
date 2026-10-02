@@ -10,7 +10,7 @@
 //
 // Exit 0 when nothing is left, 1 when findings remain.
 import { execFileSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
 const args = process.argv.slice(2);
@@ -48,7 +48,7 @@ if (existsSync(join(pkgDir, 'tsconfig.json')) && existsSync(bin('tsc'))) {
 const lintTargets = onlyFile ? [onlyFile] : ['.'];
 const lintOut = run(bin('eslint'), [...lintTargets, '-f', 'json']);
 for (const file of lintOut.trim() ? JSON.parse(lintOut) : []) {
-  for (const message of file.messages) add(file.filePath, 'lint', message.ruleId ?? 'parse-error', message.line);
+  for (const message of file.messages) add(file.filePath, 'lint', message.ruleId ?? (/disable directive/i.test(message.message) ? 'unused-disable-directive' : 'parse-error'), message.line);
 }
 
 // knip — whole-project by nature, so only in the full queue
@@ -63,6 +63,30 @@ if (!onlyFile && existsSync(bin('knip'))) {
   }
 }
 
+// disables — every directive is reported, never counted as a finding: it is
+// allowed with its reason (conventions §10), and the user is always told
+const DIRECTIVE = /(?:\/\/|\/\*)\s*(eslint-disable(?:-next-line|-line)?|@ts-expect-error|@ts-ignore|@ts-nocheck)\b([^\n*]*)/;
+function sourceFiles(dir) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    if (entry.name === 'node_modules' || entry.name.startsWith('.')) return [];
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) return sourceFiles(full);
+    return /\.(c|m)?[jt]sx?$/.test(entry.name) ? [full] : [];
+  });
+}
+const disables = [];
+for (const file of [...sourceFiles(join(pkgDir, 'src')), ...sourceFiles(join(pkgDir, 'tests'))]) {
+  const rel = relative(pkgDir, file);
+  if (onlyFile && rel !== onlyFile) continue;
+  readFileSync(file, 'utf8').split('\n').forEach((text, index) => {
+    const match = DIRECTIVE.exec(text);
+    if (!match) return;
+    const [rules, reason] = match[2].split('--').map((part) => part.trim());
+    disables.push({ file: rel, line: index + 1, directive: match[1], rules: rules || (match[1].startsWith('@ts-') ? '' : 'ALL RULES'), reason: reason ?? (match[1].startsWith('@ts-') ? rules : '') });
+  });
+}
+
 const GATE_ORDER = { types: 0, lint: 1, knip: 2 };
 const files = [...queue.entries()]
   .map(([file, items]) => ({ file, count: items.length, gate: Math.min(...items.map((item) => GATE_ORDER[item.gate])), items }))
@@ -70,7 +94,7 @@ const files = [...queue.entries()]
 const total = files.reduce((sum, entry) => sum + entry.count, 0);
 
 if (args.includes('--json')) {
-  console.log(JSON.stringify({ total, files }, null, 2));
+  console.log(JSON.stringify({ total, files, disables }, null, 2));
 } else if (total === 0) {
   console.log(onlyFile ? `${onlyFile}: clean` : 'queue empty — types, lint and knip are clean');
 } else {
@@ -81,6 +105,13 @@ if (args.includes('--json')) {
     for (const item of entry.items) rules.set(item.rule, [...(rules.get(item.rule) ?? []), item.line]);
     const summary = [...rules.entries()].map(([rule, lines]) => `${rule} ×${lines.length} (${lines.filter(Boolean).slice(0, 4).join(',') || '—'})`).join(' · ');
     console.log(`  ${entry.file}  ${summary}`);
+  }
+}
+if (!args.includes('--json') && disables.length) {
+  console.log(`disables ${disables.length} — allowed with a reason, always reported (conventions §10)`);
+  for (const item of disables) {
+    const what = item.directive.startsWith('@ts-') ? item.directive : item.rules;
+    console.log(`  ${item.file}:${item.line}  ${what} — ${item.reason || 'NO REASON (lint rejects this)'}`);
   }
 }
 process.exit(total === 0 ? 0 : 1);
