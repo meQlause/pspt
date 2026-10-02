@@ -17,11 +17,14 @@ and **when to stop**.
 
 ---
 
-## Before anything — jcodemunch
+## Before anything — prerequisites
 
-Same prerequisite as `/pspt:ticket` §Before anything: check for it, ask before
-installing it, stop if declined. The plan re-check below and every phase use
-its tools. Index the working directory once, before the first ticket.
+Run [`references/prerequisites.md`](../../references/prerequisites.md): the tools
+every pspt skill needs (jcodemunch) must be present. Missing → ask once, then
+install and register them yourself for the project (`.mcp.json`,
+`.claude/settings.json`, `CLAUDE.md`, `AGENTS.md`); declined → this skill does
+not start. Read code through jcodemunch from here on; index the working directory once,
+before the first ticket.
 
 ## Step 1 — Build the queue
 

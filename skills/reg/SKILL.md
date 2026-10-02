@@ -13,6 +13,14 @@ A regression test is **never deleted**.
 
 ---
 
+## Before anything — prerequisites
+
+Run [`references/prerequisites.md`](../../references/prerequisites.md): the tools
+every pspt skill needs (jcodemunch) must be present. Missing → ask once, then
+install and register them yourself for the project (`.mcp.json`,
+`.claude/settings.json`, `CLAUDE.md`, `AGENTS.md`); declined → this skill does
+not start. Read code through jcodemunch from here on.
+
 ## Reserving one
 
 Take the next free number in sequence. Ask for anything you cannot infer: what

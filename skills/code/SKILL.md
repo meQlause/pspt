@@ -11,6 +11,14 @@ change, or it is not done.
 
 ---
 
+## Before anything — prerequisites
+
+Run [`references/prerequisites.md`](../../references/prerequisites.md): the tools
+every pspt skill needs (jcodemunch) must be present. Missing → ask once, then
+install and register them yourself for the project (`.mcp.json`,
+`.claude/settings.json`, `CLAUDE.md`, `AGENTS.md`); declined → this skill does
+not start. Read code through jcodemunch from here on.
+
 ## Adding a code
 
 Ask for what you cannot infer: the condition that raises it, the HTTP status, the

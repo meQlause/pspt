@@ -29,6 +29,14 @@ improvise. The tables below say what it does, so its output can be read.
 
 ---
 
+## Before anything — prerequisites
+
+Run [`references/prerequisites.md`](../../references/prerequisites.md): the tools
+every pspt skill needs (jcodemunch) must be present. Missing → ask once, then
+install and register them yourself for the project (`.mcp.json`,
+`.claude/settings.json`, `CLAUDE.md`, `AGENTS.md`); declined → this skill does
+not start. Read code through jcodemunch from here on.
+
 ## Step 1 — Find the packages
 
 | The working directory has | Packages |

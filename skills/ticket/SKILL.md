@@ -38,69 +38,14 @@ grep, same rule as the specification.
 
 ---
 
-## Before anything — jcodemunch
+## Before anything — prerequisites
 
-Every code reading this skill does — the conversation, the plan, the at-risk
-search — goes through [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/), an
-MCP server that indexes the repository and returns symbols, importers and blast
-radius instead of whole files. It must be present **before** the ticket starts.
-
-**Check.** It is present when the session already has its tools (a
-`jcodemunch_guide` tool, or tools under an `mcp__jcodemunch__` prefix), or when
-`claude mcp list` shows a `jcodemunch` entry.
-
-**Missing → ask, never install silently.** Use `AskUserQuestion`:
-
-> jcodemunch is not installed, and `/pspt:ticket` reads code through it. Install
-> it now? It runs `uv tool install jcodemunch-mcp` and
-> `claude mcp add -s user jcodemunch jcodemunch-mcp`, and adds one line to this
-> project's `CLAUDE.md`. Licence: free for non-commercial use; commercial use
-> needs a paid jCodeMunch licence.
-
-| Answer | Do |
-|---|---|
-| **Yes** | Install (below), then continue to Step 0 |
-| **No** | **Stop.** The ticket does not start. Say it needs jcodemunch and that `/pspt:ticket` can be run again once it is installed |
-
-**Install, on yes:**
-
-1. `uv --version` — if `uv` is missing, print its install command
-   (`curl -LsSf https://astral.sh/uv/install.sh | sh`, or
-   `powershell -c "irm https://astral.sh/uv/install.ps1 | iex"` on Windows)
-   and stop. Do not fall back to a bare `pip install` into system Python.
-2. `uv tool install jcodemunch-mcp`, then `jcodemunch-mcp --version` to confirm.
-3. `claude mcp add -s user jcodemunch jcodemunch-mcp`. If an entry named
-   `jcodemunch` already exists, leave it as it is.
-4. **Edit `CLAUDE.md`** at the working directory's root — create it if absent —
-   so every later session uses the tools instead of reading whole files. Add
-   this line once, under a `## Tools` heading; never duplicate it, never touch
-   anything else in the file:
-
-   ```markdown
-   Call the jcodemunch_guide tool and strictly follow its instructions.
-   ```
-
-5. Commit `CLAUDE.md` alone, same discipline as the Commits section below:
-
-   ```
-   chore(tooling): read code through jcodemunch
-
-   /pspt:ticket reads code through the jcodemunch MCP server; CLAUDE.md now
-   tells every session to follow jcodemunch_guide.
-   ```
-
-6. An MCP server added mid-session is loaded on the **next** session. If its
-   tools are not visible yet, say so, ask the user to restart Claude Code and
-   run `/pspt:ticket` again, and stop. Nothing about the ticket has been
-   written, so nothing is lost.
-
-**Present, but `CLAUDE.md` lacks the line** → add it (step 4), commit it (step
-5), tell the user in one line, and continue.
-
-**Then index.** Call `jcodemunch_guide` and follow it, and index the working
-directory (`index_folder`) before the conversation's first code read. The
-submodules `backend/` and `frontend/` are part of the working directory, so
-one index covers both.
+Run [`references/prerequisites.md`](../../references/prerequisites.md): the tools
+every pspt skill needs (jcodemunch) must be present. Missing → ask once, then
+install and register them yourself for the project (`.mcp.json`,
+`.claude/settings.json`, `CLAUDE.md`, `AGENTS.md`); declined → this skill does
+not start. Read code through jcodemunch from here on — the conversation, the plan and
+the at-risk search all use its tools.
 
 ## Step 0 — Resolve the ticket
 

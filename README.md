@@ -71,11 +71,14 @@ first — re-checking each plan against the current code before building it, one
 ticket to close-out before the next starts. It stops on a stale plan, a red
 test or an unplanned file rather than skipping ahead.
 
-`/pspt:ticket` reads code through [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/)
-(an MCP code index). If it is missing, the skill asks before installing it
-(`uv tool install jcodemunch-mcp`, `claude mcp add`) and adds its one-line policy
-to your `CLAUDE.md`; decline and the ticket does not start. jCodeMunch is free
-for non-commercial use; commercial use needs its own licence.
+Every pspt skill reads code through [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/)
+(an MCP code index) — see [`references/prerequisites.md`](references/prerequisites.md).
+If it is missing, the skill asks once, then installs it itself (`uv` too, if
+needed) and registers it **for the project**: `.mcp.json`, `.claude/settings.json`,
+and one instruction line in `CLAUDE.md` and `AGENTS.md` — so the next session
+and every teammate get it. Decline and the skill does not start;
+`/pspt:status` only reports. jCodeMunch is free for non-commercial use;
+commercial use needs its own licence.
 
 ## What it requires
 
