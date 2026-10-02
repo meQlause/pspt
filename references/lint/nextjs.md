@@ -1,7 +1,10 @@
 # Lint rules — Next.js / React frontend
 
-The constraints only. Config plumbing, dependencies and the commit hook are
-deliberately left out.
+> **The rules themselves are [`configs/nextjs/eslint.config.mjs`](configs/nextjs/eslint.config.mjs)**
+> — complete, verified against [`configs/verify/`](configs/verify/), with pinned
+> dependencies in `package.lint.json`. `/pspt:build` copies it into the project
+> byte for byte and checks it for drift. This file explains the rules; if the two
+> ever disagree, that is a bug in pspt, not a choice for the project.
 
 Companions: [`react.md`](react.md), [`nestjs.md`](nestjs.md),
 [`express.md`](express.md).
@@ -77,6 +80,12 @@ if (c) { … }
 | `sonarjs/prefer-single-boolean-return` | `if (x) return true; return false` |
 | `sonarjs/no-inverted-boolean-check` | `!(a === b)` — use `a !== b` |
 | `sonarjs/no-redundant-boolean` | `x === true` |
+
+**`curly` has to be re-enabled after `prettier`.** `eslint-config-prettier`, which
+must be last, switches `curly` off along with the formatting rules. The canonical
+config adds `{ rules: { curly: ['error', 'all'] } }` after it — with `'all'` it
+never fights the formatter. Without that line the rule above silently does
+nothing.
 
 **`no-nested-conditional` is the rule most likely to surprise a React
 codebase**, because the chained ternary is idiomatic JSX:

@@ -1,7 +1,10 @@
 # Lint rules — NestJS / TypeScript backend
 
-The constraints only. Config plumbing, dependencies and the commit hook are
-deliberately left out.
+> **The rules themselves are [`configs/nestjs/eslint.config.mjs`](configs/nestjs/eslint.config.mjs)**
+> — complete, verified against [`configs/verify/`](configs/verify/), with pinned
+> dependencies in `package.lint.json`. `/pspt:build` copies it into the project
+> byte for byte and checks it for drift. This file explains the rules; if the two
+> ever disagree, that is a bug in pspt, not a choice for the project.
 
 Companions: [`express.md`](express.md), [`nextjs.md`](nextjs.md),
 [`react.md`](react.md).
@@ -78,6 +81,12 @@ These decide what a conditional may look like, not how many you may have.
 | `sonarjs/prefer-single-boolean-return` | `if (x) return true; return false` |
 | `sonarjs/no-inverted-boolean-check` | `!(a === b)` — use `a !== b` |
 | `sonarjs/no-redundant-boolean` | `x === true` |
+
+**`curly` has to be re-enabled after `prettier`.** `eslint-config-prettier`, which
+must be last, switches `curly` off along with the formatting rules. The canonical
+config adds `{ rules: { curly: ['error', 'all'] } }` after it — with `'all'` it
+never fights the formatter. Without that line the rule above silently does
+nothing.
 
 ```ts
 // ✗ no-nested-conditional

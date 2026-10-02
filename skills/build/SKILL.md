@@ -80,6 +80,52 @@ After this, `backend/` and `frontend/` are separate repositories on disk. Every
 later Step 4 / Step 5 / Step 7 that writes into them commits **inside** the
 submodule; Step 7 also updates the pinned pointer in the parent.
 
+## Step 0b — Lint toolchain: copied, never written
+
+Runs on **every** invocation, after Step 0, for each submodule the criterion
+touches. It is a few file comparisons; it is never skipped.
+
+The lint configuration is not authored in the project. pspt ships one complete,
+verified config per supported stack, and the project carries an exact copy:
+
+| Stack (S3 answer) | Copy from | Into the submodule root |
+|---|---|---|
+| Express | `references/lint/configs/express/` | `eslint.config.mjs`, and `package.lint.json` merged into `package.json` |
+| NestJS | `references/lint/configs/nestjs/` | same |
+| React + Vite | `references/lint/configs/react/` | same |
+| Next.js | `references/lint/configs/nextjs/` | same |
+
+The `.md` files in `references/lint/` explain the rules; the config files
+**are** the rules. Never write an ESLint config from the `.md`, from memory, or
+from "a good default" — that is exactly how a project ends up with a config
+nobody chose.
+
+**Install** (no `eslint.config.*` in the submodule yet): copy the stack's
+`eslint.config.mjs` byte for byte; merge its `package.lint.json`
+`devDependencies` (exact versions) and `scripts` into `package.json`; install.
+Commit as `chore(lint): install pspt <stack> lint config`.
+
+**Check for drift** (it exists) — every one of these must hold:
+
+| Check | How | Drift when |
+|---|---|---|
+| Config is the canonical copy | `sha256sum eslint.config.mjs` vs `references/lint/configs/manifest.json` → `stacks.<stack>.sha256` | the hashes differ |
+| No second config | look for `.eslintrc*`, `eslint.config.{js,cjs,ts,mts,cts}` | any exists |
+| Dependencies pinned | each `manifest.json` `devDependencies` entry in `package.json` at the exact version | missing, or a different version |
+| TypeScript, as S3 fixed it | `tsconfig.json` with `"strict": true`; no `.js` / `.jsx` under `src/` or `tests/` | either fails |
+
+**On drift, stop.** Print every failed check — for the config, the rules that
+differ (`npx eslint --print-config src/<any>.ts` against the canonical file's)
+— and ask once: **restore pspt's config**, or **keep the project's** (which is
+recorded in `docs/.pspt.json` → `lintDrift` with the user's reason, and
+reported by `/pspt:status` until resolved). Never edit the project's config to
+make a check pass, and never edit the canonical file to match the project — a
+rule pspt should change is changed in pspt, with its fixtures re-verified
+(`references/lint/configs/verify/`).
+
+A project scaffolded before this step existed gets the same treatment on its
+next invocation: the check reports what differs, and the user decides.
+
 ## Step 1 — Pick the criterion
 
 Read `phases.md`. If the user named a phase or a criterion, use it; otherwise
@@ -164,7 +210,7 @@ the test.
 
 Run the project's single check command **on the whole submodule tree**, not
 just the files this criterion touched. Run lint the way the commit hook does
-too:
+too — with the canonical config Step 0b confirmed, never a local variant:
 
 ```
 pnpm check

@@ -149,7 +149,8 @@ After each stage, write `docs/.pspt.json`:
   "stages": { "s2": "<ISO date>", "s3": null, "s4": null, "s5": null, "s6": null, "s7": null, "s8": null },
   "stack": { "database": "...", "backend": "...", "orm": "...", "di": "...",
              "frontend": "...", "routing": "...", "serverState": "...", "validation": "..." },
-  "noLinter": { "backend": null, "frontend": null }
+  "noLinter": { "backend": null, "frontend": null },
+  "lintDrift": { "backend": null, "frontend": null }
 }
 ```
 
@@ -167,6 +168,10 @@ lint file in `references/lint/`). When the user opts into an unsupported
 framework after the warning in S3, record the framework name here so
 `/pspt:build` and `/pspt:enhance` can surface a reminder each time they
 run that the commit-hook zero-warnings guarantee is off for that side.
+
+`lintDrift` is written only by `/pspt:build` Step 0b, when the user chooses to
+keep a project lint config that differs from pspt's canonical one: the reason,
+in their words, and the date. `null` means the project carries the exact copy.
 
 ## Step 6 — Commit the stage
 

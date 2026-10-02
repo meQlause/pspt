@@ -21,7 +21,9 @@ short-cuts:
 
 1. **Step 0** — ensure the scaffold. On the very first iteration this creates
    the two submodules if they are missing; on every later iteration it is a
-   fast no-op (the `.gitmodules` check returns immediately).
+   fast no-op (the `.gitmodules` check returns immediately). **Step 0b** runs
+   every iteration too: the lint config is the canonical copy, or the loop
+   stops on drift.
 2. **Step 1** — pick the first unticked exit criterion of the earliest
    incomplete phase. Print it verbatim.
 3. **Steps 2–6** — anchor, RED, GREEN, CLEAN, CHECK. Same rules as

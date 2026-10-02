@@ -4,6 +4,12 @@ Same contract as [`nextjs.md`](nextjs.md) with the Next-only rules removed.
 Every threshold and every conditional-shape rule transfers unchanged; §9 lists
 exactly what does not.
 
+> **The rules themselves are [`configs/react/eslint.config.mjs`](configs/react/eslint.config.mjs)**
+> — complete, verified against [`configs/verify/`](configs/verify/), with pinned
+> dependencies in `package.lint.json`. `/pspt:build` copies it into the project
+> byte for byte and checks it for drift. This file explains the rules; if the two
+> ever disagree, that is a bug in pspt, not a choice for the project.
+
 Companions: [`nestjs.md`](nestjs.md), [`express.md`](express.md).
 
 ---
@@ -90,6 +96,12 @@ if (c) { … }
 | `sonarjs/prefer-single-boolean-return` | `if (x) return true; return false` |
 | `sonarjs/no-inverted-boolean-check` | `!(a === b)` — use `a !== b` |
 | `sonarjs/no-redundant-boolean` | `x === true` |
+
+**`curly` has to be re-enabled after `prettier`.** `eslint-config-prettier`, which
+must be last, switches `curly` off along with the formatting rules. The canonical
+config adds `{ rules: { curly: ['error', 'all'] } }` after it — with `'all'` it
+never fights the formatter. Without that line the rule above silently does
+nothing.
 
 **`no-nested-conditional` is the rule most likely to surprise a React
 codebase**, because the chained ternary is idiomatic JSX:
@@ -233,18 +245,22 @@ export default [
   ...tseslint.configs.recommended,
   react.configs.flat.recommended,        // NOT .configs.recommended (legacy)
   react.configs.flat['jsx-runtime'],
-  reactHooks.configs['recommended-latest'],
+  reactHooks.configs.flat['recommended-latest'], // 7.x — see the trap below
   jsxA11y.flatConfigs.recommended,
   sonarjs.configs.recommended,
   importPlugin.flatConfigs.recommended,
   importPlugin.flatConfigs.typescript,
   { settings: { react: { version: 'detect' } }, /* rules from §1–§7 */ },
-  prettier,                              // always last
+  prettier,                              // last of the presets
+  { rules: { curly: ['error', 'all'] } }, // prettier turns curly off — see §3
 ];
 ```
 
-Two traps:
+Three traps:
 
+- **`reactHooks.configs['recommended-latest']` is the legacy shape** in
+  eslint-plugin-react-hooks 7.x (`plugins` as an array) and crashes flat config.
+  Use `reactHooks.configs.flat['recommended-latest']`.
 - **`react.configs.recommended` is the legacy shape** and will not load under
   flat config. Use `react.configs.flat.recommended`.
 - **Never spread a plugin's `.rules` without its `.plugins`.** The Next config

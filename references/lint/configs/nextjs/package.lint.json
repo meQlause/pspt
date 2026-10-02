@@ -1,0 +1,15 @@
+{
+  "//": "pspt lint dependencies — merge into the project's package.json exactly. eslint-config-next must match the project's next major (verified with next 16.3.8). Verified with TypeScript >=4.8.4 <6.1.0.",
+  "devDependencies": {
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.3.8",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-sonarjs": "4.2.2",
+    "eslint-plugin-unused-imports": "4.4.1",
+    "eslint-config-prettier": "10.1.8"
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings=0 .",
+    "lint:files": "eslint --max-warnings=0 --no-warn-ignored"
+  }
+}

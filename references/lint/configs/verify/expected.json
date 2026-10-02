@@ -1,0 +1,129 @@
+{
+  "nestjs": {
+    "src/features/bookings/booking.schema.ts": [],
+    "src/features/bookings/branch.ts": [
+      "curly",
+      "max-depth",
+      "no-else-return",
+      "no-negated-condition",
+      "sonarjs/no-collapsible-if",
+      "sonarjs/no-nested-conditional"
+    ],
+    "src/features/bookings/long.ts": [
+      "max-lines-per-function",
+      "max-statements"
+    ],
+    "src/features/bookings/pricing.rules.ts": [
+      "no-restricted-globals",
+      "no-restricted-imports",
+      "no-restricted-properties",
+      "sonarjs/pseudo-random"
+    ],
+    "src/features/bookings/size.ts": [
+      "max-classes-per-file",
+      "max-nested-callbacks",
+      "max-params",
+      "no-magic-numbers"
+    ],
+    "src/features/bookings/unused.ts": [
+      "sonarjs/no-unused-vars",
+      "sonarjs/unused-import",
+      "unused-imports/no-unused-imports",
+      "unused-imports/no-unused-vars"
+    ],
+    "src/features/bookings/values.ts": [
+      "@typescript-eslint/no-explicit-any",
+      "id-length",
+      "no-else-return",
+      "no-lonely-if",
+      "no-magic-numbers",
+      "sonarjs/no-duplicate-string",
+      "sonarjs/todo-tag"
+    ],
+    "tests/unit/fee.test.ts": [
+      "sonarjs/no-empty-test-file"
+    ]
+  },
+  "express": {
+    "src/features/bookings/booking.schema.ts": [],
+    "src/features/bookings/branch.ts": [
+      "curly",
+      "max-depth",
+      "no-else-return",
+      "no-negated-condition",
+      "sonarjs/no-collapsible-if",
+      "sonarjs/no-nested-conditional"
+    ],
+    "src/features/bookings/long.ts": [
+      "max-lines-per-function",
+      "max-statements"
+    ],
+    "src/features/bookings/pricing.rules.ts": [
+      "no-restricted-globals",
+      "no-restricted-imports",
+      "no-restricted-properties",
+      "sonarjs/pseudo-random"
+    ],
+    "src/features/bookings/size.ts": [
+      "max-classes-per-file",
+      "max-nested-callbacks",
+      "max-params",
+      "no-magic-numbers"
+    ],
+    "src/features/bookings/unused.ts": [
+      "sonarjs/no-unused-vars",
+      "sonarjs/unused-import",
+      "unused-imports/no-unused-imports",
+      "unused-imports/no-unused-vars"
+    ],
+    "src/features/bookings/values.ts": [
+      "@typescript-eslint/no-explicit-any",
+      "id-length",
+      "no-else-return",
+      "no-lonely-if",
+      "no-magic-numbers",
+      "sonarjs/no-duplicate-string",
+      "sonarjs/todo-tag"
+    ],
+    "tests/unit/fee.test.ts": [
+      "sonarjs/no-empty-test-file"
+    ]
+  },
+  "react": {
+    "src/features/review/Review.tsx": [
+      "react-hooks/rules-of-hooks",
+      "react/jsx-max-depth",
+      "sonarjs/no-nested-conditional"
+    ],
+    "src/features/review/booking.schema.ts": [],
+    "src/features/review/values.ts": [
+      "curly",
+      "id-length",
+      "no-magic-numbers",
+      "sonarjs/no-duplicate-string",
+      "sonarjs/todo-tag"
+    ],
+    "tests/unit/fee.test.ts": [
+      "sonarjs/no-empty-test-file"
+    ]
+  },
+  "nextjs": {
+    "src/features/review/Review.tsx": [
+      "@next/next/no-img-element",
+      "react-hooks/rules-of-hooks",
+      "react/jsx-max-depth",
+      "sonarjs/no-nested-conditional"
+    ],
+    "src/features/review/booking.schema.ts": [],
+    "src/features/review/values.ts": [
+      "curly",
+      "id-length",
+      "no-magic-numbers",
+      "sonarjs/no-duplicate-string",
+      "sonarjs/todo-tag"
+    ],
+    "tests/unit/fee.test.ts": [
+      "sonarjs/no-empty-test-file"
+    ]
+  }
+}

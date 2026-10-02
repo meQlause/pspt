@@ -4,6 +4,12 @@ Same contract as [`nestjs.md`](nestjs.md). **Every rule below is identical** —
 nothing in the NestJS set was framework-specific except two items, both noted
 in §7.
 
+> **The rules themselves are [`configs/express/eslint.config.mjs`](configs/express/eslint.config.mjs)**
+> — complete, verified against [`configs/verify/`](configs/verify/), with pinned
+> dependencies in `package.lint.json`. `/pspt:build` copies it into the project
+> byte for byte and checks it for drift. This file explains the rules; if the two
+> ever disagree, that is a bug in pspt, not a choice for the project.
+
 Companions: [`nextjs.md`](nextjs.md), [`react.md`](react.md).
 
 ---
@@ -76,6 +82,12 @@ will breach it; validate in a schema, not in branches.
 | `sonarjs/prefer-single-boolean-return` | `if (x) return true; return false` |
 | `sonarjs/no-inverted-boolean-check` | `!(a === b)` — use `a !== b` |
 | `sonarjs/no-redundant-boolean` | `x === true` |
+
+**`curly` has to be re-enabled after `prettier`.** `eslint-config-prettier`, which
+must be last, switches `curly` off along with the formatting rules. The canonical
+config adds `{ rules: { curly: ['error', 'all'] } }` after it — with `'all'` it
+never fights the formatter. Without that line the rule above silently does
+nothing.
 
 ```ts
 // ✗ no-nested-conditional

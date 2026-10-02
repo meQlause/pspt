@@ -174,9 +174,21 @@ side:
 
 ## Lint rules
 
-`references/lint/` holds one file per stack — Express, NestJS, Next.js, React.
-The plugin **selects** the governing file and copies it into your repo. It never
-authors lint rules, so there is one source and nothing to drift.
+`references/lint/` holds one stack per supported framework — Express, NestJS,
+Next.js, React — in two forms:
+
+| | |
+|---|---|
+| `references/lint/<stack>.md` | the rules explained — why each threshold, what it forces into the spec |
+| `references/lint/configs/<stack>/` | the rules as a complete, verified `eslint.config.mjs` plus pinned `package.lint.json` |
+
+`/pspt:build` copies the config into each submodule **byte for byte** and, on
+every invocation, checks it against `configs/manifest.json`: same sha256, no
+second config, exact dependency versions, TypeScript strict. Any difference is
+drift — reported, and never silently "fixed" in either direction. The plugin
+never authors lint rules in your project, so there is one source and nothing to
+drift. `configs/verify/` holds the fixtures that prove each config fires every
+rule.
 
 Three of those rules change what a generated document may say:
 
