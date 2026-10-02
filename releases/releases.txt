@@ -11,3 +11,4 @@ v0.4.0|9451214fbf35feff11201f97e39d347fb2ed2ea9|v0.4.0 — S7: the finished app 
 v0.4.1|5da3d9220da5ab1d10ddf99c0c711c1520057836|v0.4.1 — S7 analyses the mockup and defines each pattern once
 v0.5.0|476fbde273be59ed8c313b08629ae2a3d35497b4|v0.5.0 — S8: the states the mockup forgot
 v0.6.0|ae9a22fb422847a3e5875f1fca3635546d3a5115|v0.6.0 — the toolchain, shipped as files: no more drift
+v0.7.0|HEAD|v0.7.0 — fix the toolchain, then fix the code: until everything is green

@@ -1,0 +1,61 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#f7f6f2;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--spec:#3b6ea8;--spec-bg:#e8f0f9;--tick:#b0521f;--tick-bg:#fbeee6;--build:#2f7a4f;--build-bg:#e6f3eb;--bad:#b3261e;--bad-bg:#fde9e7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:40px 48px}
+.ver{display:inline-block;font:700 14px ui-monospace,Menlo,monospace;background:var(--ink);color:#fff;border-radius:7px;padding:4px 10px;margin-bottom:10px}
+h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+h2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:26px 0 11px}
+code,.m{font-family:ui-monospace,Menlo,monospace;font-size:.92em}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+.a{color:var(--mute);font-size:22px;padding:0 10px;display:flex;align-items:center}
+.n{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px}
+.n b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14.5px}
+.n span{color:var(--mute);font-size:13px;display:block}
+.s{border-color:var(--spec);background:var(--spec-bg)} .s b{color:var(--spec)}
+.t{border-color:var(--tick);background:var(--tick-bg)} .t b{color:var(--tick)}
+.g{border-color:var(--build);background:var(--build-bg)} .g b{color:var(--build)}
+.r{border-color:var(--bad);background:var(--bad-bg)} .r b{color:var(--bad)}
+.d{border-style:dashed}
+.k{border:2px solid var(--ink)}
+.grid{display:grid;gap:18px}
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p,.card li{font-size:13.5px;color:#3a3a36}
+.card ul{padding-left:18px}
+.pre{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;white-space:pre;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.pre .c{color:var(--mute)} .pre .h{color:var(--tick);font-weight:700} .pre .gg{color:var(--build);font-weight:700}
+.new{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--tick);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:system-ui}
+.foot{margin-top:22px;color:var(--mute);font-size:13px;display:flex;justify-content:space-between}
+</style></head><body><span class="ver">v0.7.0</span><h1>Fix the toolchain, then fix the code — until everything is green</h1><p class="sub">/pspt:fix-flow and /pspt:fix-flow-proceed, JavaScript toolchains, reported disables, and the tools every skill now requires.</p><h2>Two new skills — toolchain first, then the code</h2>
+<div class="row">
+ <div class="n d"><b>any package</b><span>Express · NestJS · React · Next.js — JS or TS</span></div><div class="a">→</div>
+ <div class="n s"><b>/pspt:fix-flow</b><span>detect · compare · install pspt's toolchain</span></div><div class="a">→</div>
+ <div class="n k"><b>matches?</b><span>"nothing to fix" — no change</span></div><div class="a">→</div>
+ <div class="n t"><b>/pspt:fix-flow-proceed</b><span>one file per iteration: tests → types → lint → knip</span></div><div class="a">→</div>
+ <div class="n g"><b>all green</b><span>check + tests pass · commits through the hooks</span></div>
+</div>
+<div class="grid c2">
+<div><h2>fix-flow — detection with evidence</h2>
+<div class="pre">backend/  express-js · JavaScript
+  evidence  express in dependencies · no tsconfig.json · 23 .js files
+  replaced  eslint.config.js → eslint.config.mjs
+  added     knip.json · prettier · commitlint · .husky/*
+  drop      eslint-plugin-jest, -n, -promise, -security   <span class="c">(jest stays)</span>
+frontend/ react · TypeScript
+  <span class="gg">✓ matches pspt react exactly — nothing to fix</span></div>
+<p style="margin-top:8px;color:var(--mute);font-size:13.5px">7 stacks: 4 TypeScript + <b>3 new JavaScript</b> (express-js · react-js · nextjs-js). Scripts and hooks now work with npm, pnpm or yarn.</p></div>
+<div><h2>fix-flow-proceed — the loop</h2>
+<div class="pre">▶ 14/23 · pricing.rules.js · id-length ×2 · no-magic-numbers ×2
+  h → hours · 180000 → HOURLY_RATE_IDR · ternary → early returns
+  <span class="h">⚑ disabled no-magic-numbers :14 — vendor encodes "settled" as 7</span>
+  ↻ jcodemunch re-indexed 1 file
+✓ 14/23 — 5 fixed · tests green · 104 → 99 left</div>
+<p style="margin-top:8px;color:var(--mute);font-size:13.5px">Behaviour never changes · asks instead of guessing · findings.mjs feeds a compact per-file queue.</p></div>
+</div>
+<div class="grid c3" style="margin-top:18px">
+ <div class="card"><h3>Disables: allowed, never silent</h3><p>Rule + reason after <code>--</code>, enforced by lint. Never blocks — always reported: progress line, report, <code>disables:</code> commit trailer.</p></div>
+ <div class="card"><h3>jcodemunch + ponytail, for every skill</h3><p>Asks once, installs them itself, registers for the project: <code>.mcp.json</code>, <code>.claude/settings.json</code>, <code>CLAUDE.md</code>, <code>AGENTS.md</code>, <code>.agents/rules/</code>.</p></div>
+ <div class="card"><h3>Re-index after every phase</h3><p>Only the changed files, incrementally — so the next phase never reasons about code that no longer exists.</p></div>
+</div><div class="foot"><span>meQlause/pspt · v0.7.0</span><span>skills/fix-flow · skills/fix-flow-proceed · references/prerequisites.md</span></div></body></html>

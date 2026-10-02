@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.7.0](#v070--2026-10-02) | 2026-10-02 | Fix the toolchain, then fix the code — until everything is green |
 | [0.6.0](#v060--2026-10-02) | 2026-10-02 | The toolchain, shipped as files — no more drift |
 | [0.5.0](#v050--2026-10-02) | 2026-10-02 | S8 — the states the mockup forgot |
 | [0.4.1](#v041--2026-10-02) | 2026-10-02 | S7 analyses the mockup and defines each pattern once |
@@ -20,6 +21,57 @@ absolute image links. Versions are listed in
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
 
 ---
+
+## v0.7.0 — 2026-10-02
+
+**Fix the toolchain, then fix the code — until everything is green.** Two new
+skills repair an existing project, JavaScript projects get their own
+toolchains, disables become reported instead of banned, and every skill now
+brings the tools it needs.
+
+![v0.7.0 — fix-flow detects and installs, fix-flow-proceed loops to green; disables reported; jcodemunch and ponytail required; re-index after every phase](releases/v0.7.0.png)
+
+**Added**
+
+- **`/pspt:fix-flow`** — finds each package, detects its stack (Express,
+  NestJS, React, Next.js) and language from its dependencies and sources, and
+  compares its toolchain with pspt's. A match prints **"nothing to fix"**;
+  otherwise it installs pspt's files, removes second configs, pins versions and
+  scripts, drops only unused lint/format/hook packages, installs, autofixes and
+  reports what is left. Unsupported stacks are refused with the reason. Its
+  mechanics are `references/toolchain/fix-flow.mjs`.
+- **`/pspt:fix-flow-proceed`** — loops over the code until `check` and the test
+  suite pass: failing tests first (the safety net), then types, lint and knip,
+  one file per iteration, behaviour unchanged, asking instead of guessing.
+  Commits land through the hooks once the tree is green. Its work queue is
+  `references/toolchain/findings.mjs`.
+- **JavaScript toolchains** — `express-js`, `react-js`, `nextjs-js`: the same
+  rules minus the TypeScript-only ones, Node or browser globals, Jest/Vitest
+  globals for tests. All seven stacks pass `verify/`.
+- **Required tools for every skill** ([`prerequisites.md`](references/prerequisites.md))
+  — [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/) and
+  [Ponytail](https://ponytail.dev/). Missing → one question, then the skill
+  installs them itself and registers them for the project: `.mcp.json`,
+  `.claude/settings.json`, `CLAUDE.md`, `AGENTS.md`, `.agents/rules/`.
+  pspt's spec, conventions, lint rules and tests always win over Ponytail.
+- **Re-index after every phase** — jcodemunch re-indexes only the files each
+  phase, criterion, iteration or ticket changed.
+
+**Changed**
+
+- **Disable directives** — allowed, never silent (conventions §10): the rule
+  named and a reason after `--`, enforced in every config; blanket, unpaired
+  and unused disables are errors; `@ts-expect-error` only with a description.
+  They never block a skill and are always reported — progress line, report,
+  `disables:` commit trailer, and `findings.mjs`.
+- Toolchain scripts and hooks work with npm, pnpm or yarn.
+
+**Fixed**
+
+- Shipped toolchain files were not Prettier-formatted, so the first
+  `prettier --write` made every project read as drifted.
+- JavaScript configs linted pspt's own `eslint.config.mjs`, which failed its
+  own rules; all configs now ignore pspt's toolchain files.
 
 ## v0.6.0 — 2026-10-02
 
