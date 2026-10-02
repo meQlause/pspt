@@ -1,78 +1,87 @@
-// pspt canonical ESLint config — nestjs.
-// Source of truth: references/lint/nestjs.md. Copied VERBATIM into the project by
+// pspt canonical ESLint config — react.
+// Source of truth: references/lint/react.md. Copied VERBATIM into the project by
 // /pspt:build; never edited there. A change is a change to pspt, not to the project.
 // /pspt:build and /pspt:status compare this file's sha256 against
-// references/lint/configs/manifest.json — any difference is drift and fails CHECK.
+// references/toolchain/manifest.json — any difference is drift and fails CHECK.
 
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import importPlugin from 'eslint-plugin-import';
 import sonarjs from 'eslint-plugin-sonarjs';
 import unusedImports from 'eslint-plugin-unused-imports';
 import prettier from 'eslint-config-prettier';
 
-const SOURCE = ['**/*.ts'];
+const SOURCE = ['**/*.{ts,tsx}'];
 
 export default [
   { ignores: ['dist/**', 'coverage/**', 'node_modules/**', 'src/generated/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  react.configs.flat.recommended, // NOT .configs.recommended (legacy)
+  react.configs.flat['jsx-runtime'],
+  reactHooks.configs.flat['recommended-latest'], // 7.x: configs['recommended-latest'] is the legacy shape
+  jsxA11y.flatConfigs.recommended,
   sonarjs.configs.recommended,
+  importPlugin.flatConfigs.recommended,
+  importPlugin.flatConfigs.typescript,
   {
     files: SOURCE,
     plugins: { 'unused-imports': unusedImports },
+    settings: { react: { version: 'detect' } },
     rules: {
       // §1 Size
-      'max-lines-per-function': ['error', { max: 70, skipBlankLines: true, skipComments: true }],
-      'max-lines': ['error', { max: 450, skipBlankLines: true, skipComments: true }],
+      'max-lines-per-function': ['error', { max: 100, skipBlankLines: true, skipComments: true }],
+      'max-lines': ['error', { max: 500, skipBlankLines: true, skipComments: true }],
       'max-statements': ['warn', 15],
       'max-params': ['warn', 4],
-      'max-classes-per-file': ['error', 1],
-      'max-nested-callbacks': ['error', 3],
+      'react/jsx-max-depth': ['warn', { max: 5 }],
 
       // §2 Branching
       complexity: ['error', 8],
       'sonarjs/cognitive-complexity': ['error', 10],
       'max-depth': ['error', 2],
 
-      // §3 Conditional shape
+      // §3 Conditional shape — no-negated-condition deliberately not enabled
       'sonarjs/no-nested-conditional': 'error',
-      curly: ['error', 'all'],
       'no-else-return': ['error', { allowElseIf: false }],
       'no-lonely-if': 'error',
       'sonarjs/no-collapsible-if': 'error',
-      'no-negated-condition': 'warn',
       'sonarjs/prefer-single-boolean-return': 'error',
       'sonarjs/no-inverted-boolean-check': 'error',
       'sonarjs/no-redundant-boolean': 'error',
 
-      // §4 Duplication and dead logic — two downgraded to warn
+      // §4 React-specific
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
+
+      // §5 Duplication and dead logic — all error, none downgraded
       'sonarjs/no-identical-conditions': 'error',
       'sonarjs/no-identical-expressions': 'error',
       'sonarjs/no-duplicated-branches': 'error',
       'sonarjs/no-all-duplicated-branches': 'error',
-      'sonarjs/no-identical-functions': 'warn',
+      'sonarjs/no-identical-functions': 'error',
       'sonarjs/no-invariant-returns': 'error',
       'sonarjs/no-redundant-jump': 'error',
       'sonarjs/no-redundant-assignments': 'error',
-      'sonarjs/no-unused-collection': 'warn',
+      'sonarjs/no-unused-collection': 'error',
 
-      // §5 Switch
+      // §6 Switch and other shape rules
       'sonarjs/no-small-switch': 'error',
       'sonarjs/max-switch-cases': ['error', 30],
-      'sonarjs/no-case-label-in-switch': 'error',
-
-      // §6 Other shape rules
       'sonarjs/no-nested-functions': 'error',
       'sonarjs/no-nested-template-literals': 'error',
       'sonarjs/no-parameter-reassignment': 'error',
-      'sonarjs/no-nested-assignment': 'error',
       'sonarjs/no-selector-parameter': 'error',
-      'sonarjs/no-ignored-return': 'error',
       'sonarjs/array-callback-without-return': 'error',
       'sonarjs/no-commented-code': 'error',
       'sonarjs/todo-tag': 'error',
 
-      // §8 Unused code
+      // §7 Unused code
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': 'off',
       'unused-imports/no-unused-imports': 'error',
@@ -82,10 +91,10 @@ export default [
       }],
       '@typescript-eslint/no-explicit-any': 'warn',
 
-      // §9 Identifier length
-      'id-length': ['error', { min: 3, properties: 'never', exceptions: ['id', 'db', 'tx', 'to', 'up'] }],
+      // Identifier length
+      'id-length': ['error', { min: 3, properties: 'never', exceptions: ['id', 'db', 'to', 'up', 'fn'] }],
 
-      // §10 Magic values
+      // Magic values
       'no-magic-numbers': ['error', {
         ignore: [-1, 0, 1, 2],
         ignoreArrayIndexes: true,
@@ -98,30 +107,9 @@ export default [
     },
   },
 
-  // §7 Purity boundary — *.rules.ts
+  // Magic-value exemptions — test tables and Zod schemas keep their literals
   {
-    files: ['**/*.rules.ts'],
-    rules: {
-      'no-restricted-imports': ['error', { patterns: [{ group: [
-        '@prisma/*', '.prisma/*', '**/prisma*',
-        '@nestjs/*',
-        'axios', 'node-fetch', 'undici',
-        'node:fs', 'node:fs/*', 'fs', 'fs/*',
-        'node:child_process', 'child_process',
-      ], message: 'A *.rules.ts file must stay pure — no I/O, no framework. Move this to the sibling *.service.ts.' }] }],
-      'no-restricted-globals': ['error',
-        { name: 'Date', message: 'Pass the instant in as an argument so the rule is deterministic under test.' },
-        { name: 'fetch', message: 'A *.rules.ts file must stay pure. Move the call to the sibling *.service.ts.' },
-      ],
-      'no-restricted-properties': ['error',
-        { object: 'Math', property: 'random', message: 'Non-deterministic — inject the value so the rule is testable.' },
-      ],
-    },
-  },
-
-  // §10 exemptions — test tables and Zod schemas keep their literals
-  {
-    files: ['tests/**/*.ts'],
+    files: ['tests/**/*.{ts,tsx}'],
     rules: { 'no-magic-numbers': 'off', 'sonarjs/no-duplicate-string': 'off' },
   },
   {

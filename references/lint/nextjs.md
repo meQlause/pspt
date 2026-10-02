@@ -1,8 +1,8 @@
 # Lint rules — Next.js / React frontend
 
-> **The rules themselves are [`configs/nextjs/eslint.config.mjs`](configs/nextjs/eslint.config.mjs)**
-> — complete, verified against [`configs/verify/`](configs/verify/), with pinned
-> dependencies in `package.lint.json`. `/pspt:build` copies it into the project
+> **The rules themselves are [`toolchain/nextjs/eslint.config.mjs`](../toolchain/nextjs/eslint.config.mjs)**
+> — complete, verified against [`toolchain/verify/`](../toolchain/verify/), with pinned
+> dependencies in `package.toolchain.json`. `/pspt:build` copies it into the project
 > byte for byte and checks it for drift. This file explains the rules; if the two
 > ever disagree, that is a bug in pspt, not a choice for the project.
 

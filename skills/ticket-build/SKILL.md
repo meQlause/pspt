@@ -52,7 +52,13 @@ Waiting for approval: venue-hours (planned)
 An empty queue is a one-line answer — "nothing approved to build" plus the
 planned tickets waiting for approval — and the skill stops.
 
-## Step 2 — Re-check the plan against today's code
+## Step 2 — Re-check the toolchain and the plan against today's code
+
+First, `/pspt:build` **Step 0b** for every submodule the ticket touches — the
+toolchain must be pspt's canonical copy. Drift stops the run like any other
+blocker: status `blocked · toolchain drift`, reported, and the next ticket does
+not start.
+
 
 A ticket was planned against the code as it was when it was approved. An
 earlier ticket in this queue — or anyone's commit since — may have moved it.
@@ -121,7 +127,7 @@ is true:
   in-flight phase's ticked boxes stay as the record of what finished, and its
   status stays `in progress · P<n>` so the next run resumes there.
 - **The queue is empty.**
-- A ticket's **plan is stale** (Step 2).
+- A ticket's **plan is stale**, or its **toolchain drifted** (Step 2).
 - A ticket hits **an unplanned file or a red test** — `/pspt:ticket` Step 7
   sets it `blocked`; the run stops rather than skipping to the next ticket.
 - The **same phase fails twice in a row**. One retry after a fix is fine; a

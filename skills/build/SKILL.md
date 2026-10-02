@@ -80,51 +80,54 @@ After this, `backend/` and `frontend/` are separate repositories on disk. Every
 later Step 4 / Step 5 / Step 7 that writes into them commits **inside** the
 submodule; Step 7 also updates the pinned pointer in the parent.
 
-## Step 0b — Lint toolchain: copied, never written
+## Step 0b — Toolchain: copied, never written
 
-Runs on **every** invocation, after Step 0, for each submodule the criterion
-touches. It is a few file comparisons; it is never skipped.
+Runs on **every** invocation, after Step 0, for each submodule the work
+touches — and `/pspt:build-long`, `/pspt:ticket` and `/pspt:ticket-build` run it
+too. It is a few file comparisons; it is never skipped.
 
-The lint configuration is not authored in the project. pspt ships one complete,
-verified config per supported stack, and the project carries an exact copy:
+The toolchain is not authored in the project. pspt ships it as files in
+`references/toolchain/` — ESLint, knip, Prettier, commitlint, the husky hooks,
+pinned `devDependencies` and the `check` script — and the project carries exact
+copies. `references/toolchain/manifest.json` lists, per stack, every file's
+path in the submodule, its source and its sha256. What each file does:
+`references/toolchain/README.md`.
 
-| Stack (S3 answer) | Copy from | Into the submodule root |
-|---|---|---|
-| Express | `references/lint/configs/express/` | `eslint.config.mjs`, and `package.lint.json` merged into `package.json` |
-| NestJS | `references/lint/configs/nestjs/` | same |
-| React + Vite | `references/lint/configs/react/` | same |
-| Next.js | `references/lint/configs/nextjs/` | same |
+The `.md` files in `references/lint/` explain the lint rules; the files in
+`references/toolchain/` **are** the rules. Never write a tool config from the
+`.md`, from memory, or from "a good default" — that is exactly how a project
+ends up with a config nobody chose, and without knip at all.
 
-The `.md` files in `references/lint/` explain the rules; the config files
-**are** the rules. Never write an ESLint config from the `.md`, from memory, or
-from "a good default" — that is exactly how a project ends up with a config
-nobody chose.
+**Install** (a file from the manifest is missing — on the first invocation,
+all of them): copy each `files` entry for the stack byte for byte; merge the
+stack's `package.toolchain.json` `devDependencies` (exact versions) and
+`scripts` into `package.json`; `pnpm install` (the `prepare` script installs
+the hooks). Commit as `chore(toolchain): install pspt <stack> toolchain`.
 
-**Install** (no `eslint.config.*` in the submodule yet): copy the stack's
-`eslint.config.mjs` byte for byte; merge its `package.lint.json`
-`devDependencies` (exact versions) and `scripts` into `package.json`; install.
-Commit as `chore(lint): install pspt <stack> lint config`.
-
-**Check for drift** (it exists) — every one of these must hold:
+**Check for drift** — every one of these must hold:
 
 | Check | How | Drift when |
 |---|---|---|
-| Config is the canonical copy | `sha256sum eslint.config.mjs` vs `references/lint/configs/manifest.json` → `stacks.<stack>.sha256` | the hashes differ |
-| No second config | look for `.eslintrc*`, `eslint.config.{js,cjs,ts,mts,cts}` | any exists |
-| Dependencies pinned | each `manifest.json` `devDependencies` entry in `package.json` at the exact version | missing, or a different version |
-| TypeScript, as S3 fixed it | `tsconfig.json` with `"strict": true`; no `.js` / `.jsx` under `src/` or `tests/` | either fails |
+| Every file is the canonical copy | `sha256sum` of each `files` path vs `manifest.json` | a file is missing or its hash differs |
+| No second config | look for `.eslintrc*`, `eslint.config.{js,cjs,ts,mts,cts}`, `knip.{ts,js,jsonc}`, `.knip.json`, `prettier.config.*`, `.prettierrc` in any other form, `commitlint.config.{js,cjs,ts}`, `.commitlintrc*` | any exists |
+| Dependencies pinned | every manifest `devDependencies` entry in `package.json` at the exact version | missing, or a different version |
+| Scripts | every manifest `scripts` entry in `package.json`, identical | missing or changed |
+| Hooks active | `git config core.hooksPath` is `.husky/_` | anything else |
+| TypeScript, as S3 fixed it | `tsconfig.json` has `"strict": true`; no `.js` / `.jsx` under `src/` or `tests/` | either fails |
+| Chromium (SR-4) | the frontend's `playwright.config.ts` runs Chromium | missing |
 
-**On drift, stop.** Print every failed check — for the config, the rules that
-differ (`npx eslint --print-config src/<any>.ts` against the canonical file's)
-— and ask once: **restore pspt's config**, or **keep the project's** (which is
-recorded in `docs/.pspt.json` → `lintDrift` with the user's reason, and
-reported by `/pspt:status` until resolved). Never edit the project's config to
-make a check pass, and never edit the canonical file to match the project — a
-rule pspt should change is changed in pspt, with its fixtures re-verified
-(`references/lint/configs/verify/`).
+**On drift, stop.** Print every failed check — for the ESLint config, the rules
+that differ (`npx eslint --print-config src/<any>.ts` against the canonical
+file's) — and ask once: **restore pspt's toolchain**, or **keep the project's**
+for the named files (recorded in `docs/.pspt.json` → `toolchainDrift` with the
+user's reason, and reported by `/pspt:status` until resolved). Never edit a
+project file to make a check pass, and never edit a canonical file to match the
+project — a change pspt should make is made in pspt and re-verified
+(`references/toolchain/verify/`).
 
-A project scaffolded before this step existed gets the same treatment on its
-next invocation: the check reports what differs, and the user decides.
+A project scaffolded before this step existed — with a hand-written config, or
+no knip — gets the same treatment on its next invocation: the check lists
+everything missing or different, and the user decides.
 
 ## Step 1 — Pick the criterion
 
@@ -210,7 +213,8 @@ the test.
 
 Run the project's single check command **on the whole submodule tree**, not
 just the files this criterion touched. Run lint the way the commit hook does
-too — with the canonical config Step 0b confirmed, never a local variant:
+too — with the toolchain Step 0b confirmed, never a local variant. `pnpm check`
+is the script `references/toolchain/` defines: format, lint, types, then knip.
 
 ```
 pnpm check

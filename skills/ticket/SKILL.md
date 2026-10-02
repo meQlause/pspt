@@ -526,7 +526,13 @@ approve <slug>`), and ask once:
 
 ## Step 7 — Implement, phase by phase
 
-Before P1, run every R row once and record the baseline in `Result`
+Before P1, run `/pspt:build` **Step 0b** for every submodule the plan touches:
+the toolchain (ESLint, knip, Prettier, commitlint, hooks, pinned dependencies)
+must be pspt's canonical copy, installed if missing. Drift stops the ticket —
+status `blocked · toolchain drift` — until the user restores or keeps it; a
+ticket never builds on a local variant of the rules its S rows run.
+
+Then run every R row once and record the baseline in `Result`
 (`pass · baseline`). An R that is red before any edit is not this ticket's to
 fix silently — stop and report it.
 

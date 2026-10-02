@@ -38,13 +38,13 @@ criteria per phase.
 **Drift.** Spec docs live only in the working directory's `docs/`, so
 there is nothing to compare across repos. Two cross-checks remain:
 
-- **Lint config.** For each submodule that exists, run the four Step 0b
-  checks from `/pspt:build` — config sha256 against
-  `references/lint/configs/manifest.json`, no second config, pinned
-  dependencies, TypeScript strict with no `.js` under `src/` / `tests/`.
-  Read-only: report, never repair. A `lintDrift` entry in
-  `docs/.pspt.json` is a drift the user chose to keep — show it with its
-  reason.
+- **Toolchain.** For each submodule that exists, run the Step 0b checks from
+  `/pspt:build` against `references/toolchain/manifest.json` — every file's
+  sha256 (ESLint, knip, Prettier, commitlint, husky hooks), no second config,
+  pinned dependencies, scripts, hooks active, TypeScript strict with no `.js`
+  under `src/` / `tests/`. Read-only: report, never repair. A `toolchainDrift`
+  entry in `docs/.pspt.json` is a drift the user chose to keep — show it with
+  its reason.
 - **`noLinter`.** If it names an unsupported framework, surface that so the
   reader knows the commit-hook zero-warnings guarantee is off for that side.
 
@@ -65,7 +65,7 @@ S5  ✓  2 screens             8 refactor rows
 S6  ✓  phases.md             7 backend, 4 frontend
 S7  ✓  fidelity.md           9 text roles, 11 components, 19 variants, 6 one-offs
 S8  ✓  ui-gaps.md            47 gaps → 9 patterns, 8 drawn, 1 skipped
-lint   ✓  backend express      ! frontend react — eslint.config.mjs differs (3 rules), 2 deps unpinned
+tools  ✓  backend express      ! frontend react — knip.json missing, eslint.config.mjs differs (3 rules)
 build  3/70 exit criteria
 
 next   /pspt:build           P0 — "GET /health returns 503 when the database is down"

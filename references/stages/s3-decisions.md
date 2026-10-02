@@ -102,7 +102,7 @@ or `./docs/FE/lint.md` (whichever side owns it) so the parent's spec
 carries it in one place, and link from `be-stack.md` §2 / `fe-stack.md`
 §2 rather than restating its tables. That copy is the **explanation**. The
 rules themselves are the stack's verified config in
-`references/lint/configs/<stack>/`, which `/pspt:build` Step 0b copies into the
+`references/toolchain/<stack>/`, which `/pspt:build` Step 0b copies into the
 submodule verbatim and checks for drift on every invocation. Record the
 stack name in `be-stack.md` / `fe-stack.md` so Step 0b knows which config
 applies.

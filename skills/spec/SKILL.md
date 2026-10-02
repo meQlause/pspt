@@ -150,7 +150,7 @@ After each stage, write `docs/.pspt.json`:
   "stack": { "database": "...", "backend": "...", "orm": "...", "di": "...",
              "frontend": "...", "routing": "...", "serverState": "...", "validation": "..." },
   "noLinter": { "backend": null, "frontend": null },
-  "lintDrift": { "backend": null, "frontend": null }
+  "toolchainDrift": { "backend": null, "frontend": null }
 }
 ```
 
@@ -169,8 +169,8 @@ framework after the warning in S3, record the framework name here so
 `/pspt:build` and `/pspt:enhance` can surface a reminder each time they
 run that the commit-hook zero-warnings guarantee is off for that side.
 
-`lintDrift` is written only by `/pspt:build` Step 0b, when the user chooses to
-keep a project lint config that differs from pspt's canonical one: the reason,
+`toolchainDrift` is written only by `/pspt:build` Step 0b, when the user chooses
+to keep project toolchain files that differ from pspt's canonical ones: the files, the reason,
 in their words, and the date. `null` means the project carries the exact copy.
 
 ## Step 6 — Commit the stage

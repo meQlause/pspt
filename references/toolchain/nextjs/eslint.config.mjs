@@ -2,7 +2,7 @@
 // Source of truth: references/lint/nextjs.md. Copied VERBATIM into the project by
 // /pspt:build; never edited there. A change is a change to pspt, not to the project.
 // /pspt:build and /pspt:status compare this file's sha256 against
-// references/lint/configs/manifest.json — any difference is drift and fails CHECK.
+// references/toolchain/manifest.json — any difference is drift and fails CHECK.
 
 import nextVitals from 'eslint-config-next/core-web-vitals';
 import nextTs from 'eslint-config-next/typescript';

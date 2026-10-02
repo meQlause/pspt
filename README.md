@@ -174,21 +174,22 @@ side:
 
 ## Lint rules
 
-`references/lint/` holds one stack per supported framework — Express, NestJS,
-Next.js, React — in two forms:
+`references/lint/<stack>.md` explains the rules for each supported framework —
+Express, NestJS, Next.js, React: why each threshold, and what it forces into the
+spec.
 
-| | |
-|---|---|
-| `references/lint/<stack>.md` | the rules explained — why each threshold, what it forces into the spec |
-| `references/lint/configs/<stack>/` | the rules as a complete, verified `eslint.config.mjs` plus pinned `package.lint.json` |
-
-`/pspt:build` copies the config into each submodule **byte for byte** and, on
-every invocation, checks it against `configs/manifest.json`: same sha256, no
-second config, exact dependency versions, TypeScript strict. Any difference is
-drift — reported, and never silently "fixed" in either direction. The plugin
-never authors lint rules in your project, so there is one source and nothing to
-drift. `configs/verify/` holds the fixtures that prove each config fires every
-rule.
+`references/toolchain/` **is** the toolchain, as files: per stack a complete,
+verified `eslint.config.mjs` and `knip.json`, shared Prettier, commitlint
+(with SR-6 as a rule) and husky hooks, pinned `devDependencies`, and the one
+`check` script — format, lint, types, knip. `/pspt:build` copies them into each
+submodule **byte for byte** and, on every invocation — as do `build-long`,
+`ticket` and `ticket-build` — checks them against `toolchain/manifest.json`:
+every file's sha256, no second config, exact versions, hooks active,
+TypeScript strict. Any difference is drift: reported, never silently "fixed" in
+either direction. The plugin never authors a tool config in your project, so
+there is one source and nothing to drift. `toolchain/verify/` proves each
+ESLint config fires every rule; see
+[`references/toolchain/README.md`](references/toolchain/README.md).
 
 Three of those rules change what a generated document may say:
 

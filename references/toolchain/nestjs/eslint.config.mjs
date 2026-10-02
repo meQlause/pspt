@@ -1,8 +1,8 @@
-// pspt canonical ESLint config — express.
-// Source of truth: references/lint/express.md. Copied VERBATIM into the project by
+// pspt canonical ESLint config — nestjs.
+// Source of truth: references/lint/nestjs.md. Copied VERBATIM into the project by
 // /pspt:build; never edited there. A change is a change to pspt, not to the project.
 // /pspt:build and /pspt:status compare this file's sha256 against
-// references/lint/configs/manifest.json — any difference is drift and fails CHECK.
+// references/toolchain/manifest.json — any difference is drift and fails CHECK.
 
 import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
@@ -104,7 +104,7 @@ export default [
     rules: {
       'no-restricted-imports': ['error', { patterns: [{ group: [
         '@prisma/*', '.prisma/*', '**/prisma*',
-        'express', 'express-*', '@types/express',
+        '@nestjs/*',
         'axios', 'node-fetch', 'undici',
         'node:fs', 'node:fs/*', 'fs', 'fs/*',
         'node:child_process', 'child_process',

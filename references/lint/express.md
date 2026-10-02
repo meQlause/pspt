@@ -4,9 +4,9 @@ Same contract as [`nestjs.md`](nestjs.md). **Every rule below is identical** —
 nothing in the NestJS set was framework-specific except two items, both noted
 in §7.
 
-> **The rules themselves are [`configs/express/eslint.config.mjs`](configs/express/eslint.config.mjs)**
-> — complete, verified against [`configs/verify/`](configs/verify/), with pinned
-> dependencies in `package.lint.json`. `/pspt:build` copies it into the project
+> **The rules themselves are [`toolchain/express/eslint.config.mjs`](../toolchain/express/eslint.config.mjs)**
+> — complete, verified against [`toolchain/verify/`](../toolchain/verify/), with pinned
+> dependencies in `package.toolchain.json`. `/pspt:build` copies it into the project
 > byte for byte and checks it for drift. This file explains the rules; if the two
 > ever disagree, that is a bug in pspt, not a choice for the project.
 

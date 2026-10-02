@@ -1,0 +1,229 @@
+{
+  "//": "Every file a pspt project must carry, per stack: the path in the submodule, the source in references/toolchain/, its sha256; plus the exact devDependencies and scripts. /pspt:build Step 0b copies these verbatim and checks them on every invocation; /pspt:status reports them. Regenerate whenever a toolchain file changes, and re-run verify/.",
+  "stacks": {
+    "express": {
+      "files": {
+        "eslint.config.mjs": {
+          "source": "references/toolchain/express/eslint.config.mjs",
+          "sha256": "a80d918a65267fa35e7d1d6033f5494e286a2c14c4ca5955ffa3cf1aa920bd05"
+        },
+        "knip.json": {
+          "source": "references/toolchain/express/knip.json",
+          "sha256": "5b54b6197ed48dc9deb11c41b390fcededb909832df262bd5a6d1b08fd081942"
+        },
+        ".prettierrc.json": {
+          "source": "references/toolchain/shared/.prettierrc.json",
+          "sha256": "94699af1850daa277e8e21635ef353179ed6a40989038a0b8da1bf397f673e5b"
+        },
+        ".prettierignore": {
+          "source": "references/toolchain/shared/.prettierignore",
+          "sha256": "a566c7836b86805c4a9d02d5dfb9c9bfbc53b5da74fff220c70bae982bcb8a71"
+        },
+        "commitlint.config.mjs": {
+          "source": "references/toolchain/shared/commitlint.config.mjs",
+          "sha256": "448616569f229b1fe69906ee829a0e6b8d34958f43cfe5be6b93a909398639e5"
+        },
+        ".husky/pre-commit": {
+          "source": "references/toolchain/shared/husky/pre-commit",
+          "sha256": "059ef5bd6b32db60f0c2415b6f9544196f510cb8b0c6566ce7ae3c293764fc82"
+        },
+        ".husky/commit-msg": {
+          "source": "references/toolchain/shared/husky/commit-msg",
+          "sha256": "fcfc227fe0e950deadcef148e6b460d3570b2d722ed523786a63ab00e73155c9"
+        }
+      },
+      "devDependencies": {
+        "eslint": "9.39.5",
+        "@eslint/js": "9.39.5",
+        "typescript-eslint": "8.71.0",
+        "eslint-plugin-sonarjs": "4.2.2",
+        "eslint-plugin-unused-imports": "4.4.1",
+        "eslint-config-prettier": "10.1.8",
+        "prettier": "3.9.9",
+        "knip": "6.39.0",
+        "husky": "9.1.7",
+        "@commitlint/cli": "21.2.3",
+        "@commitlint/config-conventional": "21.2.3"
+      },
+      "scripts": {
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "lint": "eslint --max-warnings=0 .",
+        "lint:files": "eslint --max-warnings=0 --no-warn-ignored",
+        "typecheck": "tsc --noEmit",
+        "knip": "knip",
+        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip",
+        "prepare": "husky"
+      }
+    },
+    "nestjs": {
+      "files": {
+        "eslint.config.mjs": {
+          "source": "references/toolchain/nestjs/eslint.config.mjs",
+          "sha256": "1647cd803787c8283d9594b55558c30dfc4909dd714c212ba5e3625c80b9858a"
+        },
+        "knip.json": {
+          "source": "references/toolchain/nestjs/knip.json",
+          "sha256": "e7d853154d1a9a2ed44da4cc2874a1a63fa32604cbf36c1140be16e70ca6db39"
+        },
+        ".prettierrc.json": {
+          "source": "references/toolchain/shared/.prettierrc.json",
+          "sha256": "94699af1850daa277e8e21635ef353179ed6a40989038a0b8da1bf397f673e5b"
+        },
+        ".prettierignore": {
+          "source": "references/toolchain/shared/.prettierignore",
+          "sha256": "a566c7836b86805c4a9d02d5dfb9c9bfbc53b5da74fff220c70bae982bcb8a71"
+        },
+        "commitlint.config.mjs": {
+          "source": "references/toolchain/shared/commitlint.config.mjs",
+          "sha256": "448616569f229b1fe69906ee829a0e6b8d34958f43cfe5be6b93a909398639e5"
+        },
+        ".husky/pre-commit": {
+          "source": "references/toolchain/shared/husky/pre-commit",
+          "sha256": "059ef5bd6b32db60f0c2415b6f9544196f510cb8b0c6566ce7ae3c293764fc82"
+        },
+        ".husky/commit-msg": {
+          "source": "references/toolchain/shared/husky/commit-msg",
+          "sha256": "fcfc227fe0e950deadcef148e6b460d3570b2d722ed523786a63ab00e73155c9"
+        }
+      },
+      "devDependencies": {
+        "eslint": "9.39.5",
+        "@eslint/js": "9.39.5",
+        "typescript-eslint": "8.71.0",
+        "eslint-plugin-sonarjs": "4.2.2",
+        "eslint-plugin-unused-imports": "4.4.1",
+        "eslint-config-prettier": "10.1.8",
+        "prettier": "3.9.9",
+        "knip": "6.39.0",
+        "husky": "9.1.7",
+        "@commitlint/cli": "21.2.3",
+        "@commitlint/config-conventional": "21.2.3"
+      },
+      "scripts": {
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "lint": "eslint --max-warnings=0 .",
+        "lint:files": "eslint --max-warnings=0 --no-warn-ignored",
+        "typecheck": "tsc --noEmit",
+        "knip": "knip",
+        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip",
+        "prepare": "husky"
+      }
+    },
+    "react": {
+      "files": {
+        "eslint.config.mjs": {
+          "source": "references/toolchain/react/eslint.config.mjs",
+          "sha256": "118bb6d25800f960711f11643781b625884ef965f2f46a3eb3105c5ccd35854e"
+        },
+        "knip.json": {
+          "source": "references/toolchain/react/knip.json",
+          "sha256": "3f6f7c3bd3c80e12bd85bcdbde03cf73c79b4a7f66bd4e8eca8a4b2664386b43"
+        },
+        ".prettierrc.json": {
+          "source": "references/toolchain/shared/.prettierrc.json",
+          "sha256": "94699af1850daa277e8e21635ef353179ed6a40989038a0b8da1bf397f673e5b"
+        },
+        ".prettierignore": {
+          "source": "references/toolchain/shared/.prettierignore",
+          "sha256": "a566c7836b86805c4a9d02d5dfb9c9bfbc53b5da74fff220c70bae982bcb8a71"
+        },
+        "commitlint.config.mjs": {
+          "source": "references/toolchain/shared/commitlint.config.mjs",
+          "sha256": "448616569f229b1fe69906ee829a0e6b8d34958f43cfe5be6b93a909398639e5"
+        },
+        ".husky/pre-commit": {
+          "source": "references/toolchain/shared/husky/pre-commit",
+          "sha256": "059ef5bd6b32db60f0c2415b6f9544196f510cb8b0c6566ce7ae3c293764fc82"
+        },
+        ".husky/commit-msg": {
+          "source": "references/toolchain/shared/husky/commit-msg",
+          "sha256": "fcfc227fe0e950deadcef148e6b460d3570b2d722ed523786a63ab00e73155c9"
+        }
+      },
+      "devDependencies": {
+        "eslint": "9.39.5",
+        "@eslint/js": "9.39.5",
+        "typescript-eslint": "8.71.0",
+        "eslint-plugin-react": "7.37.5",
+        "eslint-plugin-react-hooks": "7.1.1",
+        "eslint-plugin-jsx-a11y": "6.10.2",
+        "eslint-plugin-import": "2.32.0",
+        "eslint-plugin-sonarjs": "4.2.2",
+        "eslint-plugin-unused-imports": "4.4.1",
+        "eslint-config-prettier": "10.1.8",
+        "prettier": "3.9.9",
+        "knip": "6.39.0",
+        "husky": "9.1.7",
+        "@commitlint/cli": "21.2.3",
+        "@commitlint/config-conventional": "21.2.3"
+      },
+      "scripts": {
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "lint": "eslint --max-warnings=0 .",
+        "lint:files": "eslint --max-warnings=0 --no-warn-ignored",
+        "typecheck": "tsc --noEmit",
+        "knip": "knip",
+        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip",
+        "prepare": "husky"
+      }
+    },
+    "nextjs": {
+      "files": {
+        "eslint.config.mjs": {
+          "source": "references/toolchain/nextjs/eslint.config.mjs",
+          "sha256": "b1b1e21ca4d16a497a300485d75cf7f353a8899cba0b90ce2d85179e4ba46df8"
+        },
+        "knip.json": {
+          "source": "references/toolchain/nextjs/knip.json",
+          "sha256": "f77ebc2514338e01189edba446fd0f39e035947137ac827268fbe4f7bea7c9ec"
+        },
+        ".prettierrc.json": {
+          "source": "references/toolchain/shared/.prettierrc.json",
+          "sha256": "94699af1850daa277e8e21635ef353179ed6a40989038a0b8da1bf397f673e5b"
+        },
+        ".prettierignore": {
+          "source": "references/toolchain/shared/.prettierignore",
+          "sha256": "a566c7836b86805c4a9d02d5dfb9c9bfbc53b5da74fff220c70bae982bcb8a71"
+        },
+        "commitlint.config.mjs": {
+          "source": "references/toolchain/shared/commitlint.config.mjs",
+          "sha256": "448616569f229b1fe69906ee829a0e6b8d34958f43cfe5be6b93a909398639e5"
+        },
+        ".husky/pre-commit": {
+          "source": "references/toolchain/shared/husky/pre-commit",
+          "sha256": "059ef5bd6b32db60f0c2415b6f9544196f510cb8b0c6566ce7ae3c293764fc82"
+        },
+        ".husky/commit-msg": {
+          "source": "references/toolchain/shared/husky/commit-msg",
+          "sha256": "fcfc227fe0e950deadcef148e6b460d3570b2d722ed523786a63ab00e73155c9"
+        }
+      },
+      "devDependencies": {
+        "eslint": "9.39.5",
+        "eslint-config-next": "16.3.8",
+        "eslint-plugin-jsx-a11y": "6.10.2",
+        "eslint-plugin-sonarjs": "4.2.2",
+        "eslint-plugin-unused-imports": "4.4.1",
+        "eslint-config-prettier": "10.1.8",
+        "prettier": "3.9.9",
+        "knip": "6.39.0",
+        "husky": "9.1.7",
+        "@commitlint/cli": "21.2.3",
+        "@commitlint/config-conventional": "21.2.3"
+      },
+      "scripts": {
+        "format": "prettier --write .",
+        "format:check": "prettier --check .",
+        "lint": "eslint --max-warnings=0 .",
+        "lint:files": "eslint --max-warnings=0 --no-warn-ignored",
+        "typecheck": "tsc --noEmit",
+        "knip": "knip",
+        "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip",
+        "prepare": "husky"
+      }
+    }
+  }
+}

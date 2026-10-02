@@ -1,6 +1,6 @@
 // Re-proves a canonical config against its fixtures.
-//   cd references/lint/configs/verify/<backend|frontend>
-//   npm i -D <devDependencies from ../../<stack>/package.lint.json>
+//   cd references/toolchain/verify/<backend|frontend>
+//   npm i -D <devDependencies from ../../<stack>/package.toolchain.json>
 //   cp ../../<stack>/eslint.config.mjs . && node ../verify.mjs <stack>
 // Exit 1 when any fixture's rule set differs from expected.json.
 import { readFileSync } from 'node:fs';
