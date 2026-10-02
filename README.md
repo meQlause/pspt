@@ -104,7 +104,7 @@ of what disagrees. Never a half-spec.
   docs/
     strict-rules.md   data-spec.md   error-handling.md   phases.md      shared
     BE/  be-architecture.md  be-stack.md  testing.md  features/*.md
-    FE/  fe-architecture.md  fe-stack.md  design-system.md  fidelity.md  features/*.md
+    FE/  fe-architecture.md  fe-stack.md  design-system.md  fidelity.md  ui-gaps.md  features/*.md
   tickets/<slug>/  request.md  plan.md  phase.md               /pspt:ticket
   .gitmodules
   backend/     → <owner>/<slug>-backend   (git submodule)
@@ -132,6 +132,7 @@ Requires `gh` (GitHub CLI) installed and authenticated. See SR-3.
 | S5 | Design tokens, refactor map, screen specs with acceptance criteria |
 | S6 | Two tracks, dependencies, sizes, checkbox exit criteria |
 | S7 | Mockup fidelity: a script analyses the mockup into text roles, components and variants, each defined once; the app is held to it — every screen, state and width pixel-compared, fonts and spacing exactly equal per component, every asset hash-equal, every interaction working for real |
+| S8 | UI gap analysis: every loading, empty, error, confirmation, toast, offline and not-found state the spec requires but the mockup never drew — found from the spec, grouped into patterns, recommended from existing components, asked last, and drawn into the mockup |
 
 ## Fixed, never asked
 

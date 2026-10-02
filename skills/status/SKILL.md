@@ -29,6 +29,7 @@ count plus the first few is enough at this level.
 | S5 | `FE/design-system.md`, ≥1 `FE/features/*.md` |
 | S6 | `phases.md` |
 | S7 | `FE/fidelity.md`, and a Mockup parity phase in `phases.md` |
+| S8 | `FE/ui-gaps.md` |
 | Build | `phases.md` has at least one ticked exit criterion |
 
 **Build progress.** If `phases.md` exists, count ticked versus total exit
@@ -56,7 +57,8 @@ S3  ✓  6 files               express · prisma · postgres · react+vite
 S4  ✓  2 features            10 endpoints, 5 regressions reserved
 S5  ✓  2 screens             8 refactor rows
 S6  ✓  phases.md             7 backend, 4 frontend
-S7  ✓  fidelity.md           7 states × 3 widths, 41 style keys, 9 assets, 12 behaviours
+S7  ✓  fidelity.md           9 text roles, 11 components, 19 variants, 6 one-offs
+S8  ✓  ui-gaps.md            47 gaps → 9 patterns, 8 drawn, 1 skipped
 build  3/70 exit criteria
 
 next   /pspt:build           P0 — "GET /health returns 503 when the database is down"

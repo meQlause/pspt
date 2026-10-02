@@ -3,7 +3,7 @@
 **Produces:** `docs/FE/fidelity.md`, plus a **Mockup parity** phase appended to
 the frontend track of `docs/phases.md`
 
-The last stage. S5 decided *how* the mockup becomes an application; S7 decides
+S5 decided *how* the mockup becomes an application; S7 decides
 *how anyone will know it did*. "Looks like the mockup" is not a criterion — it is
 an opinion, and opinions drift one pixel, one font weight, one forgotten hover
 state at a time. This stage turns the mockup into a **measured baseline** and
@@ -29,7 +29,8 @@ Two principles shape everything below:
 S5 and S6 must be complete: every screen and state has a refactor-map row and a
 screen document, and `phases.md` exists. If the mockup changed since S5, stop and
 re-run S5 first — a baseline taken from a mockup the spec does not describe
-measures the wrong thing.
+measures the wrong thing. S8 runs after this stage and may add states to the
+mockup; it updates §1 and regenerates the baseline itself.
 
 ## Token discipline
 
