@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.5.0](#v050--2026-10-02) | 2026-10-02 | S8 — the states the mockup forgot |
 | [0.4.1](#v041--2026-10-02) | 2026-10-02 | S7 analyses the mockup and defines each pattern once |
 | [0.4.0](#v040--2026-10-02) | 2026-10-02 | S7 — the finished app matches the mockup |
 | [0.3.2](#v032--2026-09-29) | 2026-09-29 | A recommendation for every lorem ipsum |
@@ -18,6 +19,42 @@ absolute image links. Versions are listed in
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
 
 ---
+
+## v0.5.0 — 2026-10-02
+
+**S8 — the states the mockup forgot.** A new last stage of `/pspt:spec` finds
+every loading, empty, error, confirmation, toast, offline and not-found state
+the spec requires but the mockup never drew, recommends how to fill it, asks
+you, and draws your answer into the mockup.
+
+![v0.5.0 — gaps found from the spec, grouped into patterns, recommended from existing components, asked, drawn](releases/v0.5.0.png)
+
+**Added**
+
+- **Stage S8, UI gap analysis** ([`s8-ui-gaps.md`](references/stages/s8-ui-gaps.md))
+  — writes `docs/FE/ui-gaps.md`.
+- **Found from the spec, not guessed** — every error code's presentation on the
+  screens that receive it; loading, refresh and failure for every read; empty
+  and end states for every list; pending, success and failure for every
+  mutation; confirmation or undo for destructive actions; a message per form
+  rule; `409` conflict; `401` / `403` / `404`; offline, timeout, `500`, unknown
+  route; long and missing values; undrawn breakpoints; focus and disabled.
+- **Grouped into patterns** — fourteen missing loading states are one decision,
+  not fourteen questions.
+- **Recommended from what exists** — an existing component first, then a new
+  variant, then a new component from existing tokens; never new colours, fonts
+  or spacing. Errors you must act on are never toasts; skeletons mirror the
+  layout; loading waits 300 ms; motion honours reduced-motion.
+- **Asked last** — one `AskUserQuestion` per pattern, recommendation first with
+  its trade-offs; skipped patterns name the fallback the app shows.
+- **Drawn into the mockup** — approved states become mockup states using
+  existing classes and tokens, then fold into the S5 refactor map and screen
+  documents, additive FRs in `srs.md`, the S7 matrix and baseline, and
+  `COPY-nnn` copy recommendations.
+
+**Changed**
+
+- `/pspt:spec`, `/pspt:status`, S7 and the README list the new stage.
 
 ## v0.4.1 — 2026-10-02
 

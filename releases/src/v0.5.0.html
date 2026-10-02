@@ -1,0 +1,67 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#f7f6f2;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--spec:#3b6ea8;--spec-bg:#e8f0f9;--tick:#b0521f;--tick-bg:#fbeee6;--build:#2f7a4f;--build-bg:#e6f3eb;--bad:#b3261e;--bad-bg:#fde9e7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:40px 48px}
+.ver{display:inline-block;font:700 14px ui-monospace,Menlo,monospace;background:var(--ink);color:#fff;border-radius:7px;padding:4px 10px;margin-bottom:10px}
+h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+h2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:26px 0 11px}
+code,.m{font-family:ui-monospace,Menlo,monospace;font-size:.92em}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+.a{color:var(--mute);font-size:22px;padding:0 10px;display:flex;align-items:center}
+.n{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px}
+.n b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14.5px}
+.n span{color:var(--mute);font-size:13px;display:block}
+.s{border-color:var(--spec);background:var(--spec-bg)} .s b{color:var(--spec)}
+.t{border-color:var(--tick);background:var(--tick-bg)} .t b{color:var(--tick)}
+.g{border-color:var(--build);background:var(--build-bg)} .g b{color:var(--build)}
+.r{border-color:var(--bad);background:var(--bad-bg)} .r b{color:var(--bad)}
+.d{border-style:dashed}
+.k{border:2px solid var(--ink)}
+.grid{display:grid;gap:18px}
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p,.card li{font-size:13.5px;color:#3a3a36}
+.card ul{padding-left:18px}
+.pre{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;white-space:pre;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.pre .c{color:var(--mute)} .pre .h{color:var(--tick);font-weight:700} .pre .gg{color:var(--build);font-weight:700}
+.new{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--tick);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:system-ui}
+.foot{margin-top:22px;color:var(--mute);font-size:13px;display:flex;justify-content:space-between}
+</style></head><body><span class="ver">v0.5.0</span><h1>S8 — the states the mockup forgot</h1><p class="sub">A new last stage of /pspt:spec: every loading, empty, error, confirmation, toast, offline and not-found state the spec requires — found, recommended, asked, drawn.</p><h2>Found from the spec · grouped · recommended · asked last · drawn</h2>
+<div class="row">
+ <div class="n s"><b>spec rules</b><span>error codes · reads · lists · mutations · access</span></div><div class="a">→</div>
+ <div class="n"><b>47 gaps</b><span>places the mockup draws nothing</span></div><div class="a">→</div>
+ <div class="n k"><b>9 patterns</b><span>one decision each, not per screen</span></div><div class="a">→</div>
+ <div class="n t"><b>you choose</b><span>recommendation first, trade-offs shown</span></div><div class="a">→</div>
+ <div class="n g"><b>drawn into mockup/</b><span>then S5 · S7 · srs updated</span></div>
+</div>
+<div class="grid c2">
+<div><h2>What the spec requires that the mockup never drew</h2>
+<div class="pre">gaps   47 across 5 screens → 9 patterns
+  loading       14   every read on every screen
+  mutation      11   pending · success · failure
+  error-pres     8   E-BOOKINGS-WINDOW on review, …
+  empty          4   history, courts, search, …
+  confirm        3   cancel booking, delete court, …
+  validation     4   rules with no drawn message
+  app-wide       4   offline · timeout · 500 · 404
+  long-content   2   venue name, court name
+  focus          1   no focus-visible style</div></div>
+<div><h2>One question per pattern — recommendation first</h2>
+<div class="pre"><span class="h">Loading — 14 reads on 5 screens</span>
+ ● Skeleton after 300 ms, Card outline in
+   color.surface-muted, no shimmer   <span class="gg">(Recommended)</span>
+   <span class="c">mirrors the layout, no flash on fast responses</span>
+ ○ Spinner centred in the content area
+   <span class="c">simpler, but the layout jumps</span>
+ ○ Dim previous content, spinner on the trigger
+   <span class="c">right for refresh, wrong for first load</span></div></div>
+</div>
+<h2>Recommendations reuse what the mockup already has</h2>
+<div class="grid" style="grid-template-columns:repeat(4,1fr)">
+ <div class="card"><h3>1 · Existing component</h3><p>Error popup → the <b>Modal</b> you already have, with <code>Button/primary</code>.</p></div>
+ <div class="card"><h3>2 · New variant</h3><p>Toast → <b>Banner/advisory</b>, floating. Skeleton → <b>Card</b> outline.</p></div>
+ <div class="card"><h3>3 · New component</h3><p>Only when nothing fits — built from existing tokens only.</p></div>
+ <div class="card" style="border-color:var(--bad)"><h3 style="color:var(--bad)">Never</h3><p>New colours, fonts, spacing or radii. And an error you must act on is <b>never a toast</b>.</p></div>
+</div><div class="foot"><span>meQlause/pspt · v0.5.0</span><span>references/stages/s8-ui-gaps.md</span></div></body></html>
