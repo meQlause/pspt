@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.6.0](#v060--2026-10-02) | 2026-10-02 | The toolchain, shipped as files — no more drift |
 | [0.5.0](#v050--2026-10-02) | 2026-10-02 | S8 — the states the mockup forgot |
 | [0.4.1](#v041--2026-10-02) | 2026-10-02 | S7 analyses the mockup and defines each pattern once |
 | [0.4.0](#v040--2026-10-02) | 2026-10-02 | S7 — the finished app matches the mockup |
@@ -19,6 +20,57 @@ absolute image links. Versions are listed in
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
 
 ---
+
+## v0.6.0 — 2026-10-02
+
+**The toolchain, shipped as files — no more drift.** ESLint, knip, Prettier,
+commitlint, husky and the `check` command are copied into every project byte
+for byte and checked by every build skill.
+
+![v0.6.0 — before: a promise improvised per project; now: references/toolchain/ copied byte for byte and checked everywhere](releases/v0.6.0.png)
+
+**Why.** The lint references were prose and rule snippets, and the rest of the
+promised toolchain had no definition at all — SR-3 pointed at a "§3" that did
+not exist. Projects improvised: one ended up in plain JavaScript with
+different plugins and limits, no `id-length`, no magic-value rules, no purity
+boundary, and no knip.
+
+**Added**
+
+- **[`references/toolchain/`](references/toolchain/README.md)**, per stack
+  (Express, NestJS, React, Next.js):
+  - `eslint.config.mjs` — every rule, threshold, severity and exemption from
+    `references/lint/<stack>.md`, nothing added
+  - `knip.json` — dead files, unused exports, unused dependencies
+  - `package.toolchain.json` — exact versions, and `check` = format → lint →
+    typecheck → knip
+- **Shared** — `.prettierrc.json`, `.prettierignore`, `commitlint.config.mjs`
+  with **SR-6 as a rule** (no `Co-Authored-By`, session link or "generated
+  with"), husky `pre-commit` (`pnpm check`) and `commit-msg` (commitlint).
+- **`manifest.json`** — every file's project path, source and sha256, per stack.
+- **`verify/`** — fixtures and expected rule sets proving each ESLint config.
+  The chain was also run end to end on an Express project: knip failing the
+  check on an orphan file and an unused export, the pre-commit hook blocking a
+  magic number, commitlint rejecting `Co-Authored-By`.
+
+**Changed**
+
+- **`/pspt:build` Step 0b** installs the toolchain when missing and, on every
+  invocation, checks every file's hash, second configs, exact versions,
+  scripts, active hooks, TypeScript strict and Playwright Chromium. Drift
+  stops the work: restore pspt's toolchain, or keep yours (recorded as
+  `toolchainDrift`).
+- It runs in **`/pspt:build`**, **`/pspt:build-long`**, before
+  **`/pspt:ticket`**'s first phase and before each **`/pspt:ticket-build`**
+  ticket; **`/pspt:status`** reports it.
+- SR-3, S3, the lint references and the README point at the toolchain.
+
+**Fixed**
+
+- `curly: 'all'` never fired: `eslint-config-prettier` turns it off. Every
+  config re-enables it after Prettier.
+- `react.md` named the legacy react-hooks config, which crashes flat config;
+  it is now `reactHooks.configs.flat['recommended-latest']`.
 
 ## v0.5.0 — 2026-10-02
 

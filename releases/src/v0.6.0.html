@@ -1,0 +1,64 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#f7f6f2;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--spec:#3b6ea8;--spec-bg:#e8f0f9;--tick:#b0521f;--tick-bg:#fbeee6;--build:#2f7a4f;--build-bg:#e6f3eb;--bad:#b3261e;--bad-bg:#fde9e7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:40px 48px}
+.ver{display:inline-block;font:700 14px ui-monospace,Menlo,monospace;background:var(--ink);color:#fff;border-radius:7px;padding:4px 10px;margin-bottom:10px}
+h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+h2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:26px 0 11px}
+code,.m{font-family:ui-monospace,Menlo,monospace;font-size:.92em}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+.a{color:var(--mute);font-size:22px;padding:0 10px;display:flex;align-items:center}
+.n{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px}
+.n b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14.5px}
+.n span{color:var(--mute);font-size:13px;display:block}
+.s{border-color:var(--spec);background:var(--spec-bg)} .s b{color:var(--spec)}
+.t{border-color:var(--tick);background:var(--tick-bg)} .t b{color:var(--tick)}
+.g{border-color:var(--build);background:var(--build-bg)} .g b{color:var(--build)}
+.r{border-color:var(--bad);background:var(--bad-bg)} .r b{color:var(--bad)}
+.d{border-style:dashed}
+.k{border:2px solid var(--ink)}
+.grid{display:grid;gap:18px}
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p,.card li{font-size:13.5px;color:#3a3a36}
+.card ul{padding-left:18px}
+.pre{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;white-space:pre;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.pre .c{color:var(--mute)} .pre .h{color:var(--tick);font-weight:700} .pre .gg{color:var(--build);font-weight:700}
+.new{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--tick);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:system-ui}
+.foot{margin-top:22px;color:var(--mute);font-size:13px;display:flex;justify-content:space-between}
+</style></head><body><span class="ver">v0.6.0</span><h1>The toolchain, shipped as files — no more drift</h1><p class="sub">ESLint, knip, Prettier, commitlint, husky and the check command are copied into every project byte for byte and checked by every build skill.</p><div class="grid c2">
+<div><h2>Before — a promise, improvised per project</h2>
+<div class="pre"><span class="c">README: "eslint, prettier, knip, husky, commitlint"</span>
+<span class="c">SR-3:   "the toolchain in §3"  →  there was no §3</span>
+<span class="c">lint/*.md: "config plumbing deliberately left out"</span>
+
+<span class="h">one real project ended up with:</span>
+  plain .js, Jest, promise, security plugins
+  max-lines-per-function 80   (pspt: 70)
+  no id-length · no magic numbers · no purity rule
+  no knip at all</div></div>
+<div><h2>Now — references/toolchain/, copied byte for byte</h2>
+<div class="pre"><span class="gg">eslint.config.mjs</span>      every rule from lint/&lt;stack&gt;.md
+<span class="gg">knip.json</span>              dead files · unused exports · deps
+<span class="gg">.prettierrc.json</span>       formatting
+<span class="gg">commitlint.config.mjs</span>  conventional + <b>SR-6 as code</b>
+<span class="gg">.husky/</span>                pre-commit · commit-msg
+<span class="gg">package.json</span>           exact versions + scripts
+  <b>check</b> = format → lint → typecheck → knip
+<span class="c">manifest.json: sha256 of every file, per stack</span></div></div>
+</div>
+<h2>Step 0b — checked in every build skill, drift stops the work</h2>
+<div class="row">
+ <div class="n g"><b>/pspt:build</b><span>every run</span></div><div class="a">·</div>
+ <div class="n g"><b>/pspt:build-long</b><span>every iteration</span></div><div class="a">·</div>
+ <div class="n t"><b>/pspt:ticket</b><span>before the first phase</span></div><div class="a">·</div>
+ <div class="n t"><b>/pspt:ticket-build</b><span>before each ticket</span></div><div class="a">·</div>
+ <div class="n s"><b>/pspt:status</b><span>reports, read-only</span></div>
+</div>
+<div class="grid c3" style="margin-top:20px">
+ <div class="card"><h3>Proven end to end</h3><p>knip fails on an orphan file and an unused export; the pre-commit hook blocks a magic number; commitlint rejects <code>Co-Authored-By</code>.</p></div>
+ <div class="card"><h3>Two bugs found in the references</h3><p><code>curly</code> silently off behind Prettier; <code>react.md</code>'s react-hooks line crashing flat config. Both fixed.</p></div>
+ <div class="card"><h3>Drift is your call</h3><p>Missing files are installed. A different file stops the build: restore pspt's, or keep yours — recorded as <code>toolchainDrift</code>.</p></div>
+</div><div class="foot"><span>meQlause/pspt · v0.6.0</span><span>references/toolchain/</span></div></body></html>
