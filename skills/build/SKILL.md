@@ -317,6 +317,10 @@ The order matters because the parent tracks the submodules' commit ids:
 
 6. **Never `git push`.** The user decides when the change leaves the machine.
 
+7. **Re-index** the files the criterion changed — jcodemunch `index_folder`,
+   incremental, with those `paths` (`references/prerequisites.md` §5) — so
+   the next criterion reads the code as it now is.
+
 Message template (identical in the submodule and the parent):
 
 ```

@@ -74,8 +74,12 @@ Each iteration:
    be clean.
 4. Re-run the tests that cover the file — the whole suite when unsure. Still
    green, or the change is reverted and redone.
-5. Append the batch to the progress log, then print:
-   `✓ 14/23 · pricing.rules.js — 5 fixed · tests green · 104 → 99 left`
+5. **Re-index** the file — and any file the fix renamed, moved or deleted —
+   with jcodemunch `index_folder`, incremental, with those `paths`
+   (`references/prerequisites.md` §5), so the next file's reads and
+   `find_importers` see this change.
+6. Append the batch to the progress log, then print:
+   `✓ 14/23 · pricing.rules.js — 5 fixed · tests green · ↻ re-indexed · 104 → 99 left`
    and one line per disable added in this batch:
    `⚑ disabled no-magic-numbers at pricing.rules.js:14 — the vendor API encodes "settled" as 7`
 

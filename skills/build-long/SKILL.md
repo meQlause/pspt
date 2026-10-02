@@ -39,7 +39,9 @@ short-cuts:
    assertions, no `--no-verify`).
 4. **Step 7** — tick the checkbox in `phases.md`, write any specification
    correction back, and commit — inside the touched submodule first, then in
-   the parent so the pointer moves in the same change. No push.
+   the parent so the pointer moves in the same change. No push. Then
+   re-index the changed files with jcodemunch, so the next iteration reads the
+   code as it now is (`references/prerequisites.md` §5).
 
 ## Between iterations
 

@@ -505,6 +505,14 @@ For each phase, in order:
    ✓ P2 wire-in — T1 T2 R1 S1–S3 green; committed backend@4f2d9e1, parent@9ab31c0. Next: P3 docs.
    ```
 
+6. **Re-index** the files the phase changed — jcodemunch `index_folder`,
+   incremental, with those `paths` (`references/prerequisites.md` §5) —
+   before the next phase reads anything:
+
+   ```
+   ↻ jcodemunch re-indexed 6 files (P2 wire-in)
+   ```
+
 **A box is ticked only for what actually happened.** Never pre-tick, never tick
 a test that was not run on the current tree, never tick a task that is half
 done. If a later task turns an earlier test red, untick its box and fix it

@@ -76,13 +76,14 @@ Every pspt skill requires two tools — see [`references/prerequisites.md`](refe
 | | |
 |---|---|
 | [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/) | an MCP code index: every code read goes through it, so skills read symbols, not whole files |
-| [Ponytail](https://github.com/DietrichGebert/ponytail) | a coding-agent plugin: every change is the smallest one that works — but pspt's spec, conventions, lint rules and tests always win |
+| [Ponytail](https://ponytail.dev/) | a coding-agent plugin: every change is the smallest one that works — but pspt's spec, conventions, lint rules and tests always win |
 
 If either is missing, the skill asks once, then installs it itself (`uv` too, if
 needed) and registers it **for the project** — `.mcp.json` and
 `.claude/settings.json` for Claude Code, `CLAUDE.md`, `AGENTS.md` and
 `.agents/rules/ponytail.md` for every other agent — so the next session and
-every teammate get it. Decline and the skill does not start; `/pspt:status`
+every teammate get it. The jcodemunch index is refreshed after every phase, so
+each read sees the code as it is now. Decline and the skill does not start; `/pspt:status`
 only reports. jCodeMunch is free for non-commercial use (commercial use needs
 its own licence); Ponytail is MIT.
 

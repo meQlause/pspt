@@ -131,7 +131,10 @@ For each package that failed, in this order — 2 to 5 are one
 7. **Safe autofix** — `prettier --write .`, then `eslint --fix .`. These only
    apply fixes the tools mark as safe (formatting, braces, unused imports).
    Nothing else is edited.
-8. **Run `check`** and collect what remains: lint findings grouped by rule with
+8. **Re-index** the package incrementally with jcodemunch
+   (`references/prerequisites.md` §5) — the install and the autofixes
+   touched many files, and whatever reads the code next must see them.
+9. **Run `check`** and collect what remains: lint findings grouped by rule with
    counts and the worst files, and knip's unused files, exports and
    dependencies.
 

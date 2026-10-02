@@ -105,7 +105,11 @@ Step 7 already prints:
 
 ## Step 4 — Between tickets
 
-When a ticket closes out, print its `/pspt:ticket` Step 8 report, then one line:
+Every phase re-indexes the files it changed, as `/pspt:ticket` Step 7 · 6
+requires. When a ticket closes out, re-index once more incrementally — the next
+ticket's Step 2 re-check reads the code through jcodemunch and must see this
+ticket's changes (`references/prerequisites.md` §5). Then print its
+`/pspt:ticket` Step 8 report, then one line:
 
 ```
 ✓ 1/3 booking-ref-v2 done · next: offline-banner

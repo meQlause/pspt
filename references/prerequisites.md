@@ -8,7 +8,7 @@ every teammate gets it too. A skill never starts without them.
 | Tool | What it is for | Licence |
 |---|---|---|
 | [jCodeMunch](https://pypi.org/project/jcodemunch-mcp/) (`jcodemunch-mcp`) | An MCP server that indexes the repository and answers with symbols, importers and blast radius instead of whole files — every code read goes through it, which keeps the skills cheap and exact | Free for non-commercial use; commercial use needs a paid jCodeMunch licence |
-| [Ponytail](https://github.com/DietrichGebert/ponytail) (`ponytail@ponytail`) | A coding-agent plugin that makes every change the smallest one that works: skip it, reuse what exists, stdlib, native feature, installed dependency, one line — and never cuts validation, error handling, security or accessibility | MIT |
+| [Ponytail](https://ponytail.dev/) ([source](https://github.com/DietrichGebert/ponytail), `ponytail@ponytail`) | A coding-agent plugin that makes every change the smallest one that works: skip it, reuse what exists, stdlib, native feature, installed dependency, one line — and never cuts validation, error handling, security or accessibility | MIT |
 
 **Precedence.** Ponytail decides *how little code* a change needs; it never
 decides *what* the change must do. Where the two meet, pspt's specification,
@@ -158,3 +158,34 @@ and stop. Nothing the skill would have written exists yet, so nothing is lost.
   read a whole file only when jcodemunch returns nothing for it, and say so.
 - **ponytail** — always on once installed: before writing code, stop at the
   first rung that holds. pspt's precedence rule above decides every conflict.
+
+## 5. Keep the index current — re-index after every phase
+
+jcodemunch answers from its index. Code a skill has just written is invisible
+to it, or stale, until it is re-indexed — and the next read would then reason
+about code that no longer exists. So **every time a unit of work finishes and
+changes files, re-index before the next read**:
+
+| Skill | Re-index after |
+|---|---|
+| `/pspt:build`, `/pspt:build-long` | each exit criterion's commit (Step 7) — before the next criterion |
+| `/pspt:ticket` | each phase's commit (Step 7 · 5) — before the next phase |
+| `/pspt:ticket-build` | each phase, and each ticket's close-out — before Step 2 re-checks the next ticket's plan |
+| `/pspt:fix-flow` | the install and the autofixes (Step 4) — before reporting |
+| `/pspt:fix-flow-proceed` | each iteration's file — before the next file and before the queue is re-read |
+| `/pspt:spec` S7 / S8, `/pspt:enhance`, `/pspt:code`, `/pspt:reg` | a mockup or source file written (docs alone need no re-index) |
+
+How: `index_folder` on the working directory with `incremental: true` and
+`paths` set to the files the unit changed (`git diff --name-only <before>..HEAD`,
+plus deleted files) — only those are re-parsed. When the changed set is unclear
+(a branch switch, a merge, a pull), run `index_folder` incrementally on the
+whole working directory. Then print one line:
+
+```
+↻ jcodemunch re-indexed 6 files (P2 wire-in)
+```
+
+Never skip it because "the change was small": a renamed export missed by the
+index is exactly how a later `find_importers` reports a file as safe to edit
+when it is not.
+
