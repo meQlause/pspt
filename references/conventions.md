@@ -147,7 +147,7 @@ slot key, or an explicit lock — and record the write cost in the data spec.
 
 ## 8. Testing
 
-Four suites, one shape, mirroring the source tree exactly.
+Five suites, one shape, mirroring the source tree exactly.
 
 ```
 tests/
@@ -155,6 +155,7 @@ tests/
   integration/   mirrors src/features/, real database, real router
   e2e/           user journeys, Chromium
   regression/    one file per closed defect, REG-001 upward, never deleted
+  fidelity/      frontend only: the app against the mockup baseline — pixels, computed styles, assets, behaviour (S7)
   fixtures/      builders, not JSON blobs
   helpers/       container factory, database lifecycle, sign in
 ```

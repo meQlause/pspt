@@ -167,6 +167,18 @@ pnpm check
 npx eslint --max-warnings=0 --no-warn-ignored <changed files>
 ```
 
+In the frontend submodule, once `tests/fidelity/` exists (S7), also run the
+fidelity suites of every screen the criterion touched:
+
+```
+pnpm test:fidelity -- <screen>
+```
+
+A pixel, style, asset or behaviour difference from the mockup baseline is a red
+test like any other. Never regenerate the baseline to make it pass — the
+baseline comes from the mockup, and only a mockup change moves it
+(`references/stages/s7-fidelity.md` §10).
+
 **Zero warnings.** `warn` is not advisory in this codebase — the hook runs
 `--max-warnings=0`, so every warning blocks a commit even when `pnpm lint`
 passes. Clear every finding before moving on.

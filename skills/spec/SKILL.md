@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Derive the engineering specification set — data spec and ERD, architecture, stack, endpoint contracts, error registry, testing strategy, phased plan — from requirement documents plus a static HTML mockup. Runs one stage per invocation with a checkpoint between each. Use when the user has a BRD/PRD/SRS and a mockup and wants the SDD document set generated, or says "generate the spec", "write the data spec", "spec this out".
+description: Derive the engineering specification set — data spec and ERD, architecture, stack, endpoint contracts, error registry, testing strategy, phased plan, mockup-fidelity baseline — from requirement documents plus a static HTML mockup. Runs one stage per invocation with a checkpoint between each. Use when the user has a BRD/PRD/SRS and a mockup and wants the SDD document set generated, or says "generate the spec", "write the data spec", "spec this out".
 ---
 
 # Generate the specification set
@@ -12,7 +12,7 @@ write traces to something the user already wrote.
 Read `references/conventions.md` and `references/house-style.md` before writing
 any document. They are fixed and not negotiable per project.
 
-If the user passed an argument (`data`, `decisions`, `be`, `fe`, `phases`), skip
+If the user passed an argument (`data`, `decisions`, `be`, `fe`, `phases`, `fidelity`), skip
 to that stage and regenerate it. Otherwise run the gates, then the first
 incomplete stage.
 
@@ -88,6 +88,7 @@ Read `docs/.pspt.json` if it exists. Otherwise infer from what is in `docs/`.
 | S4 | `BE/features/README.md`, at least one `BE/features/*.md`, `BE/testing.md` |
 | S5 | `FE/design-system.md`, at least one `FE/features/*.md` |
 | S6 | `phases.md` |
+| S7 | `FE/fidelity.md`, and the Mockup parity phase in `phases.md` |
 
 Run **the first incomplete stage only**.
 
@@ -102,6 +103,7 @@ Read the matching guide and follow it:
 | S4 | `references/stages/s4-backend.md` |
 | S5 | `references/stages/s5-frontend.md` |
 | S6 | `references/stages/s6-phases.md` |
+| S7 | `references/stages/s7-fidelity.md` |
 
 Each guide lists the required sections, the decisions to ask, and the exit
 criteria. Ask every decision the guide names with `AskUserQuestion`, presenting
@@ -125,7 +127,7 @@ it changes.
 docs/
   strict-rules.md  data-spec.md  error-handling.md  phases.md     ← shared
   BE/  be-architecture.md  be-stack.md  testing.md  features/*.md
-  FE/  fe-architecture.md  fe-stack.md  design-system.md  features/*.md
+  FE/  fe-architecture.md  fe-stack.md  design-system.md  fidelity.md  features/*.md
 ```
 
 At S3, copy the governing lint file from `references/lint/` into
@@ -142,7 +144,7 @@ After each stage, write `docs/.pspt.json`:
 ```json
 {
   "version": 1,
-  "stages": { "s2": "<ISO date>", "s3": null, "s4": null, "s5": null, "s6": null },
+  "stages": { "s2": "<ISO date>", "s3": null, "s4": null, "s5": null, "s6": null, "s7": null },
   "stack": { "database": "...", "backend": "...", "orm": "...", "di": "...",
              "frontend": "...", "routing": "...", "serverState": "...", "validation": "..." },
   "noLinter": { "backend": null, "frontend": null }
@@ -212,6 +214,9 @@ S2 complete.  docs/data-spec.md  — 6 tables, 1 exclusion constraint, 17 extrac
 Read it and change anything you disagree with; it is the input to every stage after this.
 Next: /pspt:spec  → S3, shared decisions (framework, ORM, error registry)
 ```
+
+After S7 the specification set is complete; the report's last line names
+`/pspt:build` and the first unticked criterion instead of a next stage.
 
 Do not continue into the next stage, even if it seems obvious. The checkpoint is
 the point: nothing moves right until the artifact on the left has been read.

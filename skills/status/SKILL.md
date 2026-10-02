@@ -28,7 +28,8 @@ count plus the first few is enough at this level.
 | S4 | `BE/features/README.md`, ≥1 `BE/features/*.md`, `BE/testing.md` |
 | S5 | `FE/design-system.md`, ≥1 `FE/features/*.md` |
 | S6 | `phases.md` |
-| S7 | `phases.md` has at least one ticked exit criterion |
+| S7 | `FE/fidelity.md`, and a Mockup parity phase in `phases.md` |
+| Build | `phases.md` has at least one ticked exit criterion |
 
 **Build progress.** If `phases.md` exists, count ticked versus total exit
 criteria per phase.
@@ -55,7 +56,8 @@ S3  ✓  6 files               express · prisma · postgres · react+vite
 S4  ✓  2 features            10 endpoints, 5 regressions reserved
 S5  ✓  2 screens             8 refactor rows
 S6  ✓  phases.md             7 backend, 4 frontend
-S7  ·  3/64 exit criteria
+S7  ✓  fidelity.md           7 states × 3 widths, 41 style keys, 9 assets, 12 behaviours
+build  3/70 exit criteria
 
 next   /pspt:build           P0 — "GET /health returns 503 when the database is down"
 ```

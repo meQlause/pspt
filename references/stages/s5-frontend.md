@@ -4,7 +4,8 @@
 screen)
 
 Turn the approved mockup into an application by **refactoring it, not rebuilding
-it**. The mockup already carries the approved layout, the approved copy and the
+it**. S7 later measures the result against the mockup — so every value here is
+copied, never approximated. The mockup already carries the approved layout, the approved copy and the
 approved states. Rewriting from scratch throws away a stakeholder decision that
 was already paid for.
 

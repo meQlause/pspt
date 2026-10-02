@@ -358,6 +358,7 @@ Written before any code. `Result` is empty until the test runs.
 | S1 | static | all | lint, zero warnings | `pnpm exec eslint --max-warnings=0 <changed files>` | exit 0 | |
 | S2 | static | all | format | `pnpm exec prettier --check <changed files>` | exit 0 | |
 | S3 | static | all | whole-tree check | `pnpm check` | exit 0 | |
+| S4 | fidelity | touched screens | app vs mockup baseline — pixels, styles, assets, behaviour | `pnpm test:fidelity -- review` | pass | |
 
 ## 7. Traceability check
 
@@ -391,7 +392,10 @@ register — a defect this ticket closes gets a `REG-nnn` from `/pspt:reg` and i
 own T row naming the id.
 
 **S — static.** Lint with `--max-warnings=0` the way the commit hook runs it,
-format check, and the whole-tree check command. Always the last three rows.
+format check, and the whole-tree check command. Always the last rows. A ticket
+that touches a frontend screen adds one more: that screen's fidelity suites
+against the mockup baseline (`references/stages/s7-fidelity.md`), once the
+project has them.
 
 > The test table is written before the code for the same reason `/pspt:build`
 > writes the test first: a test designed after the code tests the code, not the

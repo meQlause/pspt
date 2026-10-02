@@ -104,7 +104,7 @@ of what disagrees. Never a half-spec.
   docs/
     strict-rules.md   data-spec.md   error-handling.md   phases.md      shared
     BE/  be-architecture.md  be-stack.md  testing.md  features/*.md
-    FE/  fe-architecture.md  fe-stack.md  design-system.md  features/*.md
+    FE/  fe-architecture.md  fe-stack.md  design-system.md  fidelity.md  features/*.md
   tickets/<slug>/  request.md  plan.md  phase.md               /pspt:ticket
   .gitmodules
   backend/     → <owner>/<slug>-backend   (git submodule)
@@ -131,6 +131,7 @@ Requires `gh` (GitHub CLI) installed and authenticated. See SR-3.
 | S4 | Endpoint contracts, server-owned fields, error tables, testing strategy, reserved regressions |
 | S5 | Design tokens, refactor map, screen specs with acceptance criteria |
 | S6 | Two tracks, dependencies, sizes, checkbox exit criteria |
+| S7 | Mockup fidelity: the app measured against the mockup — every screen, state and width pixel-compared; fonts, sizes, weights, padding and margins equal; every asset hash-equal; every mockup interaction working for real |
 
 ## Fixed, never asked
 
