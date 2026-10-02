@@ -1,0 +1,8 @@
+# tag|target|title — one line per version, oldest first; the last line is marked latest.
+# target is the release commit, or HEAD for "the commit that adds this line".
+v0.1.0|d040fb1fb30c874ebbb40cde2633256fd3a35746|v0.1.0 — first release: spec-driven development for Claude Code
+v0.2.0|e1739a3b37f926a21b15949638b4a6aa5ec32281|v0.2.0 — submodules, auto-commit, /pspt:enhance, /pspt:build-long
+v0.3.0|f1c328e410e73bfa3537646d35f16c6e28a53e7b|v0.3.0 — the ticket track: /pspt:ticket and /pspt:ticket-build
+v0.3.1|5d4c5716f42f6bf4391fb10deedd74d02207bfd0|v0.3.1 — never invent frontend copy
+v0.3.2|b118201670c3ec528f3c7b2107bd87c5b8fe618c|v0.3.2 — a recommendation for every lorem ipsum
+v0.4.0|HEAD|v0.4.0 — S7: the finished app matches the mockup

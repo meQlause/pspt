@@ -1,10 +1,11 @@
 # Changelog
 
-Every release of `pspt`, newest first. Each version is a git tag (`vX.Y.Z`) on
-its `chore(release)` commit; the tag message is the short form of the section
-below. Pictures are rendered from [`releases/src/`](releases/src/); the
-GitHub Release text for each version, with absolute image links, is in
-[`releases/notes/`](releases/notes/).
+Every release of `pspt`, newest first. Each version is a git tag and a
+[GitHub Release](https://github.com/meQlause/pspt/releases) whose text is the
+matching file in [`releases/notes/`](releases/notes/) — the section below with
+absolute image links. Versions are listed in
+[`releases/releases.txt`](releases/releases.txt); pictures are rendered from
+[`releases/src/`](releases/src/).
 
 | Version | Date | Headline |
 |---|---|---|
