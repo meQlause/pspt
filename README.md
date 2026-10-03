@@ -49,6 +49,7 @@ imagined ERD produces tables nobody renders.
 /pspt:ticket-build  execute every approved ticket not yet built, one ticket at a time
 /pspt:fix-flow    detect the stack and language, and install or repair pspt's toolchain
 /pspt:fix-flow-proceed  loop over the code until tests, types, lint and knip are all green
+/pspt:smoke       open the running app in Chrome, check each page loads, save a PNG of each
 ```
 
 `/pspt:enhance` changes the spec; `/pspt:ticket` turns one request into a
@@ -70,6 +71,18 @@ the queue — any ticket left in progress first, then approved tickets oldest
 first — re-checking each plan against the current code before building it, one
 ticket to close-out before the next starts. It stops on a stale plan, a red
 test or an unplanned file rather than skipping ahead.
+
+`/pspt:smoke` answers one question: does the app run? It asks which pages to
+check (the router and the spec offer them), asks once for permission to run
+Docker and Chrome, brings the app up with `docker compose` (or uses the one
+already running), logs in with a throwaway `smoke+…@example.test` user when a
+page needs it, and visits each page once with
+[`references/smoke/smoke.mjs`](references/smoke/smoke.mjs). A page fails on an
+HTTP error, an uncaught JavaScript error, a failing or `5xx` API request, a
+console error or a missing element; every page gets a full-page PNG, and the
+assistant looks at each one before reporting. It then deletes the test user and
+stops only what it started. Local only: never production, never a deploy, never
+a real email.
 
 Every pspt skill requires two tools — see [`references/prerequisites.md`](references/prerequisites.md):
 
