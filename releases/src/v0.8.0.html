@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+:root{--bg:#f7f6f2;--ink:#1d1d1b;--mute:#6b6a64;--line:#d9d6cc;--spec:#3b6ea8;--spec-bg:#e8f0f9;--tick:#b0521f;--tick-bg:#fbeee6;--build:#2f7a4f;--build-bg:#e6f3eb;--bad:#b3261e;--bad-bg:#fde9e7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 "Inter","Segoe UI",system-ui,sans-serif;width:1600px;padding:40px 48px}
+.ver{display:inline-block;font:700 14px ui-monospace,Menlo,monospace;background:var(--ink);color:#fff;border-radius:7px;padding:4px 10px;margin-bottom:10px}
+h1{font-size:28px;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px;font-size:16px}
+h2{font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:26px 0 11px}
+code,.m{font-family:ui-monospace,Menlo,monospace;font-size:.92em}
+.row{display:flex;align-items:stretch;gap:0;flex-wrap:nowrap}
+.a{color:var(--mute);font-size:22px;padding:0 10px;display:flex;align-items:center}
+.n{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:11px 14px}
+.n b{display:block;font-family:ui-monospace,Menlo,monospace;font-size:14.5px}
+.n span{color:var(--mute);font-size:13px;display:block}
+.s{border-color:var(--spec);background:var(--spec-bg)} .s b{color:var(--spec)}
+.t{border-color:var(--tick);background:var(--tick-bg)} .t b{color:var(--tick)}
+.g{border-color:var(--build);background:var(--build-bg)} .g b{color:var(--build)}
+.r{border-color:var(--bad);background:var(--bad-bg)} .r b{color:var(--bad)}
+.d{border-style:dashed}
+.k{border:2px solid var(--ink)}
+.grid{display:grid;gap:18px}
+.c2{grid-template-columns:1fr 1fr} .c3{grid-template-columns:1fr 1fr 1fr}
+.card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p,.card li{font-size:13.5px;color:#3a3a36}
+.card ul{padding-left:18px}
+.pre{font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.65;white-space:pre;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:14px 16px}
+.pre .c{color:var(--mute)} .pre .h{color:var(--tick);font-weight:700} .pre .gg{color:var(--build);font-weight:700}
+.new{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--tick);border-radius:99px;padding:1px 7px;margin-left:6px;vertical-align:2px;font-family:system-ui}
+.foot{margin-top:22px;color:var(--mute);font-size:13px;display:flex;justify-content:space-between}
+</style></head><body><span class="ver">v0.8.0</span><h1>Smoke test — open the app in a real browser and look</h1><p class="sub">/pspt:smoke asks what to check, asks before it starts Docker and Chrome, visits each page once and saves a picture of every one.</p><h2>One run</h2>
+<div class="row">
+ <div class="n d"><b>what to check?</b><span>routes from the router · spec screens · local HTML</span></div><div class="a">→</div>
+ <div class="n k"><b>permission</b><span>Docker + Chrome + a test user — this run only</span></div><div class="a">→</div>
+ <div class="n s"><b>app up</b><span>already running, or docker compose up --wait</span></div><div class="a">→</div>
+ <div class="n t"><b>smoke.mjs</b><span>one visit per page · checks · full-page PNG</span></div><div class="a">→</div>
+ <div class="n g"><b>clean up</b><span>test user deleted · only what it started is stopped</span></div>
+</div>
+<div class="grid c2">
+<div><h2>The report</h2>
+<div class="pre">smoke · Google Chrome 141 · 1440×900 · @playwright/test from frontend/
+app    started with docker compose · stopped afterwards
+user   smoke+1759501200@example.test created via API · deleted
+<span class="gg">✓ Courts            200   01-courts.png</span>
+<span class="gg">✓ My bookings       200   02-my-bookings.png</span>
+<span class="h">✗ Booking dialog    200   03-booking-dialog.png</span>
+    <span class="c">request: GET /courts/1/slots — 500</span>
+<span class="gg">✓ Reminder email    file  04-reminder-email.png</span>
+3/4 passed · <span class="c">desktop Chrome only — not Gmail or Outlook</span></div></div>
+<div><h2>A page fails on</h2>
+<div class="pre">HTTP status ≥ 400
+an uncaught JavaScript error
+a failing or 5xx request to the app's own API
+a console error
+an "expect" element that is not visible
+a redirect to login ("notAt")
+an action that cannot be done
+<span class="c">+ the assistant reads every PNG: blank page, error</span>
+<span class="c">  boundary or broken layout fails even if checks pass</span></div></div>
+</div>
+<div class="grid c3" style="margin-top:18px">
+ <div class="card"><h3>Uses what is there</h3><p>Playwright from the project first, then a global install. Google Chrome first, then Playwright's Chromium. Asks before installing anything.</p></div>
+ <div class="card"><h3>Local only</h3><p>Never production or staging, never a migration outside the local container, never a deploy, never a real email — it proposes the project's safe setting first.</p></div>
+ <div class="card"><h3>Reports, never fixes</h3><p>No code edits, nothing committed (<code>.pspt-smoke/</code> is excluded from git). A failure is offered as a <code>/pspt:ticket</code>.</p></div>
+</div><div class="foot"><span>meQlause/pspt · v0.8.0</span><span>skills/smoke · references/smoke/smoke.mjs</span></div></body></html>

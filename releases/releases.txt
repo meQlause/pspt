@@ -12,3 +12,4 @@ v0.4.1|5da3d9220da5ab1d10ddf99c0c711c1520057836|v0.4.1 — S7 analyses the mocku
 v0.5.0|476fbde273be59ed8c313b08629ae2a3d35497b4|v0.5.0 — S8: the states the mockup forgot
 v0.6.0|ae9a22fb422847a3e5875f1fca3635546d3a5115|v0.6.0 — the toolchain, shipped as files: no more drift
 v0.7.0|6509c653b419a7d20eb64aae0231c780f7d0e336|v0.7.0 — fix the toolchain, then fix the code: until everything is green
+v0.8.0|HEAD|v0.8.0 — smoke test: open the app in a real browser and look

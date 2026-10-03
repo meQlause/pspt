@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.8.0](#v080--2026-10-03) | 2026-10-03 | Smoke test — open the app in a real browser and look |
 | [0.7.0](#v070--2026-10-02) | 2026-10-02 | Fix the toolchain, then fix the code — until everything is green |
 | [0.6.0](#v060--2026-10-02) | 2026-10-02 | The toolchain, shipped as files — no more drift |
 | [0.5.0](#v050--2026-10-02) | 2026-10-02 | S8 — the states the mockup forgot |
@@ -19,6 +20,42 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.8.0 — 2026-10-03
+
+**Smoke test — open the app in a real browser and look.** One new skill answers
+"does the app run": it asks what to check, asks before it starts Docker and
+Chrome, visits each page once and saves a picture of every one.
+
+![v0.8.0 — /pspt:smoke: what to check, permission, app up, one visit per page with a PNG, clean up](releases/v0.8.0.png)
+
+**Added**
+
+- **`/pspt:smoke`** — offers the pages to check from the frontend router, the
+  spec's screens and local HTML files (email previews), then asks once for
+  permission to run Docker and Chrome for this run. It uses the app if it is
+  already running, otherwise `docker compose up -d --wait`; logs in with a
+  throwaway `smoke+<time>@example.test` user when a page needs it; visits each
+  page once; and saves a full-page PNG of each. A page fails on an HTTP error,
+  an uncaught JavaScript error, a failing or `5xx` request to the app's API, a
+  console error, a missing element or a login redirect — and the assistant
+  reads every picture, so a blank page or a broken layout fails too. The test
+  user is always deleted, and only what the skill started is stopped.
+- **`references/smoke/smoke.mjs`** — the runner: Playwright from the project
+  first, then a global install; Google Chrome first, then Playwright's
+  Chromium. Writes the PNGs and `report.json` to `.pspt-smoke/<run>/`, which is
+  excluded from git. Exit `0` pass, `1` fail, `2` no browser.
+
+**Limits, stated in every report**
+
+- Local only: never production or staging, never a migration outside the local
+  container, never a deploy, never a real email or payment.
+- Desktop Chrome only — not how Gmail or Outlook render an email, no
+  email-client dark mode, no WebP handling of mail clients.
+- One visit per page — a smoke test, not a test suite. Failures are offered as
+  a `/pspt:ticket`; the skill never edits code.
 
 ---
 
