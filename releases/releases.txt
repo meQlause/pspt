@@ -13,3 +13,4 @@ v0.5.0|476fbde273be59ed8c313b08629ae2a3d35497b4|v0.5.0 — S8: the states the mo
 v0.6.0|ae9a22fb422847a3e5875f1fca3635546d3a5115|v0.6.0 — the toolchain, shipped as files: no more drift
 v0.7.0|6509c653b419a7d20eb64aae0231c780f7d0e336|v0.7.0 — fix the toolchain, then fix the code: until everything is green
 v0.8.0|21955b462665026c876671b231fb995b99c8908e|v0.8.0 — smoke test: open the app in a real browser and look
+v0.8.1|HEAD|v0.8.1 — smoke test: look at the data, then ask how to seed and who to log in as

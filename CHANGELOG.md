@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.8.1](#v081--2026-10-03) | 2026-10-03 | Smoke test: look at the data, then ask how to seed and who to log in as |
 | [0.8.0](#v080--2026-10-03) | 2026-10-03 | Smoke test — open the app in a real browser and look |
 | [0.7.0](#v070--2026-10-02) | 2026-10-02 | Fix the toolchain, then fix the code — until everything is green |
 | [0.6.0](#v060--2026-10-02) | 2026-10-02 | The toolchain, shipped as files — no more drift |
@@ -20,6 +21,41 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.8.1 — 2026-10-03
+
+**Smoke test: look at the data, then ask how to seed and who to log in as.**
+`/pspt:smoke` now checks the local database before it visits any page.
+
+![v0.8.1 — /pspt:smoke checks the local database, finds the seed, asks about data and accounts, cleans up](releases/v0.8.1.png)
+
+**Added**
+
+- **Data and accounts step** — before any visit, `/pspt:smoke` confirms the
+  database is local (otherwise it stops), counts the rows in the tables the
+  chosen pages read and the users per role, finds the project's own seed and
+  reads whether it deletes data first, and works out which roles the pages
+  need. Then it asks two questions:
+  - **Data:** use what is already there · run the project's seed (saying what
+    it deletes first) · generate a smoke seed — the fewest rows the pages need,
+    built from `data-spec.md`, every row marked and removed again in clean-up
+    · or "I'll seed it myself".
+  - **Accounts:** one throwaway test user per role · the seed's accounts · or
+    the user's own account, for this run only and never printed.
+- **Named logins in `smoke.mjs`** — `"logins": { "customer": …, "admin": … }`
+  opens one browser session per account; each target's `auth` names the
+  account it visits as.
+
+**Changed**
+
+- Clean-up also removes generated seed rows (children first, by recorded id)
+  and deletes a run plan that holds a password the user typed. Rows from the
+  project's own seed stay, and the report says so.
+- A role the API cannot grant is created through the app's own user service,
+  or inserted with a password hashed by the app's own function — never plain
+  text.
 
 ---
 
