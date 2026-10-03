@@ -128,17 +128,22 @@ if (!browser) {
 const vp = plan.viewport || { width: 1440, height: 900 };
 const results = [];
 try {
-  const groups = [[false, plan.targets.filter(t => !t.auth)], [true, plan.targets.filter(t => t.auth)]];
+  // one browser context per account: public pages, then each named login ("auth": true uses "default")
+  const logins = { ...(plan.logins || {}) };
+  if (plan.login && !logins.default) logins.default = plan.login;
+  const only = Object.keys(logins).length === 1 ? Object.keys(logins)[0] : 'default';
+  const who = t => (!t.auth ? '' : t.auth === true ? only : String(t.auth));
+  const order = [...new Set(plan.targets.map(who))].sort((a, b) => (a === '' ? -1 : b === '' ? 1 : 0));
   let i = 0;
-  for (const [needsAuth, targets] of groups) {
-    if (!targets.length) continue;
+  for (const account of order) {
+    const targets = plan.targets.filter(t => who(t) === account);
     const context = await browser.newContext({ viewport: vp, locale: plan.locale, timezoneId: plan.timezone });
-    if (needsAuth) {
-      if (!plan.login) { for (const t of targets) results.push({ name: t.name, ok: false, checks: ['needs login, but the plan has no "login" block'] }); await context.close(); continue; }
-      try { await login(context, plan.login); }
-      catch (e) { for (const t of targets) results.push({ name: t.name, ok: false, checks: [`login failed: ${String(e.message).split('\n')[0]}`] }); await context.close(); continue; }
+    if (account) {
+      if (!logins[account]) { for (const t of targets) results.push({ name: t.name, account, ok: false, checks: [`needs login "${account}", but the plan has no such login`] }); await context.close(); continue; }
+      try { await login(context, logins[account]); }
+      catch (e) { for (const t of targets) results.push({ name: t.name, account, ok: false, checks: [`login "${account}" failed: ${String(e.message).split('\n')[0]}`] }); await context.close(); continue; }
     }
-    for (const t of targets) results.push(await visit(context, t, i++));
+    for (const t of targets) results.push({ ...(await visit(context, t, i++)), account: account || null });
     await context.close();
   }
 } finally {
@@ -150,7 +155,7 @@ fs.writeFileSync(path.join(out, 'report.json'), JSON.stringify(report, null, 2))
 
 console.log(`smoke · ${report.browser} · ${vp.width}×${vp.height} · Playwright from ${from}`);
 for (const r of results) {
-  console.log(`${r.ok ? '✓' : '✗'} ${r.name.padEnd(28)} ${r.status ?? ''}  ${r.screenshot ? path.relative(process.cwd(), r.screenshot) : ''}`);
+  console.log(`${r.ok ? '✓' : '✗'} ${r.name.padEnd(28)} ${String(r.account ?? 'public').padEnd(10)} ${r.status ?? ''}  ${r.screenshot ? path.relative(process.cwd(), r.screenshot) : ''}`);
   for (const c of r.checks || []) console.log(`    ${c}`);
   for (const e of r.pageErrors || []) console.log(`    page error: ${e}`);
   for (const e of r.failedRequests || []) console.log(`    request: ${e}`);

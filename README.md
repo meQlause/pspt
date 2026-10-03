@@ -75,13 +75,16 @@ test or an unplanned file rather than skipping ahead.
 `/pspt:smoke` answers one question: does the app run? It asks which pages to
 check (the router and the spec offer them), asks once for permission to run
 Docker and Chrome, brings the app up with `docker compose` (or uses the one
-already running), logs in with a throwaway `smoke+…@example.test` user when a
-page needs it, and visits each page once with
+already running), then looks at the local database before anything else: it
+counts what the chosen pages read, finds the project's seed and what it deletes,
+and asks how to get data — use what is there, run the project's seed, or
+generate a throwaway seed it removes afterwards — and which accounts to log in
+with, one test user per role by default. It visits each page once with
 [`references/smoke/smoke.mjs`](references/smoke/smoke.mjs). A page fails on an
 HTTP error, an uncaught JavaScript error, a failing or `5xx` API request, a
 console error or a missing element; every page gets a full-page PNG, and the
-assistant looks at each one before reporting. It then deletes the test user and
-stops only what it started. Local only: never production, never a deploy, never
+assistant looks at each one before reporting. It then deletes the test users and any
+generated seed rows, and stops only what it started. Local only: never production, never a deploy, never
 a real email.
 
 Every pspt skill requires two tools — see [`references/prerequisites.md`](references/prerequisites.md):
