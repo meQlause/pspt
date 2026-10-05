@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.8.2](#v082--2026-10-05) | 2026-10-05 | Commit only inside a git repository |
 | [0.8.1](#v081--2026-10-03) | 2026-10-03 | Smoke test: look at the data, then ask how to seed and who to log in as |
 | [0.8.0](#v080--2026-10-03) | 2026-10-03 | Smoke test — open the app in a real browser and look |
 | [0.7.0](#v070--2026-10-02) | 2026-10-02 | Fix the toolchain, then fix the code — until everything is green |
@@ -21,6 +22,43 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.8.2 — 2026-10-05
+
+**Commit only inside a git repository.** Tickets, smoke tests and the
+helper-tool setup now work on a plain folder that holds two clones — the folder
+the tutorial recommends for an existing project — instead of failing at the
+first commit.
+
+![v0.8.2 — commit only inside a git repository: backend and frontend commit in their own repos; a parent that is not a repo gets no commit, and git init is never run](releases/v0.8.2.png)
+
+**Fixed**
+
+- On a folder that is not a git repository (`my-app/` holding `backend/` and
+  `frontend/` clones), `/pspt:ticket` could not commit the helper-tool files
+  (`.mcp.json`, `.claude/`, `CLAUDE.md`, `AGENTS.md`, `.agents/`), and none of
+  its parent commits — the plan, the approval, each phase, the close-out — had
+  anywhere to go. Found by running the real skills on such a folder.
+
+**Changed**
+
+- **One rule, [conventions §11](references/conventions.md):**
+  a commit is made in each git repository the work touched, and nowhere else.
+  A package that is a repository gets its own commit. A parent that is not a
+  repository gets **none** — `tickets/`, `docs/`, the tooling files and
+  `.pspt-smoke/` stay on disk, and the report says so once. No skill runs
+  `git init`.
+- A parent that **is** a repository commits only its own files. `backend/` and
+  `frontend/` are staged into it only when `.gitmodules` registers them as
+  submodules; two plain clones are left to their own repositories.
+- A `Committed — <sha>` box in a ticket reads `n/a — not a git repository` when
+  no repository owns that phase's files. A skipped commit never blocks a step.
+- Applies to `/pspt:ticket`, `/pspt:ticket-build`, `/pspt:fix-flow`,
+  `/pspt:fix-flow-proceed`, `/pspt:smoke` and the tool setup
+  (`references/prerequisites.md` §3.5). `/pspt:smoke` adds `.pspt-smoke/` to
+  `.git/info/exclude` only where there is a repository to exclude it from.
 
 ---
 
