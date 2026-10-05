@@ -317,3 +317,39 @@ on. It does not stop to ask.
 
 > A disable with a reason is a decision someone can review. A disable without
 > one is a defect someone will copy.
+
+## 11. Where commits happen — only inside a git repository
+
+A commit is made in every git repository the work touched, and nowhere else.
+Nothing here ever runs `git init`, and nothing is ever staged into a repository
+that does not own it.
+
+**Look before the first commit** — `git rev-parse --show-toplevel`, run in the
+directory the files live in:
+
+| Directory | Is a git repository | Not a git repository |
+|---|---|---|
+| Each package (`backend/`, `frontend/`) | commit its code there, as the skill says | no commit for it; the files stay on disk |
+| The working directory (the parent) | commit its own files: `tickets/`, `docs/`, `.mcp.json`, `.claude/`, `CLAUDE.md`, `AGENTS.md`, `.agents/` | **no parent commit at all** — those files stay on disk, uncommitted |
+
+**The parent commits only the parent's files.** `backend/` and `frontend/` are
+staged into the parent only when they are registered submodules (`.gitmodules`
+lists them), where the commit moves the pointer. Two plain clones inside a
+parent repository are left to their own repositories: never `git add backend`,
+and never put the parent's files into either clone.
+
+**Skipping is reported, once.** The skill's final report names what was not
+committed and why, and every `Committed: <sha>` line says what it did:
+
+```
+commits  backend@4f2d9e1 · frontend@6f38a51 · parent — none, not a git repository
+         left on disk: tickets/booking-cancel/ (3 files) · .mcp.json · CLAUDE.md · AGENTS.md · .agents/
+```
+
+A skipped commit is not a failure and never blocks a step. A box that asks for a
+commit (`Committed — <sha>`) is ticked with `n/a — not a git repository` when no
+repository owns that phase's files.
+
+Where this does not apply: `/pspt:spec`, `/pspt:enhance`, `/pspt:build`,
+`/pspt:build-long`, `/pspt:code` and `/pspt:reg` belong to a pspt project, whose
+parent is a git repository with the two submodules by construction.

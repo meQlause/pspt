@@ -26,8 +26,9 @@ an acceptance criterion, a guarantee or a test is never trimmed as "not needed".
 
 And the project tells every agent about them — the lines in §3.4 are in
 `CLAUDE.md` and `AGENTS.md`, and `.agents/rules/ponytail.md` exists. A tool that
-is present with a line or file missing → add just that (§3.4), commit, say so in
-one line, and continue.
+is present with a line or file missing → add just that (§3.4), commit it if the
+working directory is a git repository (conventions §11), say so in one line, and
+continue.
 
 Everything present → go to §4.
 
@@ -130,6 +131,11 @@ Follow ponytail (.agents/rules/ponytail.md): the smallest change that works — 
 ```
 
 ### 3.5 Commit and reload
+
+**Only if the working directory is a git repository** (`git rev-parse
+--show-toplevel`, conventions §11). Otherwise skip the commit, leave the files on
+disk, never `git init`, never commit them into `backend/` or `frontend/`, and
+say in one line that they are uncommitted.
 
 Commit those files alone — `git status --porcelain` first, explicit paths, no
 push, SR-6 (no co-author trailer):

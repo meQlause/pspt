@@ -150,7 +150,9 @@ The pre-commit hook runs `check` on the **whole** tree, so nothing can be
 committed while any finding remains — and it is never bypassed
 (`--no-verify` is forbidden). Commits are therefore made once, when the tree
 is green, as reviewable units, in this order — `git status --porcelain` first,
-explicit paths, never `git add -A`, no push:
+explicit paths, never `git add -A`, no push — in each package that is a git
+repository (conventions §11; a package that is not one keeps the changes on
+disk and the report says so):
 
 | Commit | Contents |
 |---|---|

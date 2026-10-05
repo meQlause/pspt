@@ -378,7 +378,7 @@ Nothing existing calls the new code yet. The tree behaves exactly as before.
 
 - [ ] Every test above is ticked green
 - [ ] No existing file was edited
-- [ ] Committed — `<sha>`
+- [ ] Committed — `<sha>` (or `n/a — not a git repository`)
 
 ## P2 — Wire-in
 
@@ -401,7 +401,7 @@ The smallest edit to existing code that connects P1.
 ### Done when
 
 - [ ] …
-- [ ] Committed — `<sha>`
+- [ ] Committed — `<sha>` (or `n/a — not a git repository`)
 
 ## P3 — Docs and full re-run
 
@@ -421,7 +421,7 @@ The smallest edit to existing code that connects P1.
 ### Done when
 
 - [ ] Every `Result` in `plan.md` §6 reads pass on this commit
-- [ ] Committed — `<sha>`
+- [ ] Committed — `<sha>` (or `n/a — not a git repository`)
 ```
 
 Every line a reviewer would check is a checkbox — the phase itself, each task,
@@ -444,10 +444,11 @@ ids that verify it, and a done-when a reviewer can check without asking.
 
 ## Step 6 — Stop for approval
 
-All three files carry status `planned`. Commit them (see Commits), and print:
+All three files carry status `planned`. Commit them if the working directory is
+a git repository (see Commits; otherwise they stay on disk), and print:
 
 ```
-Ticket booking-ref-v2 planned.  3 ACs · 3 files (1 new, 1 modify, 1 delete) · 1 at risk · 6 tests · 3 phases.  Committed: 7c1e0a2.
+Ticket booking-ref-v2 planned.  3 ACs · 3 files (1 new, 1 modify, 1 delete) · 1 at risk · 6 tests · 3 phases.  Committed: 7c1e0a2 (or: not committed — not a git repository).
 
 Read tickets/booking-ref-v2/plan.md and phase.md. Say "approve" to start P1, or tell me what to change.
 ```
@@ -553,7 +554,8 @@ After the last phase:
 3. Tick every box in `plan.md` §7.
 4. Confirm every box in `phase.md` is ticked. An unticked one means that work
    did not happen — go back to Step 7.
-5. Status → `done` in all three files. Commit.
+5. Status → `done` in all three files. Commit if the working directory is a git
+   repository (Commits above).
 6. Report:
 
    ```
@@ -568,7 +570,15 @@ After the last phase:
    Next: /pspt:trace FR-014 to confirm the chain, then push when ready.
    ```
 
-## Commits — automatic
+## Commits — automatic, and only inside a git repository
+
+First `references/conventions.md` §11: a commit is made in each git repository
+the work touched and nowhere else. A package that is a git repository gets its
+commit; if the working directory is not a git repository there is **no parent
+commit** — the ticket files, `docs/` write-backs and tooling files stay on disk,
+uncommitted, and the report says so. Never `git init`. When the parent is a
+git repository, it commits its own files only, and `backend/` / `frontend/` are
+staged into it only if they are registered submodules.
 
 Same discipline as `/pspt:build`'s Commits section: `git status --porcelain`
 first, stage explicit paths (never `git add -A` or `git add .`), commit inside

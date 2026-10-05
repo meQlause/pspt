@@ -141,7 +141,9 @@ For each package that failed, in this order — 2 to 5 are one
 ## Step 5 — Commit, or hand the rest to a ticket
 
 **Check is green →** commit, the same discipline as `/pspt:build` §Commits
-(`git status --porcelain` first, explicit paths, no `git add -A`, no push).
+(`git status --porcelain` first, explicit paths, no `git add -A`, no push) — in
+each package that is a git repository (conventions §11). A package that is not
+one keeps the changes on disk: say so, never `git init`.
 Two commits, so the toolchain change stays reviewable apart from the code it
 touched:
 

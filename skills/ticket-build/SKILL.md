@@ -146,8 +146,9 @@ is true:
 
 ## Commits
 
-Every commit is `/pspt:ticket` §Commits — per phase (submodule first, then the
-parent) and at close-out, explicit paths, no `git add -A`, no `git push`,
+Every commit is `/pspt:ticket` §Commits — made only inside a git repository
+(conventions §11) — per phase (submodule first, then the
+parent, when the parent is a git repository) and at close-out, explicit paths, no `git add -A`, no `git push`,
 semantic messages, and **SR-6: no `Co-Authored-By` trailer**, no tool
 attribution. The loop adds no commit of its own. A stale-plan or blocked status
 change is committed alone:

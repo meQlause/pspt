@@ -187,7 +187,9 @@ before installing anything: `npm i -D @playwright/test` in the frontend, or
 ## Step 6 — Run
 
 Write the plan to `.pspt-smoke/<YYYY-MM-DD-HHmm>/plan.json` and add
-`.pspt-smoke/` to `.git/info/exclude`, so a run is never committed or linted.
+`.pspt-smoke/` to `.git/info/exclude` when the working directory is a git
+repository (a plain folder has nothing to exclude from), so a run is never
+committed or linted.
 
 ```json
 {
@@ -294,6 +296,7 @@ offer `/pspt:ticket <slug>` for it.
   `docker compose down -v`.
 - **Never edit application code, tests or config.** A smoke test reports; a fix
   is a ticket.
-- **Never commit** anything from a run. `.pspt-smoke/` is excluded from git.
+- **Never commit** anything from a run, in any folder. `.pspt-smoke/` is excluded
+  from git where there is a repository, and sits on disk where there is not.
 - **Never call it comprehensive.** One visit per page, the checks above, and the
   pictures — say so in the report.
