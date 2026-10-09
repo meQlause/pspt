@@ -30,8 +30,14 @@ loop turns.
 database always, a cache or queue only if requests fail without it. Each check
 has a timeout (2 s) and reports `ok` or `fail`, never the error text. It also
 answers `503` **before startup has finished** (migrations applied, config
-loaded) and **after shutdown has begun** (`SIGTERM` flips a flag, readiness goes
-`503`, in-flight requests drain, then the process exits).
+loaded) and **after shutdown has begun**. Shutdown is three steps, in this order:
+`SIGTERM` flips a flag and readiness goes `503`; the process then **keeps
+listening for a grace period** (`SHUTDOWN_GRACE_MS`, default 5000 — an
+application env key) so the platform's probe actually sees the `503` and stops
+routing to it; only then does it close the listener, drain in-flight requests and
+exit, with a hard stop (30 s) if something hangs. Closing the listener at once
+makes the probe fail to connect instead of reading `503`, and requests already
+routed to the pod are dropped.
 
 **Probes use them.** `Dockerfile` `HEALTHCHECK`, compose `healthcheck`,
 Kubernetes `livenessProbe` → `/api/v1/liveness`, `readinessProbe` →
@@ -39,8 +45,9 @@ Kubernetes `livenessProbe` → `/api/v1/liveness`, `readinessProbe` →
 `/ready`, `/live`, `/ping`) are replaced everywhere they appear.
 
 **Tests, written first:** each endpoint's status and body shape; readiness `503`
-with a fake dependency that fails; readiness `503` while shutting down;
-liveness `200` with the same failing dependency.
+with a fake dependency that fails; readiness `503` during the shutdown grace
+period **while the listener still answers**; liveness `200` with the same
+failing dependency.
 
 ---
 
@@ -81,7 +88,7 @@ If leaking a value lets someone act as the app or reach its data, it is a
 
 | | Application environment | Secrets (credentials) |
 |---|---|---|
-| Examples | `NODE_ENV`, `PORT`, `LOG_LEVEL`, `APP_VERSION`, `APP_BASE_URL`, `CORS_ORIGINS`, `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USER`, feature flags | `DATABASE_PASSWORD`, `JWT_SECRET`, `SESSION_SECRET`, `SMTP_PASSWORD`, `*_API_KEY`, `*_TOKEN`, `OAUTH_CLIENT_SECRET`, signing and encryption keys, a connection string that contains a password |
+| Examples | `NODE_ENV`, `PORT`, `LOG_LEVEL`, `APP_VERSION`, `SHUTDOWN_GRACE_MS`, `APP_BASE_URL`, `CORS_ORIGINS`, `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USER`, feature flags | `DATABASE_PASSWORD`, `JWT_SECRET`, `SESSION_SECRET`, `SMTP_PASSWORD`, `*_API_KEY`, `*_TOKEN`, `OAUTH_CLIENT_SECRET`, signing and encryption keys, a connection string that contains a password |
 | Local file | `.env` (not committed) | `.env.secret` (not committed) |
 | Committed template | `.env.example` — every key, example values | `.env.secret.example` — every key, **empty values** |
 | Docker / compose | `env_file: .env` | `env_file: .env.secret` (separate entry) |

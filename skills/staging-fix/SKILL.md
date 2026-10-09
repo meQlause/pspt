@@ -99,7 +99,8 @@ For each package, in this order. Red first, for the right reason, then green:
 
 1. **Tests.**
    - Health: each endpoint's status and body shape; readiness `503` with a fake
-     dependency that fails, and while shutting down; liveness `200` with the same
+     dependency that fails, and during the shutdown grace period while the listener
+     still answers; liveness `200` with the same
      failing dependency.
    - Prefix: an unknown path answers `404` with a JSON body; each old path
      answers `404` (or the alias, if kept); the health endpoints answer under
@@ -110,10 +111,14 @@ For each package, in this order. Red first, for the right reason, then green:
    constant; Express — one router mounted once and a JSON `404` after it; NestJS —
    `setGlobalPrefix('api/v1')` and a `HealthController`; Next.js — handlers under
    `app/api/v1/`. Readiness checks each required dependency with a 2 s timeout
-   and reports `ok`/`fail` only. `SIGTERM` flips readiness to `503`, in-flight
-   requests drain, then the process exits.
+   and reports `ok`/`fail` only. Shutdown, in this order: `SIGTERM` flips
+   readiness to `503`; **keep listening for `SHUTDOWN_GRACE_MS`** (default 5000)
+   so the platform's probe sees the `503`; then close the listener, drain
+   in-flight requests and exit, with a 30 s hard stop. NestJS:
+   `app.enableShutdownHooks()` and the same grace in `onApplicationShutdown`.
 3. **Environment.**
-   - `.env.example` (application keys, example values) and `.env.secret.example`
+   - `.env.example` (application keys, example values — including
+     `APP_VERSION` and `SHUTDOWN_GRACE_MS`) and `.env.secret.example`
      (secret keys, **empty values**); `.gitignore` and `.dockerignore` as in
      `staging.md` §3.
    - `src/config/app.config.ts` and `src/config/secrets.config.ts`, two Zod

@@ -127,6 +127,15 @@ if (stack !== 'react') {
       for (const f of hit) { const lines = read(f); const i = lines.findIndex((l) => /liveness/.test(l)); let j = i + 1; while (j < lines.length && j < i + 8 && !/(\.(get|post|put|patch|delete)\(|@Get\(|@Controller|export (async )?function)/.test(lines[j])) j++; const win = lines.slice(i, j).join('\n'); if (/\b(prisma|pool|knex|sequelize|redis|database|db\.|query)\b/i.test(win)) add('H6', 'warn', f, i + 1, 'liveness appears to touch a dependency — it must not', 'return 200 without any I/O'); }
     }
   }
+  if (stack === 'express' || stack === 'nestjs') {
+    const all = haystack.map((f) => [f, fs.readFileSync(f, 'utf8')]);
+    if (stack === 'nestjs') { if (!all.some(([, t]) => /enableShutdownHooks\(/.test(t))) add('H7', 'warn', null, null, 'no graceful shutdown: readiness cannot go 503 before the listener closes', 'app.enableShutdownHooks() and wait SHUTDOWN_GRACE_MS before closing'); }
+    else {
+      const hit = all.find(([, t]) => /SIGTERM/.test(t));
+      if (!hit) add('H7', 'warn', null, null, 'no SIGTERM handler: readiness cannot go 503 before the listener closes', 'flip readiness, keep listening for SHUTDOWN_GRACE_MS, then close and exit');
+      else { const lines = hit[1].split('\n'); const i = lines.findIndex((l) => /SIGTERM/.test(l)); if (!/setTimeout|SHUTDOWN_GRACE/.test(lines.slice(i, i + 14).join('\n'))) add('H8', 'warn', hit[0], i + 1, 'SIGTERM closes the listener at once — the probe never sees readiness 503', 'wait SHUTDOWN_GRACE_MS (default 5000) after flipping readiness, then close'); }
+    }
+  }
   grep(haystack, new RegExp(`['"\`]/(${LEGACY.join('|')})['"\`]`), (f, n, m) => add('H5', 'warn', f, n, `legacy health path /${m[1]}`, `replace with ${PREFIX}/healthz, /liveness or /readiness`));
 }
 
