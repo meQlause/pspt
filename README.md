@@ -51,6 +51,7 @@ imagined ERD produces tables nobody renders.
 /pspt:fix-flow-proceed  loop over the code until tests, types, lint and knip are all green
 /pspt:smoke       open the running app in Chrome, check each page loads, save a PNG of each
 /pspt:staging-fix  health endpoints, everything under /api/v1, env split from secrets
+/pspt:staging-scan  read-only: the docker buildx build and push commands for each app to GHCR
 ```
 
 `/pspt:enhance` changes the spec; `/pspt:ticket` turns one request into a
@@ -99,6 +100,16 @@ a ConfigMap and a Secret. It audits first with
 running app with `--probe`), says "nothing to fix" when the service already
 holds, fixes it test-first, repoints the Dockerfile, compose and Kubernetes
 probes, and never prints, copies or commits a secret.
+
+`/pspt:staging-scan` is the read-only step before it: it reads the Dockerfiles,
+`.dockerignore`, package files, environment-variable usage, git remotes and
+Kubernetes manifests, and prints one copy-paste `docker buildx build --platform
+linux/amd64 … --push` command per app (backend, frontend, …) with the registry
+login and submodule commands beside it. It passes only build arguments the
+Dockerfile accepts and the app uses, keeps backend runtime secrets in Kubernetes,
+and when an image cannot build it names the blocker and the smallest fix. It
+creates, builds, pushes and deploys nothing —
+[`references/staging/scan.mjs`](references/staging/scan.mjs) is a static reader.
 
 Every pspt skill requires two tools — see [`references/prerequisites.md`](references/prerequisites.md):
 
