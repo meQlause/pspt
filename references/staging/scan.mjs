@@ -165,6 +165,8 @@ for (const df of dockerfiles) {
   let evidence = 'COPY paths';
   if (outside.length) { ctx = path.dirname(dir) === root || path.dirname(dir) === path.dirname(root) ? root : path.dirname(dir); evidence = 'COPY paths reach outside the Dockerfile folder'; B('B1', `COPY reaches outside the Dockerfile's folder (${outside.join(', ')}), so the context must be the parent`, `build from ${rel(ctx)} with -f ${rel(df)}, and make the COPY paths relative to that context`); }
   else if (!ctx) { ctx = dir; for (const s of literalSources) if (!present(dir, s)) B('B2', `COPY source "${s}" does not exist under the build context`, `create ${s}, or correct the COPY path in ${rel(df)}:${(d.copies.find((c) => c.sources.includes(s)) || {}).line}`); }
+  // every literal COPY source must exist in the chosen context, whichever branch chose it
+  for (const src of literalSources) { if (src.startsWith('..') || present(ctx, src)) continue; if (!app.blockers.some((b) => b.id === 'B2' && b.message.includes(`"${src}"`))) B('B2', `COPY source "${src}" does not exist under the build context ${rel(ctx)}`, `create ${src}, or correct the COPY path in ${rel(df)}:${(d.copies.find((c) => c.sources.includes(src)) || {}).line}`); }
   if (compose && path.normalize(compose.context) !== path.normalize(ctx)) W('W9', `docker-compose builds this with context ${rel(compose.context)}, the scan chose ${rel(ctx)}`, 'check which one is intended');
   if (compose && path.normalize(compose.context) === path.normalize(ctx)) evidence += ' + docker-compose';
   if (ci && ci.context) evidence += ' + CI';
@@ -172,6 +174,7 @@ for (const df of dockerfiles) {
 
   // .dockerignore
   const ignoreFile = [`${df}.dockerignore`, path.join(ctx, '.dockerignore')].find(exists);
+  if (!ignoreFile && path.normalize(dir) !== path.normalize(ctx) && exists(path.join(dir, '.dockerignore'))) W('W15', `${rel(path.join(dir, '.dockerignore'))} is NOT used: the context is ${rel(ctx)}, and Docker reads .dockerignore from the context root (or <Dockerfile>.dockerignore)`, `move it to ${rel(ctx) === '.' ? '' : rel(ctx) + '/'}.dockerignore, or name it ${rel(df)}.dockerignore`);
   if (!ignoreFile) W('W7', 'no .dockerignore: node_modules, .git and any .env files are sent to the daemon', 'add one that excludes node_modules, .git and .env*');
   else {
     const pats = readText(ignoreFile).split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#'));
