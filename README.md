@@ -50,6 +50,7 @@ imagined ERD produces tables nobody renders.
 /pspt:fix-flow    detect the stack and language, and install or repair pspt's toolchain
 /pspt:fix-flow-proceed  loop over the code until tests, types, lint and knip are all green
 /pspt:smoke       open the running app in Chrome, check each page loads, save a PNG of each
+/pspt:staging-fix  health endpoints, everything under /api/v1, env split from secrets
 ```
 
 `/pspt:enhance` changes the spec; `/pspt:ticket` turns one request into a
@@ -86,6 +87,18 @@ console error or a missing element; every page gets a full-page PNG, and the
 assistant looks at each one before reporting. It then deletes the test users and any
 generated seed rows, and stops only what it started. Local only: never production, never a deploy, never
 a real email.
+
+`/pspt:staging-fix` makes a service ready for staging, against one contract
+([`references/staging.md`](references/staging.md)): the three health endpoints
+`/api/v1/healthz`, `/api/v1/liveness` and `/api/v1/readiness` (liveness never
+touches a dependency; readiness checks them and answers `503` while starting or
+shutting down); **every** endpoint under `/api/v1`; and application environment
+kept apart from secrets — `.env` and `.env.secret`, two validated config schemas,
+a ConfigMap and a Secret. It audits first with
+[`references/staging/audit.mjs`](references/staging/audit.mjs) (and probes a
+running app with `--probe`), says "nothing to fix" when the service already
+holds, fixes it test-first, repoints the Dockerfile, compose and Kubernetes
+probes, and never prints, copies or commits a secret.
 
 Every pspt skill requires two tools — see [`references/prerequisites.md`](references/prerequisites.md):
 

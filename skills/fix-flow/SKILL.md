@@ -42,6 +42,7 @@ not start. Read code through jcodemunch from here on.
 | The working directory has | Packages |
 |---|---|
 | `.gitmodules` listing `backend` and `frontend` (a pspt project) | each submodule |
+| `backend/` and `frontend/` folders that each hold a `package.json` — two plain clones in one folder | each of them |
 | An argument — `/pspt:fix-flow frontend` | that directory |
 | A `package.json` with `workspaces`, or a `pnpm-workspace.yaml` | each workspace package with a framework dependency |
 | A `package.json` | the root |

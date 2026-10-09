@@ -178,6 +178,7 @@ changes files, re-index before the next read**:
 | `/pspt:ticket` | each phase's commit (Step 7 · 5) — before the next phase |
 | `/pspt:ticket-build` | each phase, and each ticket's close-out — before Step 2 re-checks the next ticket's plan |
 | `/pspt:fix-flow` | the install and the autofixes (Step 4) — before reporting |
+| `/pspt:staging-fix` | each package's code and config changes (Step 4) — before the verify step reads them |
 | `/pspt:fix-flow-proceed` | each iteration's file — before the next file and before the queue is re-read |
 | `/pspt:spec` S7 / S8, `/pspt:enhance`, `/pspt:code`, `/pspt:reg` | a mockup or source file written (docs alone need no re-index) |
 
