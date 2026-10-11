@@ -89,8 +89,9 @@ interface SectionMotion {
 
 ## 4. Per section
 
-1. Markup first, with every copy line from the section document and its source, and
-   `data-thread-in` / `data-thread-out` anchors.
+1. Markup first, with every copy line from the section document and its source,
+   `data-thread-in` / `data-thread-out` anchors, `data-scene="<type>"` on the root and
+   one `[data-stage]` wrapping the `100svh` composition.
 2. Still CSS: the composition without motion, which is also the no-JS and the
    reduced-motion page.
 3. `[data-motion]` CSS and `init`: the scene, pinned or not, its timeline by beats
@@ -107,6 +108,7 @@ interface SectionMotion {
 | `tests/e2e/<name>.spec.ts` | The section loads with no page errors and gets its motion once scrolled to |
 | `tests/e2e/flow.spec.ts` | The whole page scrolls top to bottom and back with no errors, one thread layer, and pins within the budget |
 | `tests/e2e/seams.spec.ts` | Every seam is stitched and nothing carried is painted over ([`seams.md`](./seams.md) §4) |
+| `tests/e2e/scenes.spec.ts` | With motion on, desktop and phone: every `[data-section]` is at least one viewport tall; its `[data-stage]` is the viewport's height and no child overflows it; only `data-scene="pinned"` and `data-scene="track"` sections are taller, and their extra height sums to the pin budget |
 | `tests/e2e/hardening.spec.ts` | No-JS copy, reduced motion with no pin spacers, phone width with no horizontal scroll |
 
 Plus the **seam audit**: a scratch Playwright script that screenshots every seam at

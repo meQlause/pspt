@@ -214,7 +214,9 @@ colour in every document is a named shade from a family in `rules.md`.
 **One story.** One carried object, one thread, one scroll. A section that cannot
 say what it receives and what it hands on does not belong on the page.
 
-**Full screen, full range.** Every section is a `100svh` scene; the page meets the
+**Full screen, full range.** Every section is a `100svh` scene; content longer than
+one screen becomes a pinned stage or more scenes, and only pinned and track scenes are
+taller, inside the pin budget; the page meets the
 coverage rules in `craft.md` §4.
 
 **References are searched live.** Every stage runs a real-time internet search for

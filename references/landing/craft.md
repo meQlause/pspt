@@ -20,6 +20,10 @@ Each section is a **scene**: composed for the viewport, not a document that flow
 | A beat with steps is a **pinned stage** with a scrubbed timeline; its pin length in screens comes from the spine | The visitor drives the scene with the wheel, at their pace |
 | Phones get the same scenes **re-composed**, not shrunk: one column, the thread on a rail, the signature moment kept | A desktop scene scaled to 375px is unreadable and loses the beat |
 | No two consecutive scenes use the same scene type | Three pinned stages in a row feel like one long stall |
+| Content longer than one screen becomes a **pinned stage** whose steps play in place, or is **split into more scenes** — never a long block that scrolls past normally | A section that scrolls like a document breaks the full-screen rhythm and hides its seam below the fold |
+| A section may be taller than one screen **only** as a pinned stage or a horizontal track, and its extra length counts toward the pin budget in `rules.md` §7 | Unbudgeted height is a pin in disguise; the page grows long without anyone deciding it should |
+| Every section root carries `data-scene="<type>"` and wraps its composition in one `[data-stage]` element; the stage is `100svh` and nothing overflows it | The scene test (`architecture.md` §5) reads these to prove every section is full screen |
+| The rule applies with motion on, on desktop and phone. With reduced motion or no JavaScript, the still composition may flow as a normal page | Without pins, a stepped scene shows all its steps at once, and that is the readable fallback |
 | Copy and controls stay outside pins' blind spots: nothing important under the sticky header, nothing that needs a tap while scrubbing | Scrubbed scenes punish precise interaction |
 
 ### Scene types

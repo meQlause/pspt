@@ -32,7 +32,7 @@ seams will meet its neighbours'.
 | Stacking | NN-1 above until hand-off; this section above after |
 
 ## Scene
-Scene type (from `craft.md` §1), the `100svh` stage, and how the viewport is
+Scene type (from `craft.md` §1, written as the root's `data-scene` value), the `100svh` stage, and how the viewport is
 composed on desktop and re-composed on phone — not shrunk. The signature technique
 and every other capability used, each with the beat it serves.
 
@@ -110,5 +110,8 @@ re-ask what `rules.md` or `story.md` settled.
 - [ ] Pin lengths match the spine.
 - [ ] Every section is a full-screen scene with its type, signature technique and
       phone re-composition written down.
+- [ ] Content that does not fit one screen is a pinned stage or split into more
+      scenes; any section taller than one screen is pinned or a track, and its extra
+      length is in the spine's pin column.
 - [ ] Every capability named serves a beat in the Motion table.
 - [ ] The seam gate prints nothing.

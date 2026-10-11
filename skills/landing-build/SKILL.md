@@ -79,7 +79,7 @@ Write `docs/landing/build.md` from `story.md`. One phase per row, in this order:
 
 | Phase | Builds | Exit checks |
 |---|---|---|
-| **P0 Foundation** | `tokens.css` generated from every family in `rules.md` (each shade a custom property named after it); `base.css` with the section, anchor, thread, carried and hand-off rules; the motion layer (`gsap.ts` with the named verbs and CustomEases, `types.ts`, `page.ts`, `thread.ts` with `stitch` and `SEAM`, `carried.ts`, `handoff.ts`); the prerender; `tokens.test.ts`; the e2e harness (`flow`, `seams`, `hardening` specs, empty-safe); the seam audit script | `check`, unit, build, e2e green; `tokens.test.ts` proves no flat colour exists |
+| **P0 Foundation** | `tokens.css` generated from every family in `rules.md` (each shade a custom property named after it); `base.css` with the section, anchor, thread, carried and hand-off rules; the motion layer (`gsap.ts` with the named verbs and CustomEases, `types.ts`, `page.ts`, `thread.ts` with `stitch` and `SEAM`, `carried.ts`, `handoff.ts`); the prerender; `tokens.test.ts`; the e2e harness (`flow`, `scenes`, `seams`, `hardening` specs, empty-safe); the seam audit script | `check`, unit, build, e2e green; `tokens.test.ts` proves no flat colour exists |
 | **P1 … Pn** | One section each, in page order (Step 5) | Step 6, for this section and every seam built so far |
 | **Pn+1 Hardening** | No-JS reading, reduced motion, phone at 375px, the entry bundle and CLS budgets from `rules.md` §11, lazy plugins | `hardening.spec.ts` complete and green; budgets measured and recorded |
 | **Pn+2 Whole-page review** | The seam audit across every seam, desktop and phone; the coverage rules in `craft.md` §4 counted on the real page | Every seam frame joined; coverage met; nothing left unticked |
@@ -105,8 +105,8 @@ If an entry under "Blocked" names this phase, read it first.
    document, in order, in the prerendered HTML. `tests/e2e/<name>.spec.ts` asserts it
    loads with no page errors and gets `data-motion` when scrolled to. Run them; they
    fail for the right reason.
-4. **Markup and still state (green).** `<Name>.tsx` with the document's copy and the
-   thread anchors; `<name>.css` composing the `100svh` scene without motion, colours
+4. **Markup and still state (green).** `<Name>.tsx` with the document's copy, the
+   thread anchors, `data-scene="<type>"` on the root and one `[data-stage]`; `<name>.css` composing the `100svh` scene without motion, colours
    only as `var(--<shade>)`.
 5. **The scene.** `<name>.motion.ts` builds the Motion table beat by beat with the
    capabilities it names, every number in `<name>.tuning.ts`, SVG data in
@@ -122,8 +122,9 @@ All of these, in the landing submodule:
 
 1. `npm run format`, then `npm run check` — zero warnings.
 2. `npm test` and `npm run build` (prints the prerender line).
-3. `npm run test:e2e` — the section spec, `flow`, `seams` (every seam built so far)
-   and `hardening`, on desktop and phone.
+3. `npm run test:e2e` — the section spec, `flow`, `scenes` (every section built so
+   far is full screen, its stage does not overflow, only pinned and track scenes are
+   taller), `seams` (every seam built so far) and `hardening`, on desktop and phone.
 4. **Seam audit.** Run the screenshot script for the seam above this section and the
    one below it (if built), at 85%, 55% and 25%, desktop and phone, and **look at
    every frame**. A gap, a kink, a detour, a cropped object, a line drawn ahead of the
