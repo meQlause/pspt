@@ -4,7 +4,7 @@
 screen)
 
 Turn the approved mockup into an application by **refactoring it, not rebuilding
-it**. S7 later measures the result against the mockup — so every value here is
+it**. S6 later measures the result against the mockup — so every value here is
 copied, never approximated. The mockup already carries the approved layout, the approved copy and the
 approved states. Rewriting from scratch throws away a stakeholder decision that
 was already paid for.
@@ -28,7 +28,7 @@ off. Status colours are for status only, never decoration.
 
 List the components the mockup has already proven — the ones that appear more
 than once with a consistent shape. That is the UI kit, derived rather than
-invented. S7's analysis re-derives it from the rendered mockup and checks the two
+invented. S6's analysis re-derives it from the rendered mockup and checks the two
 agree, so name components and variants here the way the app will name them.
 
 ### Refactor map

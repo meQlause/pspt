@@ -182,9 +182,9 @@ Requires `gh` (GitHub CLI) installed and authenticated. See SR-3.
 | S3 | Strict rules, error registry, architecture and stack per side |
 | S4 | Endpoint contracts, server-owned fields, error tables, testing strategy, reserved regressions |
 | S5 | Design tokens, refactor map, screen specs with acceptance criteria |
-| S6 | Two tracks, dependencies, sizes, checkbox exit criteria |
-| S7 | Mockup fidelity: a script analyses the mockup into text roles, components and variants, each defined once; the app is held to it — every screen, state and width pixel-compared, fonts and spacing exactly equal per component, every asset hash-equal, every interaction working for real |
-| S8 | UI gap analysis: every loading, empty, error, confirmation, toast, offline and not-found state the spec requires but the mockup never drew — found from the spec, grouped into patterns, recommended from existing components, asked last, and drawn into the mockup |
+| S6 | Mockup fidelity: a script analyses the mockup into text roles, components and variants, each defined once; the app is held to it — every screen, state and width pixel-compared, fonts and spacing exactly equal per component, every asset hash-equal, every interaction working for real |
+| S7 | UI gap analysis: every loading, empty, error, confirmation, toast, offline and not-found state the spec requires but the mockup never drew — found from the spec, grouped into patterns, recommended from existing components, asked last, and drawn into the mockup |
+| S8 | After frontend validation: two tracks, dependencies, sizes, checkbox exit criteria and Mockup parity |
 
 ## Fixed, never asked
 
@@ -274,3 +274,7 @@ constraint, twelve error codes, ten endpoints and eleven phases.
 ## Licence
 
 MIT
+
+Existing version-1 stage records retain their completion dates via the
+[stage-order migration](references/stages/stage-order.md); phase planning now
+follows mockup fidelity and frontend UI-gap validation.

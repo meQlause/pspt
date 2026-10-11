@@ -135,7 +135,7 @@ answer now. It is a check-in, not a bar.
 
 **Enhance changes the *specification*, not the *work list*.** The work
 that builds it is planned *after* enhance closes — as a ticket with
-`/pspt:ticket`, or by re-running `/pspt:spec` at stage S6 for
+`/pspt:ticket`, or by re-running `/pspt:spec` at stage S8 for
 `phases.md`. Enhance never opens, closes, or adds an exit criterion.
 It records what must be true, not what to do next.
 
@@ -218,7 +218,7 @@ workaround — leave the change staged (or unstaged) and stop.
   the old row.
 - **Never write to `phases.md` at all.** Neither adding nor ticking.
   Planning the work is `/pspt:ticket`'s job (in `tickets/<slug>/`, or
-  S6 for `phases.md`); ticking a criterion is `/pspt:build`'s job
+  S8 for `phases.md`); ticking a criterion is `/pspt:build`'s job
   (marking work as actually done). Enhance changes the *spec*; the
   ticket and the build are separate skills, invoked after enhance
   closes.

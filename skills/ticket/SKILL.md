@@ -213,7 +213,7 @@ What the conversation settled, and what settled it.
 ```
 
 **Acceptance criteria follow the `phases.md` bar** in
-`references/stages/s6-phases.md` §Writing exit criteria: each names an input and
+`references/stages/s8-phases.md` §Writing exit criteria: each names an input and
 an observable outcome, and a test can be written against it. "Works
 correctly", "is fast", "looks right" are goals — they should have been sharpened
 in Step 2; if one slipped through, go back and ask.
@@ -339,7 +339,7 @@ own T row naming the id.
 **S — static.** Lint with `--max-warnings=0` the way the commit hook runs it,
 format check, and the whole-tree check command. Always the last rows. A ticket
 that touches a frontend screen adds one more: that screen's fidelity suites
-against the mockup baseline (`references/stages/s7-fidelity.md`), once the
+against the mockup baseline (`references/stages/s6-fidelity.md`), once the
 project has them.
 
 > The test table is written before the code for the same reason `/pspt:build`
@@ -648,7 +648,7 @@ staged (or unstaged) and stop.
   contract or error code goes through `/pspt:enhance`, `/pspt:code` or
   `/pspt:reg` first; the ticket cites the id. Correcting `docs/` to match what
   was built is `/pspt:build` Step 7's write-back, and nothing more.
-- **Never write to `docs/phases.md`.** That file is S6's plan and
+- **Never write to `docs/phases.md`.** That file is S8's plan and
   `/pspt:build`'s checklist; a ticket keeps its own phases in its own folder.
 - **Never invent frontend text.** Defined text (mockup, spec, PRD/SRS, existing
   copy constant, the user's words) is written as-is — otherwise lorem ipsum,

@@ -1,6 +1,6 @@
-# S6 — Development phases
+# S8 — Development phases
 
-**Produces:** `docs/phases.md` (written into both repos)
+**Produces:** `docs/phases.md` in the parent workspace (one shared plan)
 
 One shared file holding a backend track and a frontend track. It converts the
 specifications into an order of work, and it is the file a planning session
@@ -9,6 +9,14 @@ frontend cannot start a screen whose endpoints are still in a later backend
 phase.
 
 ---
+
+## Gate
+
+S2–S7 must be complete, including S6 mockup fidelity and S7 frontend UI gap
+validation. Every gap must be approved and drawn or explicitly skipped with a
+fallback; Gate 2 must pass, and the fidelity matrix and baseline must include
+the final approved states. An explicit `phases` invocation does not bypass this
+gate. Do not create or regenerate `phases.md` while frontend validation is open.
 
 ## Required sections
 
@@ -88,6 +96,37 @@ response. A criterion no test can be written against is a goal, not a criterion.
 > The last row matters most. A specification that drifts from the code is worse
 > than no specification, because the next reader trusts it and is wrong.
 
+## Mockup parity phase
+
+Use the final S6 fidelity matrix and S7 validated states. Add one phase at the end of the frontend track. Criteria follow the modules, so
+the shared parts are proven once, before the screens that reuse them:
+
+```markdown
+## Phase F<n> — Mockup parity
+
+**Goal:** every screen, in every state, at every width, is indistinguishable from the signed-off mockup and does for real what the mockup demonstrates.
+
+| Area | Files |
+|------|-------|
+| Harness | `tests/fidelity/analyse.ts`, `tests/fidelity/baseline/` |
+| Suites | `tests/fidelity/**/*.spec.ts` |
+
+### Exit criteria
+
+- [ ] `pnpm fidelity:analyse` regenerates `baseline/` from `mockup/` with no diff to the committed baseline
+- [ ] Text roles — every `data-role` instance equals its role baseline (`*.style.spec.ts`)
+- [ ] Button — every variant × state equals its baseline; behaviour spec green (`components/button.behaviour.spec.ts`)
+- [ ] Modal — … (one criterion per §4 component)
+- [ ] `booking-review` — pixel diff ≤ 0.001, all states × widths; flows B-01 … B-07 green (one criterion per screen)
+- [ ] Every asset hash-equal or listed in `FE/fidelity.md` §11 (`assets.spec.ts`)
+```
+
+Add one row to `phases.md` §2 Definition of done:
+
+| Area | Requirement |
+|---|---|
+| Fidelity | A criterion that touches a component or screen runs its `tests/fidelity/` suites once they exist; a parity regression is a red test |
+
 ## Decisions to ask
 
 | Decision | What to put in front of the user |
@@ -106,3 +145,7 @@ response. A criterion no test can be written against is a goal, not a criterion.
 - [ ] Cross-track dependencies are explicit, so no screen starts before its endpoints exist
 - [ ] The definition of done is stated once and applies to every phase
 - [ ] The first-week sequence names what to start on Monday
+
+- [ ] S6 fidelity and S7 frontend validation are complete before the plan is written
+- [ ] Every approved UI-gap state and every documented fallback has an observable phase exit criterion
+- [ ] The frontend track includes Mockup parity, components first then screens, and the definition of done includes Fidelity

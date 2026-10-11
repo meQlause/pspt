@@ -1,10 +1,10 @@
-# S8 — UI gap analysis
+# S7 — UI gap analysis
 
 **Produces:** `docs/FE/ui-gaps.md`; for every approved gap, a drawn state in
-`mockup/`, a row in the S5 refactor map and screen document, a row in the S7
+`mockup/`, a row in the S5 refactor map and screen document, a row in the S6
 matrix, and — when it is new user-visible behaviour — an FR in `srs.md`
 
-The last stage, and the one that asks the questions nobody drew an answer to.
+The frontend validation stage, and the one that asks the questions nobody drew an answer to.
 A mockup shows the screens someone pictured: the happy path, perhaps an empty
 list. The rest of the specification knows far more — every error code has a
 presentation, every request can be slow or fail, every list can be empty, every
@@ -12,21 +12,23 @@ destructive action needs a second chance. Each of those is a piece of UI the app
 **will** show, and if nobody designs it, the first person to design it is a
 developer at 6 p.m. with no mockup to copy.
 
-S8 finds every such gap **mechanically from the spec**, recommends how to fill
+S7 finds every such gap **mechanically from the spec**, recommends how to fill
 it **from what the mockup already has**, asks the user, and folds each approved
 answer back into the mockup — so the mockup stays the one source of truth and
-S7 holds the app to the new states like any other.
+S6 holds the app to the new states like any other.
 
 ---
 
 ## Gate
 
-S2–S7 complete. S8 reads every one of them; it does not run on a partial spec.
+S2–S6 complete. S7 reads every one of them; it does not run on a partial spec.
+`phases.md` is not required and is not written here. S8 creates the plan only
+after this stage closes and Gate 2 passes.
 
 ## Step 1 — Find the gaps, from the spec
 
 Each row below is a rule the spec already states. A gap is a place where the
-rule applies and the mockup draws nothing. Use the S7 analyser's summary and the
+rule applies and the mockup draws nothing. Use the S6 analyser's summary and the
 S5 refactor map — not a fresh read of every mockup file.
 
 | Source in the spec | Requires on screen | Gap when the mockup has no… |
@@ -41,8 +43,8 @@ S5 refactor map — not a fresh read of every mockup file.
 | Access rules — `401`, `403`, another user's record → `404` | Session expiry, denial, not found | session-expired prompt · not-found screen |
 | App-wide | Offline, timeout, unexpected `500`, unknown route | offline banner · timeout · generic failure · 404 page |
 | Rendered values (S2 §1) | Long and missing values | truncation / wrapping of long names · fallback image · placeholder for null |
-| Each S7 viewport | A layout at every width | a breakpoint with no drawn layout |
-| Each control (S7 §4) | Keyboard and disabled states | focus-visible · disabled · loading |
+| Each S6 viewport | A layout at every width | a breakpoint with no drawn layout |
+| Each control (S6 §4) | Keyboard and disabled states | focus-visible · disabled · loading |
 
 Report the result in `ui-gaps.md` §1 as **patterns with counts**, never as one
 line per screen:
@@ -71,7 +73,7 @@ from the mockup's own material, in this order of preference:
 
 | Preference | Recommendation | Example |
 |---|---|---|
-| 1. Reuse a component as-is | An existing S7 §4 component and variant | Error popup → the existing **Modal** with `Button/primary` "OK" |
+| 1. Reuse a component as-is | An existing S6 §4 component and variant | Error popup → the existing **Modal** with `Button/primary` "OK" |
 | 2. A new variant of an existing component | Same anatomy, a token-only difference | Toast → **Banner/advisory** made floating; Skeleton → **Card** outline in `color.surface-muted` |
 | 3. A new component | Only when nothing fits — composed of existing tokens only | A **Skeleton** line block, built from `space.*` and `radius.sm` |
 | Never | New colours, fonts, spacing or radii | A token the design system does not have is a design decision, not a gap fill |
@@ -98,7 +100,7 @@ Each recommendation states:
 - Motion honours `prefers-reduced-motion` — no shimmer, no slide.
 - A destructive action gets a confirmation dialog naming the thing destroyed; a
   reversible one gets undo instead of a dialog.
-- Every new state has a real trigger the app can reach — the same rule as S7 §9.
+- Every new state has a real trigger the app can reach — the same rule as S6 §9.
 
 ## Step 3 — Ask, last, one pattern at a time
 
@@ -144,7 +146,7 @@ Then fold them into the spec in the same pass:
 |---|---|
 | New refactor-map rows, one per new state | `FE/design-system.md` §4 |
 | New state rows (trigger + presentation) | `FE/features/<screen>.md` States |
-| New component or variant | `FE/design-system.md` UI kit, and S7 §4 catalog |
+| New component or variant | `FE/design-system.md` UI kit, and S6 §4 catalog |
 | New FR for new user-visible behaviour — additive only, per `/pspt:enhance` §3 rules | `srs.md` |
 | New matrix rows, re-run `pnpm fidelity:analyse` | `FE/fidelity.md` §1, `tests/fidelity/baseline/` — allowed because the mockup changed |
 | Placeholder copy | `docs/FE/copy-recommendations.md` (`COPY-nnn`) |
@@ -168,5 +170,5 @@ covered by an FR or an existing error-code rule.
 - [ ] Every recommendation reuses existing components and tokens, or says why it cannot
 - [ ] No error the user must act on is shown as a toast
 - [ ] Every pattern is decided by the user — drawn (§2) or skipped with a fallback (§3)
-- [ ] Every drawn state is in the mockup, the refactor map, its screen document and the S7 matrix, and the baseline was regenerated
+- [ ] Every drawn state is in the mockup, the refactor map, its screen document and the S6 matrix, and the baseline was regenerated
 - [ ] New user-visible behaviour has an FR; Gate 2 still passes

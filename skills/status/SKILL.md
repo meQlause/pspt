@@ -25,7 +25,9 @@ next writing skill will offer to install it`. Read-only: never ask, never instal
 count plus the first few is enough at this level.
 
 **Stages.** Read `docs/.pspt.json` if present, otherwise infer from the files in
-`docs/`:
+`docs/`. Normalize legacy state keys in memory using
+[`stage-order.md`](../../references/stages/stage-order.md); do not write the state
+file. Confirm stage exit criteria before reporting completion:
 
 | Stage | Complete when |
 |---|---|
@@ -33,9 +35,9 @@ count plus the first few is enough at this level.
 | S3 | `strict-rules.md`, `error-handling.md`, both architecture and both stack files |
 | S4 | `BE/features/README.md`, ≥1 `BE/features/*.md`, `BE/testing.md` |
 | S5 | `FE/design-system.md`, ≥1 `FE/features/*.md` |
-| S6 | `phases.md` |
-| S7 | `FE/fidelity.md`, and a Mockup parity phase in `phases.md` |
-| S8 | `FE/ui-gaps.md` |
+| S6 | `FE/fidelity.md` |
+| S7 | `FE/ui-gaps.md` |
+| S8 | `phases.md`, including Mockup parity and the Fidelity definition of done |
 | Build | `phases.md` has at least one ticked exit criterion |
 
 **Build progress.** If `phases.md` exists, count ticked versus total exit
@@ -69,9 +71,9 @@ S2  ✓  data-spec.md          6 tables, 1 exclusion constraint
 S3  ✓  6 files               express · prisma · postgres · react+vite
 S4  ✓  2 features            10 endpoints, 5 regressions reserved
 S5  ✓  2 screens             8 refactor rows
-S6  ✓  phases.md             7 backend, 4 frontend
-S7  ✓  fidelity.md           9 text roles, 11 components, 19 variants, 6 one-offs
-S8  ✓  ui-gaps.md            47 gaps → 9 patterns, 8 drawn, 1 skipped
+S6  ✓  fidelity.md           9 text roles, 11 components, 19 variants, 6 one-offs
+S7  ✓  ui-gaps.md            47 gaps → 9 patterns, 8 drawn, 1 skipped
+S8  ✓  phases.md             7 backend, 4 frontend
 tools  ✓  backend express      ! frontend react — knip.json missing, eslint.config.mjs differs (3 rules)
 build  3/70 exit criteria
 

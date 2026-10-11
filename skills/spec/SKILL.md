@@ -13,7 +13,8 @@ Read `references/conventions.md` and `references/house-style.md` before writing
 any document. They are fixed and not negotiable per project.
 
 If the user passed an argument (`data`, `decisions`, `be`, `fe`, `phases`, `fidelity`, `gaps`), skip
-to that stage and regenerate it. Otherwise run the gates, then the first
+to that stage and regenerate it, after checking its prerequisites (including
+S8's frontend-validation gate). Otherwise run the gates, then the first
 incomplete stage.
 
 ---
@@ -87,7 +88,10 @@ resolved in the source documents, not here. Generate nothing.
 
 ## Step 4 — Detect the stage
 
-Read `docs/.pspt.json` if it exists. Otherwise infer from what is in `docs/`.
+Read `docs/.pspt.json` if it exists. Normalize legacy stage keys using
+[`stage-order.md`](../../references/stages/stage-order.md) before selecting a stage.
+Otherwise infer from what is in `docs/`. Stage completion requires the guide
+exit criteria, not only file existence.
 
 | Stage | Complete when these exist |
 |---|---|
@@ -95,9 +99,9 @@ Read `docs/.pspt.json` if it exists. Otherwise infer from what is in `docs/`.
 | S3 | `strict-rules.md`, `error-handling.md`, `BE/be-architecture.md`, `BE/be-stack.md`, `FE/fe-architecture.md`, `FE/fe-stack.md` |
 | S4 | `BE/features/README.md`, at least one `BE/features/*.md`, `BE/testing.md` |
 | S5 | `FE/design-system.md`, at least one `FE/features/*.md` |
-| S6 | `phases.md` |
-| S7 | `FE/fidelity.md`, and the Mockup parity phase in `phases.md` |
-| S8 | `FE/ui-gaps.md` |
+| S6 | `FE/fidelity.md` |
+| S7 | `FE/ui-gaps.md` |
+| S8 | `phases.md`, including Mockup parity and the Fidelity definition of done |
 
 Run **the first incomplete stage only**.
 
@@ -111,9 +115,9 @@ Read the matching guide and follow it:
 | S3 | `references/stages/s3-decisions.md` |
 | S4 | `references/stages/s4-backend.md` |
 | S5 | `references/stages/s5-frontend.md` |
-| S6 | `references/stages/s6-phases.md` |
-| S7 | `references/stages/s7-fidelity.md` |
-| S8 | `references/stages/s8-ui-gaps.md` |
+| S6 | `references/stages/s6-fidelity.md` |
+| S7 | `references/stages/s7-ui-gaps.md` |
+| S8 | `references/stages/s8-phases.md` |
 
 Each guide lists the required sections, the decisions to ask, and the exit
 criteria. Ask every decision the guide names with `AskUserQuestion`, presenting
@@ -153,7 +157,7 @@ After each stage, write `docs/.pspt.json`:
 
 ```json
 {
-  "version": 1,
+  "version": 2,
   "stages": { "s2": "<ISO date>", "s3": null, "s4": null, "s5": null, "s6": null, "s7": null, "s8": null },
   "stack": { "database": "...", "backend": "...", "orm": "...", "di": "...",
              "frontend": "...", "routing": "...", "serverState": "...", "validation": "..." },

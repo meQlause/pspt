@@ -246,7 +246,7 @@ you, and draws your answer into the mockup.
 
 **Added**
 
-- **Stage S8, UI gap analysis** ([`s8-ui-gaps.md`](references/stages/s8-ui-gaps.md))
+- **Stage S8, UI gap analysis** ([`s7-ui-gaps.md`](https://github.com/meQlause/pspt/blob/6e77eef42c1bafcdb10f49d9c21854fc7eba1791/references/stages/s8-ui-gaps.md))
   — writes `docs/FE/ui-gaps.md`.
 - **Found from the spec, not guessed** — every error code's presentation on the
   screens that receive it; loading, refresh and failure for every read; empty
@@ -309,7 +309,7 @@ padding, margins, assets and every interaction.
 
 **Added**
 
-- **Stage S7, mockup fidelity** ([`s7-fidelity.md`](references/stages/s7-fidelity.md))
+- **Stage S7, mockup fidelity** ([`s6-fidelity.md`](https://github.com/meQlause/pspt/blob/6e77eef42c1bafcdb10f49d9c21854fc7eba1791/references/stages/s7-fidelity.md))
   — writes `docs/FE/fidelity.md`. Every value is read from the mockup rendered
   in Chromium, never from its CSS by eye and never from the app:
   - **Look** — every mockup file × state × viewport (from the mockup's own

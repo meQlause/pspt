@@ -144,7 +144,7 @@ take the **first unticked exit criterion of the earliest incomplete phase**.
 
 Refuse and say why if:
 
-- `phases.md` does not exist — S6 has not run, so there is no work list
+- `phases.md` does not exist — S8 has not run, so there is no work list
 - the phase depends on an earlier phase that is not complete
 - the criterion depends on an open decision in `phases.md` §0
 
@@ -229,7 +229,7 @@ pnpm check
 npx eslint --max-warnings=0 --no-warn-ignored <changed files>
 ```
 
-In the frontend submodule, once `tests/fidelity/` exists (S7), also run the
+In the frontend submodule, once `tests/fidelity/` exists (S6), also run the
 fidelity suites of every screen and shared component the criterion touched:
 
 ```
@@ -239,7 +239,7 @@ pnpm test:fidelity -- <screen-or-component>
 A pixel, style, asset or behaviour difference from the mockup baseline is a red
 test like any other. Never regenerate the baseline to make it pass — the
 baseline comes from the mockup, and only a mockup change moves it
-(`references/stages/s7-fidelity.md` §10).
+(`references/stages/s6-fidelity.md` §10).
 
 **Zero warnings.** `warn` is not advisory in this codebase — the hook runs
 `--max-warnings=0`, so every warning blocks a commit even when `pnpm lint`

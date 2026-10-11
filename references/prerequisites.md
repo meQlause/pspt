@@ -180,7 +180,7 @@ changes files, re-index before the next read**:
 | `/pspt:fix-flow` | the install and the autofixes (Step 4) — before reporting |
 | `/pspt:staging-fix` | each package's code and config changes (Step 4) — before the verify step reads them |
 | `/pspt:fix-flow-proceed` | each iteration's file — before the next file and before the queue is re-read |
-| `/pspt:spec` S7 / S8, `/pspt:enhance`, `/pspt:code`, `/pspt:reg` | a mockup or source file written (docs alone need no re-index) |
+| `/pspt:spec` S6 / S7, `/pspt:enhance`, `/pspt:code`, `/pspt:reg` | a mockup or source file written (docs alone need no re-index) |
 
 How: `index_folder` on the working directory with `incremental: true` and
 `paths` set to the files the unit changed (`git diff --name-only <before>..HEAD`,

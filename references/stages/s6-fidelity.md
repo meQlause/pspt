@@ -1,9 +1,9 @@
-# S7 — Mockup fidelity
+# S6 — Mockup fidelity
 
 **Produces:** `docs/FE/fidelity.md`, plus a **Mockup parity** phase appended to
 the frontend track of `docs/phases.md`
 
-S5 decided *how* the mockup becomes an application; S7 decides
+S5 decided *how* the mockup becomes an application; S6 decides
 *how anyone will know it did*. "Looks like the mockup" is not a criterion — it is
 an opinion, and opinions drift one pixel, one font weight, one forgotten hover
 state at a time. This stage turns the mockup into a **measured baseline** and
@@ -17,7 +17,7 @@ Two principles shape everything below:
    mockup rendered in Chromium — not off its CSS by eye, not off the app after
    the fact.
 2. **Analyse first, define once.** A mockup is mostly repetition: twenty
-   buttons, six cards, one heading style used forty times. S7 finds the
+   buttons, six cards, one heading style used forty times. S6 finds the
    repetition **with a script**, defines each pattern **once**, and lets every
    instance inherit it. Nothing is specified per element unless it is genuinely
    one of a kind.
@@ -26,11 +26,11 @@ Two principles shape everything below:
 
 ## Gate
 
-S5 and S6 must be complete: every screen and state has a refactor-map row and a
-screen document, and `phases.md` exists. If the mockup changed since S5, stop and
-re-run S5 first — a baseline taken from a mockup the spec does not describe
-measures the wrong thing. S8 runs after this stage and may add states to the
-mockup; it updates §1 and regenerates the baseline itself.
+S2–S5 must be complete: every screen and state has a refactor-map row and a
+screen document. `phases.md` is not a prerequisite. If the mockup changed since
+S5, stop and re-run S5 first — a baseline taken from a mockup the spec does not
+describe measures the wrong thing. S7 runs next and may add approved states; it
+updates the matrix and regenerates the baseline before S8 plans development.
 
 ## Token discipline
 
@@ -89,7 +89,7 @@ rules, one width inside each range; if it has none, ask (Decisions).
 Run `pnpm fidelity:analyse` (§10). It renders every §1 row of the mockup and
 reports, without the assistant reading the markup:
 
-| Finding | How the extractor finds it | What S7 does with it |
+| Finding | How the extractor finds it | What S6 does with it |
 |---|---|---|
 | **Style classes** | Groups text elements by their computed type signature (family, size, weight, line-height, letter-spacing, transform, colour) | Each class becomes one §5 text role |
 | **Components** | Groups repeated subtrees by structure and class names — the same shape appearing two or more times | Each becomes one §4 component, matched against the S5 UI kit |
@@ -265,36 +265,12 @@ a failing run pass, is lowering the bar (SR-5).
 
 Empty until the user decides otherwise. A difference not listed here is a defect.
 
-## Appending to `phases.md`
+## Phase-planning handoff
 
-Add one phase at the end of the frontend track. Criteria follow the modules, so
-the shared parts are proven once, before the screens that reuse them:
-
-```markdown
-## Phase F<n> — Mockup parity
-
-**Goal:** every screen, in every state, at every width, is indistinguishable from the signed-off mockup and does for real what the mockup demonstrates.
-
-| Area | Files |
-|------|-------|
-| Harness | `tests/fidelity/analyse.ts`, `tests/fidelity/baseline/` |
-| Suites | `tests/fidelity/**/*.spec.ts` |
-
-### Exit criteria
-
-- [ ] `pnpm fidelity:analyse` regenerates `baseline/` from `mockup/` with no diff to the committed baseline
-- [ ] Text roles — every `data-role` instance equals its role baseline (`*.style.spec.ts`)
-- [ ] Button — every variant × state equals its baseline; behaviour spec green (`components/button.behaviour.spec.ts`)
-- [ ] Modal — … (one criterion per §4 component)
-- [ ] `booking-review` — pixel diff ≤ 0.001, all states × widths; flows B-01 … B-07 green (one criterion per screen)
-- [ ] Every asset hash-equal or listed in §11 (`assets.spec.ts`)
-```
-
-Add one row to `phases.md` §2 Definition of done:
-
-| Area | Requirement |
-|---|---|
-| Fidelity | A criterion that touches a component or screen runs its `tests/fidelity/` suites once they exist; a parity regression is a red test |
+S6 defines fidelity evidence and criteria in `docs/FE/fidelity.md`; it does not
+create or update `docs/phases.md`. S7 validates missing frontend states and
+refreshes the baseline. S8 uses that final matrix and component catalog to
+create the Mockup parity phase and the Fidelity definition-of-done row.
 
 ## Decisions to ask
 
@@ -314,4 +290,4 @@ Add one row to `phases.md` §2 Definition of done:
 - [ ] Text roles and components are defined once, by token name; no computed value is typed into `fidelity.md`
 - [ ] §7 one-offs are few, each with a reason
 - [ ] Every handler, toggled class and `?state=` value lands in exactly one §9 table, with a real mechanism and a test
-- [ ] `phases.md` has the Mockup parity phase — components first, then screens — and the Fidelity row in its definition of done
+- [ ] `fidelity.md` defines the final matrix, component criteria and deviations for S7 validation and S8 planning; this stage did not create or update `phases.md`
