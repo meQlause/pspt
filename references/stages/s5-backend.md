@@ -1,4 +1,4 @@
-# S4 — Backend specification
+# S5 — Backend specification
 
 **Produces:** `docs/BE/features/README.md`, `docs/BE/features/<feature>.md` (one
 per feature), `docs/BE/testing.md`
@@ -8,6 +8,21 @@ its own, so it can be handed to a frontend engineer or an assistant without
 dragging the whole specification along.
 
 ---
+
+## Architecture handoff
+
+S3 and S4 must be complete. Read the architecture decision register, security and
+operations documents. Carry ADR ids beside the behavior they govern.
+
+For each required job, specify payload validation and tenant scope, producer and
+transaction/outbox boundary, consumer, schedule/timezone or delay, idempotency and
+ordering, retry/timeout/cancellation, exhaustion/dead-letter recovery, concurrency
+and shutdown behavior. State only applicable policies chosen in S3.
+For endpoints and integrations, specify the chosen object permissions, request
+authenticity/replay checks, rate limits and safe error behavior.
+Map these guarantees to observable integration/fault tests in `testing.md`;
+backend-only jobs and provider callbacks trace to requirements even without a
+screen caller.
 
 ## Deciding the feature split
 
@@ -132,9 +147,11 @@ next reader of the spec knows the rule was once broken.
 ## Exit criteria
 
 - [ ] Every endpoint the mockup needs exists in a feature document
-- [ ] No document contains an endpoint no screen calls
+- [ ] Every endpoint has a screen caller or an explicit source-backed integration/operational requirement
 - [ ] Every endpoint states access, request rules, response example and error table
 - [ ] Every error code used appears in the registry with exactly one status
 - [ ] Server-owned fields are listed, so no amount or status can be set by a client
 - [ ] Every computed figure in a response example matches the mockup
 - [ ] Every reserved regression has an id, a level and a precise assertion
+
+- [ ] Required S3 guarantees have endpoint/job contracts and named tests, with ADR traceability

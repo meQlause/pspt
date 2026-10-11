@@ -120,7 +120,7 @@ and language, copies every `files` entry byte for byte, merges the pinned
 | Dependencies pinned | every manifest `devDependencies` entry in `package.json` at the exact version | missing, or a different version |
 | Scripts | every manifest `scripts` entry in `package.json`, identical | missing or changed |
 | Hooks active | `git config core.hooksPath` is `.husky/_` | anything else |
-| TypeScript, as S3 fixed it | `tsconfig.json` has `"strict": true`; no `.js` / `.jsx` under `src/` or `tests/` | either fails |
+| TypeScript, as S4 fixed it | `tsconfig.json` has `"strict": true`; no `.js` / `.jsx` under `src/` or `tests/` | either fails |
 | Chromium (SR-4) | the frontend's `playwright.config.ts` runs Chromium | missing |
 
 **On drift, stop.** Print every failed check — for the ESLint config, the rules
@@ -144,7 +144,7 @@ take the **first unticked exit criterion of the earliest incomplete phase**.
 
 Refuse and say why if:
 
-- `phases.md` does not exist — S8 has not run, so there is no work list
+- `phases.md` does not exist — S9 has not run, so there is no work list
 - the phase depends on an earlier phase that is not complete
 - the criterion depends on an open decision in `phases.md` §0
 
@@ -154,6 +154,12 @@ Print the criterion verbatim before starting, so what you are building is on
 screen in the user's own words.
 
 ## Step 2 — Find its anchor
+
+Read applicable ADRs in `docs/architecture-decisions.md` and their linked security
+and operations rules when the criterion implements a system guarantee. Respect
+the owning component, failure behavior and proof chosen there. For existing
+projects, a missing new S3 review is reported without resetting completed work;
+an unresolved decision blocks only the dependent criterion.
 
 Every criterion points at something: a specification section, a regression id, or
 an observable response. Locate it and read it. Quote the statement you are about
@@ -229,7 +235,7 @@ pnpm check
 npx eslint --max-warnings=0 --no-warn-ignored <changed files>
 ```
 
-In the frontend submodule, once `tests/fidelity/` exists (S6), also run the
+In the frontend submodule, once `tests/fidelity/` exists (S7), also run the
 fidelity suites of every screen and shared component the criterion touched:
 
 ```
@@ -239,7 +245,7 @@ pnpm test:fidelity -- <screen-or-component>
 A pixel, style, asset or behaviour difference from the mockup baseline is a red
 test like any other. Never regenerate the baseline to make it pass — the
 baseline comes from the mockup, and only a mockup change moves it
-(`references/stages/s6-fidelity.md` §10).
+(`references/stages/s7-fidelity.md` §10).
 
 **Zero warnings.** `warn` is not advisory in this codebase — the hook runs
 `--max-warnings=0`, so every warning blocks a commit even when `pnpm lint`

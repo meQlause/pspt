@@ -1,6 +1,6 @@
 # S2 — Data specification
 
-**Produces:** `docs/data-spec.md` (written into both repos)
+**Produces:** `docs/data-spec.md` in the parent workspace
 
 Turn the mockup into a database design that can be migrated, seeded and queried.
 Every table must trace to a screen or to a rule stated out loud in the SRS.
@@ -49,6 +49,14 @@ Every table gets the full column grid, then:
   reader is a write cost with no reader.
 - **Checks** — every invariant expressible as a `CHECK`, written as SQL.
 
+## Handoff to S3
+
+Carry source-backed requirements for background work, consistency, isolation,
+sensitive data, retention and recovery into §7, including requirements with no
+screen. Flag architecture-dependent storage choices as provisional until S3/S4
+settle them; do not invent a queue table or choose a broker here. If that review
+changes a storage assumption, correct this document with traceability preserved.
+
 ## Decisions to ask
 
 Ask each with two candidates and the cost of each, never as an open question.
@@ -74,9 +82,10 @@ Ask each with two candidates and the cost of each, never as an open question.
 
 ## Traps
 
-**Do not invent tables the mockup cannot justify.** If the SRS demands data no
-screen renders, that disagreement should have blocked at gate 2. It is not
-resolved by quietly adding a table.
+**Do not invent tables without a source.** Source-backed non-functional rules,
+provider callbacks and internal jobs need no screen; trace their data to §7.
+A user-facing functional requirement without a matching screen is still a Gate 2
+gap, not permission to invent a table or screen.
 
 **A rename question is a table.** When a label repeats across records and
 renaming it must reach all of them, it is a table with a foreign key, not a

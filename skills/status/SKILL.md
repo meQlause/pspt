@@ -32,12 +32,13 @@ file. Confirm stage exit criteria before reporting completion:
 | Stage | Complete when |
 |---|---|
 | S2 | `data-spec.md` |
-| S3 | `strict-rules.md`, `error-handling.md`, both architecture and both stack files |
-| S4 | `BE/features/README.md`, ≥1 `BE/features/*.md`, `BE/testing.md` |
-| S5 | `FE/design-system.md`, ≥1 `FE/features/*.md` |
-| S6 | `FE/fidelity.md` |
-| S7 | `FE/ui-gaps.md` |
-| S8 | `phases.md`, including Mockup parity and the Fidelity definition of done |
+| S3 | `architecture.md`, `security.md`, `operations.md`, `architecture-decisions.md`, with S3 exit criteria met |
+| S4 | `strict-rules.md`, `error-handling.md`, both architecture and both stack files |
+| S5 | `BE/features/README.md`, ≥1 `BE/features/*.md`, `BE/testing.md` |
+| S6 | `FE/design-system.md`, ≥1 `FE/features/*.md` |
+| S7 | `FE/fidelity.md` |
+| S8 | `FE/ui-gaps.md` |
+| S9 | `phases.md`, including Mockup parity and the Fidelity definition of done |
 | Build | `phases.md` has at least one ticked exit criterion |
 
 **Build progress.** If `phases.md` exists, count ticked versus total exit
@@ -68,12 +69,13 @@ inputs    ✓ brd.md   ✓ prd.md   ✓ srs.md (42 FR, 8 NFR)   ✓ mockup/ (2 s
 gates     ✓ complete   ✓ consistent
 
 S2  ✓  data-spec.md          6 tables, 1 exclusion constraint
-S3  ✓  6 files               express · prisma · postgres · react+vite
-S4  ✓  2 features            10 endpoints, 5 regressions reserved
-S5  ✓  2 screens             8 refactor rows
-S6  ✓  fidelity.md           9 text roles, 11 components, 19 variants, 6 one-offs
-S7  ✓  ui-gaps.md            47 gaps → 9 patterns, 8 drawn, 1 skipped
-S8  ✓  phases.md             7 backend, 4 frontend
+S3  ✓  system decisions     trust boundaries, job guarantees, security and recovery
+S4  ✓  6 files               express · prisma · postgres · react+vite
+S5  ✓  2 features            10 endpoints, 5 regressions reserved
+S6  ✓  2 screens             8 refactor rows
+S7  ✓  fidelity.md           9 text roles, 11 components, 19 variants, 6 one-offs
+S8  ✓  ui-gaps.md            47 gaps → 9 patterns, 8 drawn, 1 skipped
+S9  ✓  phases.md             7 backend, 4 frontend
 tools  ✓  backend express      ! frontend react — knip.json missing, eslint.config.mjs differs (3 rules)
 build  3/70 exit criteria
 

@@ -1,7 +1,7 @@
 # Strict rules — S0 template
 
-Copied into both repos as `docs/strict-rules.md` during S3, once the container
-and framework are known. Fill the `<…>` placeholders from the S3 answers; change
+Copied into the parent workspace as `docs/strict-rules.md` during S4, once the container
+and framework are known. Fill the `<…>` placeholders from the S4 answers; change
 nothing else.
 
 These rules are not re-opened per feature or per pull request. Changing one is a
@@ -36,7 +36,7 @@ in this repository follows them without being asked.
 SR-1 is worded against the **principle**, not the library, so it survives the DI
 choice. Add one line naming the chosen mechanism:
 
-| S3 answer | Line to add under SR-1 |
+| S4 answer | Line to add under SR-1 |
 |---|---|
 | Awilix | Registered per feature in `<feature>.container.ts`, scoped per request, proxy injection with a typed `Cradle`. |
 | NestJS | Satisfied by constructor injection; providers registered in the feature module. |

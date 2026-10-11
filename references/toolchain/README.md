@@ -44,7 +44,7 @@ directly or through `npm run` / `npx`, so they work under pnpm, npm or yarn.
 
 | Key | Language | Notes |
 |---|---|---|
-| `express`, `nestjs`, `react`, `nextjs` | TypeScript | what a pspt project uses — S3 fixes TypeScript |
+| `express`, `nestjs`, `react`, `nextjs` | TypeScript | what a pspt project uses — S4 fixes TypeScript |
 | `express-js`, `react-js`, `nextjs-js` | JavaScript | for existing JavaScript projects: the same rules, minus the TypeScript-only presets and `@typescript-eslint/*` rules; `globals` supplies Node or browser globals; no `typecheck` |
 
 NestJS ships in TypeScript only. JavaScript entries: Express `src/server.js`,

@@ -1,6 +1,6 @@
 # Frontend copy — recommendation for AI assistants
 
-**Applies to:** every frontend file an assistant writes · **Rule:** [`conventions.md` §9](./conventions.md#9-frontend-copy--never-invent-text) · **Used by:** `/pspt:spec` S5, `/pspt:build`, `/pspt:ticket`, `/pspt:ticket-build`
+**Applies to:** every frontend file an assistant writes · **Rule:** [`conventions.md` §9](./conventions.md#9-frontend-copy--never-invent-text) · **Used by:** `/pspt:spec` S6, `/pspt:build`, `/pspt:ticket`, `/pspt:ticket-build`
 
 This is the recommendation behind conventions §9, shown on one screen. It
 explains **why** an assistant must never write frontend text it was not given,

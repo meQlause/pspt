@@ -1,9 +1,9 @@
-# S6 — Mockup fidelity
+# S7 — Mockup fidelity
 
 **Produces:** `docs/FE/fidelity.md`, plus a **Mockup parity** phase appended to
 the frontend track of `docs/phases.md`
 
-S5 decided *how* the mockup becomes an application; S6 decides
+S6 decided *how* the mockup becomes an application; S7 decides
 *how anyone will know it did*. "Looks like the mockup" is not a criterion — it is
 an opinion, and opinions drift one pixel, one font weight, one forgotten hover
 state at a time. This stage turns the mockup into a **measured baseline** and
@@ -17,7 +17,7 @@ Two principles shape everything below:
    mockup rendered in Chromium — not off its CSS by eye, not off the app after
    the fact.
 2. **Analyse first, define once.** A mockup is mostly repetition: twenty
-   buttons, six cards, one heading style used forty times. S6 finds the
+   buttons, six cards, one heading style used forty times. S7 finds the
    repetition **with a script**, defines each pattern **once**, and lets every
    instance inherit it. Nothing is specified per element unless it is genuinely
    one of a kind.
@@ -26,11 +26,11 @@ Two principles shape everything below:
 
 ## Gate
 
-S2–S5 must be complete: every screen and state has a refactor-map row and a
+S2–S6 must be complete: every screen and state has a refactor-map row and a
 screen document. `phases.md` is not a prerequisite. If the mockup changed since
-S5, stop and re-run S5 first — a baseline taken from a mockup the spec does not
-describe measures the wrong thing. S7 runs next and may add approved states; it
-updates the matrix and regenerates the baseline before S8 plans development.
+S6, stop and re-run S6 first — a baseline taken from a mockup the spec does not
+describe measures the wrong thing. S8 runs next and may add approved states; it
+updates the matrix and regenerates the baseline before S9 plans development.
 
 ## Token discipline
 
@@ -89,21 +89,21 @@ rules, one width inside each range; if it has none, ask (Decisions).
 Run `pnpm fidelity:analyse` (§10). It renders every §1 row of the mockup and
 reports, without the assistant reading the markup:
 
-| Finding | How the extractor finds it | What S6 does with it |
+| Finding | How the extractor finds it | What S7 does with it |
 |---|---|---|
 | **Style classes** | Groups text elements by their computed type signature (family, size, weight, line-height, letter-spacing, transform, colour) | Each class becomes one §5 text role |
-| **Components** | Groups repeated subtrees by structure and class names — the same shape appearing two or more times | Each becomes one §4 component, matched against the S5 UI kit |
+| **Components** | Groups repeated subtrees by structure and class names — the same shape appearing two or more times | Each becomes one §4 component, matched against the S6 UI kit |
 | **Variants** | Within a component, instances whose signatures differ in a consistent way (`.btn` vs `.btn.secondary`) | Each becomes one variant row under its component |
 | **Near-duplicates** | Instances of one component that differ by a small amount (padding `16px` vs `18px`, colour off by one step) | **A question, never a silent choice** — see below |
 | **One-offs** | Elements matching no group | §7, one row each |
-| **Untokenised values** | A computed value with no token in `design-system.md` §2 | Add the token in S5 first, then continue |
+| **Untokenised values** | A computed value with no token in `design-system.md` §2 | Add the token in S6 first, then continue |
 
 Report the summary in `fidelity.md` §3 as counts, not values:
 
 ```
 analysed   5 screens · 18 states · 3 viewports · 1,412 elements
 classes    9 text roles cover 97% of text (41 one-off text nodes → 3 real one-offs, 38 are data)
-components 11 components, 19 variants, 268 instances  (S5 UI kit: 11 ✓)
+components 11 components, 19 variants, 268 instances  (S6 UI kit: 11 ✓)
 near-dup   2 — Card padding 16px (4 inst.) vs 18px (2 inst.); Button/secondary border 1px vs 1.5px
 one-offs   6 elements
 assets     14 files, 2 remote
@@ -123,7 +123,7 @@ variant row is added). The assistant never decides which pixel was meant.
 One section per component, written once. Instances are counted, not listed.
 
 ```markdown
-#### Button  · S5 UI kit · 64 instances on 5 screens
+#### Button  · S6 UI kit · 64 instances on 5 screens
 
 | Variant | Tokens | States compared | Instances |
 |---|---|---|---|
@@ -253,7 +253,7 @@ The style specs are **generic**: one loop over every `data-component` and
 screen adds a §1 row and a fixture, not test code.
 
 The baseline is regenerated **only when the mockup changes**, in the same commit
-as the mockup change and the S5 update. Regenerating it from the app, or to make
+as the mockup change and the S6 update. Regenerating it from the app, or to make
 a failing run pass, is lowering the bar (SR-5).
 
 ### §11 Allowed deviations
@@ -267,9 +267,9 @@ Empty until the user decides otherwise. A difference not listed here is a defect
 
 ## Phase-planning handoff
 
-S6 defines fidelity evidence and criteria in `docs/FE/fidelity.md`; it does not
-create or update `docs/phases.md`. S7 validates missing frontend states and
-refreshes the baseline. S8 uses that final matrix and component catalog to
+S7 defines fidelity evidence and criteria in `docs/FE/fidelity.md`; it does not
+create or update `docs/phases.md`. S8 validates missing frontend states and
+refreshes the baseline. S9 uses that final matrix and component catalog to
 create the Mockup parity phase and the Fidelity definition-of-done row.
 
 ## Decisions to ask
@@ -285,9 +285,9 @@ create the Mockup parity phase and the Fidelity definition-of-done row.
 ## Exit criteria
 
 - [ ] `pnpm fidelity:analyse` ran, and §3 holds its summary as counts
-- [ ] Every §3 component is a §4 catalog entry, and matches the S5 UI kit — or S5 is updated
+- [ ] Every §3 component is a §4 catalog entry, and matches the S6 UI kit — or S6 is updated
 - [ ] Every near-duplicate was decided by the user: unified (§11) or a variant (§4)
 - [ ] Text roles and components are defined once, by token name; no computed value is typed into `fidelity.md`
 - [ ] §7 one-offs are few, each with a reason
 - [ ] Every handler, toggled class and `?state=` value lands in exactly one §9 table, with a real mechanism and a test
-- [ ] `fidelity.md` defines the final matrix, component criteria and deviations for S7 validation and S8 planning; this stage did not create or update `phases.md`
+- [ ] `fidelity.md` defines the final matrix, component criteria and deviations for S8 validation and S9 planning; this stage did not create or update `phases.md`

@@ -179,12 +179,13 @@ Requires `gh` (GitHub CLI) installed and authenticated. See SR-3.
 | Stage | Produces |
 |---|---|
 | S2 | Extraction table, ERD, relationships with delete **and** update rules, the constraints that carry a guarantee |
-| S3 | Strict rules, error registry, architecture and stack per side |
-| S4 | Endpoint contracts, server-owned fields, error tables, testing strategy, reserved regressions |
-| S5 | Design tokens, refactor map, screen specs with acceptance criteria |
-| S6 | Mockup fidelity: a script analyses the mockup into text roles, components and variants, each defined once; the app is held to it — every screen, state and width pixel-compared, fonts and spacing exactly equal per component, every asset hash-equal, every interaction working for real |
-| S7 | UI gap analysis: every loading, empty, error, confirmation, toast, offline and not-found state the spec requires but the mockup never drew — found from the spec, grouped into patterns, recommended from existing components, asked last, and drawn into the mockup |
-| S8 | After frontend validation: two tracks, dependencies, sizes, checkbox exit criteria and Mockup parity |
+| S3 | System architecture, security and reliability: requirements and threats drive decisions about queues, schedules, signatures, permissions, retries, circuit breakers and recovery; every concern has a reasoned disposition and testable proof |
+| S4 | Strict rules, error registry, architecture and stack per side |
+| S5 | Endpoint contracts, server-owned fields, error tables, testing strategy, reserved regressions |
+| S6 | Design tokens, refactor map, screen specs with acceptance criteria |
+| S7 | Mockup fidelity: a script analyses the mockup into text roles, components and variants, each defined once; the app is held to it — every screen, state and width pixel-compared, fonts and spacing exactly equal per component, every asset hash-equal, every interaction working for real |
+| S8 | UI gap analysis: every loading, empty, error, confirmation, toast, offline and not-found state the spec requires but the mockup never drew — found from the spec, grouped into patterns, recommended from existing components, asked last, and drawn into the mockup |
+| S9 | After frontend validation: two tracks, dependencies, sizes, checkbox exit criteria and Mockup parity |
 
 ## Fixed, never asked
 

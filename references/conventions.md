@@ -1,6 +1,6 @@
 # Conventions every generated document must reflect
 
-Fixed across all projects. These are not asked at S3 — they are the shape the
+Fixed across all projects. These are not asked at S4 — they are the shape the
 specification is written into. Read this before generating any stage.
 
 ---
@@ -155,7 +155,7 @@ tests/
   integration/   mirrors src/features/, real database, real router
   e2e/           user journeys, Chromium
   regression/    one file per closed defect, REG-001 upward, never deleted
-  fidelity/      frontend only: the app against the mockup baseline — pixels, computed styles, assets, behaviour (S6)
+  fidelity/      frontend only: the app against the mockup baseline — pixels, computed styles, assets, behaviour (S7)
   fixtures/      builders, not JSON blobs
   helpers/       container factory, database lifecycle, sign in
 ```

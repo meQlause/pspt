@@ -1,27 +1,49 @@
 # Specification stage order and existing state
 
-State version 2 uses this order:
+State version 3 uses this order:
 
 | Stage | Artifact |
 |---|---|
-| S6 | Mockup fidelity: `FE/fidelity.md` and the measured baseline |
-| S7 | Frontend validation: `FE/ui-gaps.md`, approved drawn states and regenerated baseline |
-| S8 | Development plan: `phases.md`, including Mockup parity and Fidelity definition of done |
+| S2 | Data specification: `data-spec.md` |
+| S3 | System decisions: `architecture.md`, `security.md`, `operations.md`, `architecture-decisions.md` |
+| S4 | Technology, conventions and toolchain: strict rules, error registry, BE/FE architecture and stack files |
+| S5 | Backend feature contracts and testing |
+| S6 | Frontend design system and screen contracts |
+| S7 | Mockup fidelity: `FE/fidelity.md` and the measured baseline |
+| S8 | Frontend validation: `FE/ui-gaps.md`, approved drawn states and regenerated baseline |
+| S9 | Development plan: `phases.md`, Mockup parity and Fidelity definition of done |
 
-For a version-1 (or unversioned) `docs/.pspt.json`, interpret completed stage
-keys by their former meaning, preserving timestamps and null values:
-`new.s6 = old.s7`, `new.s7 = old.s8`, `new.s8 = old.s6`.
-Use a snapshot of all three original values; never remap in place sequentially.
-Keep S2–S5, stack answers and unrelated state fields unchanged. Version 2 keys
-already use the new order and must never be remapped again.
+## Normalize legacy state
 
-Status normalizes this mapping in memory only; it remains read-only. A writing
-spec invocation persists version 2 with the normalized keys in its stage commit.
-When no state file exists, infer completion from the artifact and its exit
-criteria, not a timestamp or the presence of a legacy stage number.
+Use snapshots of original values; never remap sequentially in place.
 
-Stage timestamps do not bypass the gates: S8 requires completed S6 and S7,
-resolved frontend gaps, Gate 2 and the final fidelity matrix/baseline. Existing
-`phases.md` is retained; do not delete plans, reset checked criteria or regenerate
-an in-progress build merely to adopt the new numbering. If frontend validation
-is incomplete, report that work first and defer any phase-plan regeneration.
+1. For version 1 or unversioned state, first normalize the former phase-first
+   order into version 2: `v2.s6 = old.s7`, `v2.s7 = old.s8`,
+   `v2.s8 = old.s6`. Keep S2–S5 unchanged.
+2. For version 2, insert the new architecture review:
+   `v3.s2 = v2.s2`, `v3.s3 = null`,
+   `v3.s4 = v2.s3`, `v3.s5 = v2.s4`, `v3.s6 = v2.s5`,
+   `v3.s7 = v2.s6`, `v3.s8 = v2.s7`, `v3.s9 = v2.s8`.
+   Preserve timestamps and null values. Existing shared decisions do not prove
+   the new S3 review is complete; verify its artifacts and exit criteria.
+3. Version 3 keys already have this meaning; never shift them again. For a
+   newer unknown version, report that it is unsupported rather than guessing.
+
+Preserve stack answers and unrelated state fields. Status normalizes in memory
+only and remains read-only. A writing spec invocation persists version 3 in its
+stage commit. With no state file, infer completion from artifacts and exit
+criteria, not legacy stage numbers.
+
+## Existing builds and gates
+
+Retain existing plans, checked exit criteria, requirement ids and decision ids.
+Do not delete or regenerate an in-progress build to adopt the new numbering.
+Report a missing S3 review and run it next; reuse and reference valid existing
+decisions, documenting only the gaps. Numbering migration alone does not reset
+completed implementation or create new product scope.
+
+Stage timestamps never bypass exit criteria. New or regenerated S9 plans require
+S2–S8 complete, including S3 decisions, S7 fidelity, S8 resolved frontend gaps,
+Gate 2 and the final fidelity matrix/baseline. An explicit stage argument does
+not bypass its prerequisites. If an existing build encounters a relevant open
+architecture decision, block that dependent work, not unrelated completed work.

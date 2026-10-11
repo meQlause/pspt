@@ -78,7 +78,7 @@ That gives the manifest key: `express`, `express-js`, `nestjs`, `react`,
 | No supported framework (Fastify, Koa, Vue, Svelte, …) | Say which framework was found and that pspt has no verified toolchain for it. **Do nothing** for that package — never improvise one. |
 | NestJS in JavaScript | Same: pspt ships NestJS in TypeScript only |
 | TypeScript with `.js` / `.jsx` files under `src/` or `tests/` | Use the TypeScript set; list the JavaScript files as a finding. Converting them is code work for a ticket, never part of this skill |
-| JavaScript in a pspt project (`docs/.pspt.json` exists; S3 fixed TypeScript) | Install the JavaScript set so the rules hold **now**, and report that the spec requires TypeScript — the migration is a `/pspt:ticket` |
+| JavaScript in a pspt project (`docs/.pspt.json` exists; S4 fixed TypeScript) | Install the JavaScript set so the rules hold **now**, and report that the spec requires TypeScript — the migration is a `/pspt:ticket` |
 
 Print one line per package, with the evidence:
 

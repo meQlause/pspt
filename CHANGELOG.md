@@ -26,6 +26,12 @@ absolute image links. Versions are listed in
 
 ---
 
+## Unreleased
+
+- Add S3 for system architecture, security and reliability decisions, with requirement-backed dispositions and observable proof.
+- Move technology selection to S4 and downstream stages through S9; normalize legacy state without resetting completed build criteria.
+- Carry architecture decisions into backend job contracts, frontend failure states and phase exit criteria.
+
 ## v0.8.3 — 2026-10-11
 
 **Readable formatting, frontend validation before phases, and disposable Docker test storage.**

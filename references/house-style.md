@@ -13,7 +13,7 @@ Open with a one-line status header, then the content. No preamble.
 ```markdown
 # <Project> — <Document>
 
-**Stage:** S4 · **Owns:** `bookings` · Conventions: [`README.md`](./README.md)
+**Stage:** S5 · **Owns:** `bookings` · Conventions: [`README.md`](./README.md)
 
 <one paragraph: what this is for, and what it deliberately does not do>
 ```

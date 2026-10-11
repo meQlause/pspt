@@ -1,4 +1,4 @@
-# S3 — Shared decisions
+# S4 — Technology, conventions and toolchain
 
 **Produces** (all in the working directory's `./docs/`, one place, never
 mirrored into the submodules): `strict-rules.md`, `error-handling.md`,
@@ -17,6 +17,21 @@ Error handling is written **once and shared**, because a code registry with two
 homes eventually has two truths.
 
 ---
+
+## Gate and architecture handoff
+
+S3 must be complete. Read `architecture.md`, `security.md`,
+`operations.md` and `architecture-decisions.md` before choosing technologies.
+Keep S3's system boundaries and guarantees authoritative; the BE/FE architecture
+files here describe code organization and framework wiring, linking the system
+decisions rather than duplicating them.
+
+For every required infrastructure capability, choose a compatible implementation
+and record alternatives, operating cost, version-specific traps and its ADR id in
+the relevant stack file. Include queues/brokers, scheduler, identity, secret
+storage and observability only when S3 requires them. Reuse settled choices.
+Verify current capabilities in official documentation. If a candidate cannot
+meet a guarantee, revise the ADR explicitly before proceeding.
 
 ## The stack questions, in dependency order
 
@@ -159,3 +174,5 @@ every screen implements.
 - [ ] Import boundaries are stated as rules a linter can enforce, not as advice
 - [ ] Every error code has exactly one status and one defined screen behaviour
 - [ ] The single check command is defined and runs format, lint, types and dead code (for an unsupported framework, the lint step is either omitted with a written note, or wired to whatever the user's ecosystem provides — never fabricated)
+
+- [ ] Every required S3 capability has a compatible technology choice linked to its ADR; no unrequested service was added

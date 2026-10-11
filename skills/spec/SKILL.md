@@ -12,9 +12,9 @@ write traces to something the user already wrote.
 Read `references/conventions.md` and `references/house-style.md` before writing
 any document. They are fixed and not negotiable per project.
 
-If the user passed an argument (`data`, `decisions`, `be`, `fe`, `phases`, `fidelity`, `gaps`), skip
+If the user passed an argument (`data`, `architecture`, `decisions`, `stack`, `be`, `fe`, `phases`, `fidelity`, `gaps`), skip
 to that stage and regenerate it, after checking its prerequisites (including
-S8's frontend-validation gate). Otherwise run the gates, then the first
+S9's frontend-validation gate). Otherwise run the gates, then the first
 incomplete stage.
 
 ---
@@ -65,7 +65,9 @@ mockup: a rendered value, a control, a state, or a screen.
 the mockup must be covered by a requirement.
 
 Non-functional requirements are **exempt from the forward check** — a latency
-budget or a security rule has no screen and never will. Carry them forward
+budget or a security rule has no screen and never will. Source-backed provider
+callbacks and internal jobs also need no screen; trace them to their operational
+requirement and S3 decision. Carry them forward
 instead: budgets into the frontend stack document, operational constraints into
 the phase plan and the definition of done.
 
@@ -96,14 +98,20 @@ exit criteria, not only file existence.
 | Stage | Complete when these exist |
 |---|---|
 | S2 | `data-spec.md` |
-| S3 | `strict-rules.md`, `error-handling.md`, `BE/be-architecture.md`, `BE/be-stack.md`, `FE/fe-architecture.md`, `FE/fe-stack.md` |
-| S4 | `BE/features/README.md`, at least one `BE/features/*.md`, `BE/testing.md` |
-| S5 | `FE/design-system.md`, at least one `FE/features/*.md` |
-| S6 | `FE/fidelity.md` |
-| S7 | `FE/ui-gaps.md` |
-| S8 | `phases.md`, including Mockup parity and the Fidelity definition of done |
+| S3 | `architecture.md`, `security.md`, `operations.md`, `architecture-decisions.md`, with S3 exit criteria met |
+| S4 | `strict-rules.md`, `error-handling.md`, `BE/be-architecture.md`, `BE/be-stack.md`, `FE/fe-architecture.md`, `FE/fe-stack.md` |
+| S5 | `BE/features/README.md`, at least one `BE/features/*.md`, `BE/testing.md` |
+| S6 | `FE/design-system.md`, at least one `FE/features/*.md` |
+| S7 | `FE/fidelity.md` |
+| S8 | `FE/ui-gaps.md` |
+| S9 | `phases.md`, including Mockup parity and the Fidelity definition of done |
 
 Run **the first incomplete stage only**.
+Argument routing: `architecture` → S3; `decisions` and `stack` → S4
+(the existing `decisions` alias keeps its technology-selection meaning).
+Explicit arguments still require earlier stages, including the S3 review.
+For migrated projects preserve existing plans and checked criteria as
+`stage-order.md` directs.
 
 ## Step 5 — Run one stage
 
@@ -112,13 +120,15 @@ Read the matching guide and follow it:
 | Stage | Guide |
 |---|---|
 | S2 | `references/stages/s2-data-spec.md` |
-| S3 | `references/stages/s3-decisions.md` |
-| S4 | `references/stages/s4-backend.md` |
-| S5 | `references/stages/s5-frontend.md` |
-| S6 | `references/stages/s6-fidelity.md` |
-| S7 | `references/stages/s7-ui-gaps.md` |
-| S8 | `references/stages/s8-phases.md` |
+| S3 | `references/stages/s3-architecture.md` |
+| S4 | `references/stages/s4-stack.md` |
+| S5 | `references/stages/s5-backend.md` |
+| S6 | `references/stages/s6-frontend.md` |
+| S7 | `references/stages/s7-fidelity.md` |
+| S8 | `references/stages/s8-ui-gaps.md` |
+| S9 | `references/stages/s9-phases.md` |
 
+S3 asks applicable unsettled decisions; do not turn its review areas into mandatory infrastructure.
 Each guide lists the required sections, the decisions to ask, and the exit
 criteria. Ask every decision the guide names with `AskUserQuestion`, presenting
 two or more real candidates with the trade-off and the trap. **Ask for
@@ -139,12 +149,13 @@ it changes.
 
 ```
 docs/
+  architecture.md  architecture-decisions.md  security.md  operations.md
   strict-rules.md  data-spec.md  error-handling.md  phases.md     ← shared
   BE/  be-architecture.md  be-stack.md  testing.md  features/*.md
   FE/  fe-architecture.md  fe-stack.md  design-system.md  fidelity.md  ui-gaps.md  features/*.md
 ```
 
-At S3, copy the governing lint file from `references/lint/` into
+At S4, copy the governing lint file from `references/lint/` into
 `./docs/BE/lint.md` or `./docs/FE/lint.md` (whichever side owns it) —
 still in the parent's `docs/`, still one source. The submodule reads
 the lint rules from the parent's docs at build time; the parent's
@@ -157,8 +168,8 @@ After each stage, write `docs/.pspt.json`:
 
 ```json
 {
-  "version": 2,
-  "stages": { "s2": "<ISO date>", "s3": null, "s4": null, "s5": null, "s6": null, "s7": null, "s8": null },
+  "version": 3,
+  "stages": { "s2": "<ISO date>", "s3": null, "s4": null, "s5": null, "s6": null, "s7": null, "s8": null, "s9": null },
   "stack": { "database": "...", "backend": "...", "orm": "...", "di": "...",
              "frontend": "...", "routing": "...", "serverState": "...", "validation": "..." },
   "noLinter": { "backend": null, "frontend": null },
@@ -177,7 +188,7 @@ carry spec docs, and the spec skill never asks where they are.
 `noLinter.backend` / `noLinter.frontend` are `null` when the framework is
 supported (Express, NestJS, React + Vite, Next.js — each has a governing
 lint file in `references/lint/`). When the user opts into an unsupported
-framework after the warning in S3, record the framework name here so
+framework after the warning in S4, record the framework name here so
 `/pspt:build` and `/pspt:enhance` can surface a reminder each time they
 run that the commit-hook zero-warnings guarantee is off for that side.
 
@@ -199,7 +210,7 @@ The stage's message uses `feat(spec)` as the type and names what landed:
 feat(spec): <stage> — <one-line what the stage produced>
 
 <body: what the stage generated and any decisions worth remembering,
-wrapped at 100. If the user opted into an unsupported framework in S3,
+wrapped at 100. If the user opted into an unsupported framework in S4,
 name it here and reference docs/.pspt.json.noLinter.>
 
 stage: S<n>
@@ -231,10 +242,10 @@ After the commit lands, stop. Report in three lines:
 S2 complete.  docs/data-spec.md  — 6 tables, 1 exclusion constraint, 17 extraction rows.  Committed: 4b8246f.
 
 Read it and change anything you disagree with; it is the input to every stage after this.
-Next: /pspt:spec  → S3, shared decisions (framework, ORM, error registry)
+Next: /pspt:spec  → S3, architecture, security and reliability
 ```
 
-After S8 the specification set is complete; the report's last line names
+After S9 the specification set is complete; the report's last line names
 `/pspt:build` and the first unticked criterion instead of a next stage.
 
 Do not continue into the next stage, even if it seems obvious. The checkpoint is

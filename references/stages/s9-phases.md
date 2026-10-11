@@ -1,4 +1,4 @@
-# S8 — Development phases
+# S9 — Development phases
 
 **Produces:** `docs/phases.md` in the parent workspace (one shared plan)
 
@@ -12,11 +12,21 @@ phase.
 
 ## Gate
 
-S2–S7 must be complete, including S6 mockup fidelity and S7 frontend UI gap
+S2–S8 must be complete, including S7 mockup fidelity and S8 frontend UI gap
 validation. Every gap must be approved and drawn or explicitly skipped with a
 fallback; Gate 2 must pass, and the fidelity matrix and baseline must include
 the final approved states. An explicit `phases` invocation does not bypass this
 gate. Do not create or regenerate `phases.md` while frontend validation is open.
+
+## Architecture guarantees in the plan
+
+Read S3's decision register, security and operations documents and S5's tests.
+Map each required guarantee to its owning phase and an observable criterion,
+carrying requirement and ADR ids. Include infrastructure setup and recurring jobs
+only when chosen; prove transaction/queue consistency, permissions and failure
+recovery early enough to change the design cheaply. Record deferred triggers and
+open decisions with their blocked work. Preserve completed criteria in existing
+plans; numbering migration does not regenerate them.
 
 ## Required sections
 
@@ -98,7 +108,7 @@ response. A criterion no test can be written against is a goal, not a criterion.
 
 ## Mockup parity phase
 
-Use the final S6 fidelity matrix and S7 validated states. Add one phase at the end of the frontend track. Criteria follow the modules, so
+Use the final S7 fidelity matrix and S8 validated states. Add one phase at the end of the frontend track. Criteria follow the modules, so
 the shared parts are proven once, before the screens that reuse them:
 
 ```markdown
@@ -146,6 +156,8 @@ Add one row to `phases.md` §2 Definition of done:
 - [ ] The definition of done is stated once and applies to every phase
 - [ ] The first-week sequence names what to start on Monday
 
-- [ ] S6 fidelity and S7 frontend validation are complete before the plan is written
+- [ ] S7 fidelity and S8 frontend validation are complete before the plan is written
 - [ ] Every approved UI-gap state and every documented fallback has an observable phase exit criterion
 - [ ] The frontend track includes Mockup parity, components first then screens, and the definition of done includes Fidelity
+
+- [ ] Every required architecture/security/reliability guarantee has an owning phase and observable proof; deferred decisions retain their revisit triggers
