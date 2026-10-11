@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.9.0](#v090--2026-10-11) | 2026-10-11 | Landing pages, specified then built scene by scene; S3 architecture review |
 | [0.8.3](#v083--2026-10-11) | 2026-10-11 | Readable formatting, validated phase planning and Docker test cleanup |
 | [0.8.2](#v082--2026-10-05) | 2026-10-05 | Commit only inside a git repository |
 | [0.8.1](#v081--2026-10-03) | 2026-10-03 | Smoke test: look at the data, then ask how to seed and who to log in as |
@@ -26,13 +27,17 @@ absolute image links. Versions are listed in
 
 ---
 
-## Unreleased
+## v0.9.0 — 2026-10-11
+
+**Landing pages — specify the story, then build it scene by scene — and an S3 architecture, security and reliability review.**
 
 - Add `/pspt:landing-spec`: from the BRD, PRD and mockup — or, without them, from an interview that asks what website to build, defines the requirements that kind of site needs and stops while information is lacking — write the landing page's creative rules (colour as families, never flat values), its story spine and seam map, and one document per section, with a seam gate that fails when neighbouring sections do not join. Companion craft skills (GSAP, scroll storytelling, SVG, impeccable, frontend-design, motion-framer) are listed and read when a stage needs them.
 - Add `/pspt:landing-build`: implement `docs/landing/` as a full-screen, scroll-told React + TypeScript page with GSAP's whole plugin set, SVG and Framer Motion — one phase per run (motion foundation, each section joined to the one above, hardening, whole-page review), tests first, every seam proven by a screenshot audit and an e2e seam test. References for each technique are searched live at build time.
 - Add S3 for system architecture, security and reliability decisions, with requirement-backed dispositions and observable proof.
 - Move technology selection to S4 and downstream stages through S9; normalize legacy state without resetting completed build criteria.
 - Carry architecture decisions into backend job contracts, frontend failure states and phase exit criteria.
+
+---
 
 ## v0.8.3 — 2026-10-11
 
