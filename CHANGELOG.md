@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.10.0](#v0100--2026-10-11) | 2026-10-11 | Landing scaffold in the spec; the build codes one section folder at a time |
 | [0.9.1](#v091--2026-10-11) | 2026-10-11 | Every landing section proven full screen |
 | [0.9.0](#v090--2026-10-11) | 2026-10-11 | Landing pages, specified then built scene by scene; S3 architecture review |
 | [0.8.3](#v083--2026-10-11) | 2026-10-11 | Readable formatting, validated phase planning and Docker test cleanup |
@@ -28,7 +29,9 @@ absolute image links. Versions are listed in
 
 ---
 
-## Unreleased
+## v0.10.0 — 2026-10-11
+
+**Landing pages get a plain scaffold, and the build codes one section folder at a time.**
 
 - `/pspt:landing-spec` gains **L4 Scaffold**: a plain `landing/` folder from templates — `index.html`, a ten-line Vite inliner, `shared/` (tokens, base, a small `page.js` with `stitch`, `SEAM` and `handoff`) and one `sections/NN-name/` folder per section with its own `index.html`, `style.css` and `script.js`.
 - `/pspt:landing-build` now codes one section per run straight into that section's folder. No React, no TypeScript, no tests, no toolchain; each section is checked by eye in the browser, desktop and phone, with its seams at 85/55/25%.
