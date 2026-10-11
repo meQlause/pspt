@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.9.1](#v091--2026-10-11) | 2026-10-11 | Every landing section proven full screen |
 | [0.9.0](#v090--2026-10-11) | 2026-10-11 | Landing pages, specified then built scene by scene; S3 architecture review |
 | [0.8.3](#v083--2026-10-11) | 2026-10-11 | Readable formatting, validated phase planning and Docker test cleanup |
 | [0.8.2](#v082--2026-10-05) | 2026-10-05 | Commit only inside a git repository |
@@ -24,6 +25,15 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.9.1 — 2026-10-11
+
+**Every landing section is proven full screen.**
+
+- Content longer than one screen becomes a pinned stage or more scenes; only pinned and track scenes may be taller, inside the pin budget.
+- `/pspt:landing-build` adds `scenes.spec.ts`: with motion on, on desktop and phone, every section is at least one viewport tall and its `[data-stage]` does not overflow.
 
 ---
 

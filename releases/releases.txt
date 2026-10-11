@@ -17,3 +17,4 @@ v0.8.1|9bba7c431fbe6df7383bc2f3cc226dcb5c61e4c0|v0.8.1 — smoke test: look at t
 v0.8.2|3486e605bbe87086c40cea6a281d87f415c43984|v0.8.2 — commit only inside a git repository
 v0.8.3|122c9ef16436eebb85053e77b329a7bdad653758|v0.8.3 — readable formatting, validated phase planning and Docker test cleanup
 v0.9.0|de0660e00985d686cf1647edc3e09c52c25ddb93|v0.9.0 — landing pages, specified then built scene by scene
+v0.9.1|HEAD|v0.9.1 — every landing section proven full screen
