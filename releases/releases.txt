@@ -18,4 +18,4 @@ v0.8.2|3486e605bbe87086c40cea6a281d87f415c43984|v0.8.2 — commit only inside a 
 v0.8.3|122c9ef16436eebb85053e77b329a7bdad653758|v0.8.3 — readable formatting, validated phase planning and Docker test cleanup
 v0.9.0|de0660e00985d686cf1647edc3e09c52c25ddb93|v0.9.0 — landing pages, specified then built scene by scene
 v0.9.1|ea3d5dd1075e28680cd60383baafe9e64c2750f3|v0.9.1 — every landing section proven full screen
-v0.10.0|HEAD|v0.10.0 — landing scaffold in the spec; the build codes one section folder at a time
+v0.10.0|f58c68f0fa4ad50895b907e65846bc297931b80f|v0.10.0 — landing scaffold in the spec; the build codes one section folder at a time
