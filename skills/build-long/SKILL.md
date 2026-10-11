@@ -123,3 +123,9 @@ itself is whatever the underlying `/pspt:build` steps produced.
 ## Newline formatting
 
 For Express and React TypeScript criteria, follow the canonical [newline rules](../../references/toolchain/formatting.md) and run `npm run format` before CHECK. Use the same layout in tests and application code.
+
+## Docker test storage
+
+When this workflow runs Docker-based tests, follow the shared
+[disposable storage and cleanup rules](../../references/docker-testing.md).
+Avoid persistent test volumes and verify cleanup after every run.

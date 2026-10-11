@@ -163,6 +163,12 @@ tests/
 Naming: `<source>.test.ts` for unit and integration, `<journey>.spec.ts` for end
 to end. A test is found by transforming a path, not by searching.
 
+### Disposable Docker storage
+
+All Docker-based tests follow [docker-testing.md](docker-testing.md): prefer
+bounded tmpfs, clean exact test-owned resources even after failure, and verify
+that no test volumes remain. Persistent project data is retained.
+
 ## 9. Frontend copy — never invent text
 
 **If the text is already defined, write it.** If it is not, write lorem ipsum.

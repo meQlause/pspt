@@ -665,3 +665,9 @@ staged (or unstaged) and stop.
   empty `Result`.
 - **Never tick a box in a batch, ahead of the work, or for a test that was not
   run on the current tree.**
+
+## Docker test storage
+
+When this workflow runs Docker-based tests, follow the shared
+[disposable storage and cleanup rules](../../references/docker-testing.md).
+Avoid persistent test volumes and verify cleanup after every run.

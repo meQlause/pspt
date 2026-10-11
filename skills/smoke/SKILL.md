@@ -252,8 +252,10 @@ In this order, even after a failure:
    project's own seed stay — they are the project's data, and the report says
    so.
 2. Delete the run's `plan.json` if it holds a password the user typed.
-3. `docker compose down` — **only** if Step 3 started it. Never `-v`: the
-   database volume is the user's.
+3. Stop only the stack Step 3 started. For an isolated disposable test project,
+   remove its test-owned volumes with `docker compose -p <test-project> down
+   --volumes --remove-orphans`. For a reused project database, use `docker
+   compose down` without volume removal; preserve the user's data.
 4. Stop the dev servers this skill started.
 
 ## Step 9 — Report
@@ -292,11 +294,17 @@ offer `/pspt:ticket <slug>` for it.
 - **Never leave a test user or a generated seed row behind**, never store a
   plain-text password in the database, and never print or keep a password the
   user typed.
-- **Never stop or remove what this skill did not start**, and never
-  `docker compose down -v`.
+- **Never stop or remove what this skill did not start.** Volume deletion is
+  limited to verified disposable test-run resources; never delete project data.
 - **Never edit application code, tests or config.** A smoke test reports; a fix
   is a ticket.
 - **Never commit** anything from a run, in any folder. `.pspt-smoke/` is excluded
   from git where there is a repository, and sits on disk where there is not.
 - **Never call it comprehensive.** One visit per page, the checks above, and the
   pictures — say so in the report.
+
+## Docker test storage
+
+When this workflow runs Docker-based tests, follow the shared
+[disposable storage and cleanup rules](../../references/docker-testing.md).
+Avoid persistent test volumes and verify cleanup after every run.

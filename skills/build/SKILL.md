@@ -379,3 +379,9 @@ permission to sweep.
 red is on a file this criterion did not touch. Fix or revert the red first.
 "It was already broken" is not a reason — as the committer you own the state
 you are handing forward.
+
+## Docker test storage
+
+When this workflow runs Docker-based tests, follow the shared
+[disposable storage and cleanup rules](../../references/docker-testing.md).
+Avoid persistent test volumes and verify cleanup after every run.
