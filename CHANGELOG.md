@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.8.3](#v083--2026-10-11) | 2026-10-11 | Readable formatting, validated phase planning and Docker test cleanup |
 | [0.8.2](#v082--2026-10-05) | 2026-10-05 | Commit only inside a git repository |
 | [0.8.1](#v081--2026-10-03) | 2026-10-03 | Smoke test: look at the data, then ask how to seed and who to log in as |
 | [0.8.0](#v080--2026-10-03) | 2026-10-03 | Smoke test — open the app in a real browser and look |
@@ -22,6 +23,16 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.8.3 — 2026-10-11
+
+**Readable formatting, frontend validation before phases, and disposable Docker test storage.**
+
+- Formatting adds consistent blank lines between imports, functions and control flow while preserving the canonical linter checks.
+- Specification stages now run S6 mockup fidelity, S7 UI gaps and frontend validation, then S8 phase planning. Legacy stage records retain their completion dates.
+- Docker test workflows avoid persistent volumes, remove owned disposable resources on teardown, and verify that tests leave no containers or volumes behind. Existing project data is preserved.
 
 ---
 

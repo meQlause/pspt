@@ -15,3 +15,4 @@ v0.7.0|6509c653b419a7d20eb64aae0231c780f7d0e336|v0.7.0 — fix the toolchain, th
 v0.8.0|21955b462665026c876671b231fb995b99c8908e|v0.8.0 — smoke test: open the app in a real browser and look
 v0.8.1|9bba7c431fbe6df7383bc2f3cc226dcb5c61e4c0|v0.8.1 — smoke test: look at the data, then ask how to seed and who to log in as
 v0.8.2|3486e605bbe87086c40cea6a281d87f415c43984|v0.8.2 — commit only inside a git repository
+v0.8.3|HEAD|v0.8.3 — readable formatting, validated phase planning and Docker test cleanup
