@@ -28,6 +28,8 @@ absolute image links. Versions are listed in
 
 ## Unreleased
 
+- Add `/pspt:landing-spec`: from the BRD, PRD and mockup — or, without them, from an interview that asks what website to build, defines the requirements that kind of site needs and stops while information is lacking — write the landing page's creative rules (colour as families, never flat values), its story spine and seam map, and one document per section, with a seam gate that fails when neighbouring sections do not join. Companion craft skills (GSAP, scroll storytelling, SVG, impeccable, frontend-design, motion-framer) are listed and read when a stage needs them.
+- Add `/pspt:landing-build`: implement `docs/landing/` as a full-screen, scroll-told React + TypeScript page with GSAP's whole plugin set, SVG and Framer Motion — one phase per run (motion foundation, each section joined to the one above, hardening, whole-page review), tests first, every seam proven by a screenshot audit and an e2e seam test. References for each technique are searched live at build time.
 - Add S3 for system architecture, security and reliability decisions, with requirement-backed dispositions and observable proof.
 - Move technology selection to S4 and downstream stages through S9; normalize legacy state without resetting completed build criteria.
 - Carry architecture decisions into backend job contracts, frontend failure states and phase exit criteria.
