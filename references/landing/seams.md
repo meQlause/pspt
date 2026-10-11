@@ -42,17 +42,8 @@ rules exist because each of them was once broken.
 | The outgoing thread reaches the seam **before** the incoming one draws from it | An incoming line that appears first looks like it came from nowhere |
 | Interactive beats (a join the visitor triggers) never own the seam stretch; the stretch to the seam is drawn by scroll | The visitor might not interact; the seam must still connect |
 
-## 4. Proof
+## 4. Proof — by eye
 
-Every landing build keeps two checks for the seams:
-
-1. **Seam audit (visual).** Screenshots on desktop and phone with each seam at 85%,
-   55% and 25% of the viewport, reviewed by eye. Gaps, kinks, crops and runaway
-   lines show at 85%; settled joins at 25%.
-2. **Seam test (e2e).** For every seam, sample every thread path in both sections
-   (`getPointAtLength` + `getScreenCTM`, including the path's end point) and assert
-   that a point on each side lies within 2px of the stitch point, within 3px of each
-   other, upright (|dx/dy| < 0.2). For every carried object straddling a seam,
-   assert that the section that owns it paints above the section it overlaps
-   (compare z-index, then DOM order) — `elementFromPoint` is unreliable at pin and
-   clip boundaries.
+Every seam is looked at in the browser, on desktop and phone, with the seam at 85%,
+55% and 25% of the viewport. Gaps, kinks, crops and runaway lines show at 85%;
+settled joins at 25%. A seam that looks joined at all three, both widths, is done.

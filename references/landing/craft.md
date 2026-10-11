@@ -22,7 +22,7 @@ Each section is a **scene**: composed for the viewport, not a document that flow
 | No two consecutive scenes use the same scene type | Three pinned stages in a row feel like one long stall |
 | Content longer than one screen becomes a **pinned stage** whose steps play in place, or is **split into more scenes** — never a long block that scrolls past normally | A section that scrolls like a document breaks the full-screen rhythm and hides its seam below the fold |
 | A section may be taller than one screen **only** as a pinned stage or a horizontal track, and its extra length counts toward the pin budget in `rules.md` §7 | Unbudgeted height is a pin in disguise; the page grows long without anyone deciding it should |
-| Every section root carries `data-scene="<type>"` and wraps its composition in one `[data-stage]` element; the stage is `100svh` and nothing overflows it | The scene test (`architecture.md` §5) reads these to prove every section is full screen |
+| Every section root carries `data-scene="<type>"` and wraps its composition in one `[data-stage]` element; the stage is `100svh` and nothing overflows it | The scaffold writes both (`architecture.md` §2), so every section starts as a full-screen stage and the check by eye (§5) knows what to look for |
 | The rule applies with motion on, on desktop and phone. With reduced motion or no JavaScript, the still composition may flow as a normal page | Without pins, a stepped scene shows all its steps at once, and that is the readable fallback |
 | Copy and controls stay outside pins' blind spots: nothing important under the sticky header, nothing that needs a tap while scrubbing | Scrubbed scenes punish precise interaction |
 
@@ -97,18 +97,18 @@ section document names the ones it uses.
 SMIL animation is not used: GSAP drives every SVG, so scrubbing and reduced motion
 work the same way everywhere.
 
-### Framer Motion (`motion-framer`)
+### Motion (`motion`, the vanilla build of Framer Motion — `motion-framer`)
 
-Only where React owns a piece of UI and scroll does not:
+Only on small pieces of UI that scroll does not drive:
 
 | Capability | Use it for |
 |---|---|
-| `layout` / `layoutId` | Shared-element transitions inside a form, a tab, a dialog |
-| `AnimatePresence` | Mounting and unmounting the film dialog, form states, toasts |
-| `whileHover` / `whileTap` springs | Buttons, cards, the pilot form |
-| `useScroll` / `useTransform` | Never on elements GSAP drives; only inside isolated widgets |
+| `animate()` with springs | Buttons, cards, the form responding to hover and press |
+| `inView()` | One-off reveals outside any pinned scene |
+| `hover()` / `press()` gestures | Pointer feedback without wiring listeners by hand |
+| `scroll()` | Never on elements GSAP drives; only inside isolated widgets |
 
-> Never animate the same element with GSAP and Framer Motion. Two engines writing the
+> Never animate the same element with GSAP and Motion. Two engines writing the
 > same `transform` produce a jitter nobody can debug.
 
 ### CSS

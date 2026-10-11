@@ -1,8 +1,11 @@
-# Landing — build architecture
+# Landing — the scaffold
 
-How `/pspt:landing-build` turns `docs/landing/` into a running page. Taken from a
-landing page that shipped this way: nine full-screen sections, one thread, one carried
-object, every seam stitched.
+`/pspt:landing-spec` **L4** writes this scaffold from the templates in
+[`scaffold/`](./scaffold/); `/pspt:landing-build` then writes code straight into one
+section's folder at a time. Deliberately small: plain HTML, CSS and
+JavaScript, one folder per section, no framework, no TypeScript, no tests, no lint
+toolchain. Every piece of work happens inside one section's folder; a thin shared
+layer keeps the sections joined.
 
 ---
 
@@ -10,107 +13,108 @@ object, every seam stitched.
 
 | Part | Choice | Why |
 |---|---|---|
-| Language | TypeScript, strict | The motion layer is shared by every section; its contracts must be typed |
-| UI | React + Vite, pspt `react` toolchain | Same toolchain, hooks and lint as the app |
-| Rendering | Static prerender: `entry-server.tsx` renders to `dist/index.html`, the client hydrates | The page reads fully without JavaScript; motion is an enhancement |
-| Motion | `gsap` (every plugin is in the public package), ScrollSmoother as the only scroll engine | One engine for scroll, SVG, text and physics |
-| UI micro-motion | `motion` (Framer Motion) only for React-owned widgets (form, dialog) | Never on an element GSAP drives |
-| Physics (optional) | `matter-js`, loaded lazily near its scene | Only when a scene needs bodies that collide |
-| Tests | Vitest (unit, against the prerendered HTML) and Playwright (desktop + phone) | The seams are only provable in a real browser |
+| Files | Plain `.html`, `.css`, `.js` (ES modules) | A section is three files anyone can open and read |
+| Dev server and build | Vite, vanilla template | Hot reload while working; one `npm run build` for a static `dist/` |
+| Motion | `gsap` from npm (every plugin is in the public package); ScrollSmoother is the only scroll engine | One engine for scroll, SVG, text and physics |
+| UI micro-motion (optional) | `motion` (the vanilla build of Framer Motion: `animate`, `inView`, springs) | Only on elements GSAP does not drive |
+| Physics (optional) | `matter-js`, imported only by the section that needs it | Only when a scene needs bodies that collide |
 
-Motion code is loaded with a dynamic `import()` after hydration, so the entry bundle
-stays inside the budget in `rules.md` §11.
+`package.json` has three scripts — `dev`, `build`, `preview` — and nothing else.
 
 ## 2. Folders
 
 ```
-<landing>/
-  src/
-    main.tsx              hydrate, then lazy-load the motion layer and start the page
-    entry-server.tsx      prerender
-    app/App.tsx           <div id="smooth-wrapper"><main id="smooth-content"> sections </main></div>
-    styles/tokens.css     every colour family, type, space and shape token from rules.md
-    styles/base.css       .section, [data-thread-in]/[data-thread-out], .thread-layer, .carried,
-                          [data-handed-off] rules
-    motion/
-      gsap.ts             plugin registration, conditions, named eases and durations (rules §7)
-      types.ts            Shared, SectionMotion, Conditions
-      page.ts             startPage: matchMedia, ScrollSmoother, the solo stub, init every section
-      thread.ts           stitch(), SEAM, the global thread layer
-      carried.ts          the carried object and its forms
-      handoff.ts          incoming(root) and receive(root, taken)
-      dom.ts              one(), all(), segment(), SVG_NS
-    sections/
-      index.ts            the sections in page order
-      motions.ts          the SectionMotion list in page order
-      NN-<name>/
-        <Name>.tsx        markup: copy, data-section, data-thread-in/out, no motion
-        <Name>.parts.tsx  sub-components when the markup is long
-        <name>.css        layout and still state; [data-motion] styles for the animated state
-        <name>.motion.ts  init(root, shared) → cleanup
-        <name>.tuning.ts  every number the motion uses, named
-        <name>.shapes.ts  SVG path data, when the section draws
-  scripts/prerender.ts
-  tests/unit/*.test.ts
-  tests/e2e/*.spec.ts
+landing/
+  index.html             the shell: one <!-- section NN-name --> marker per section, in page order
+  vite.config.js         inlines each marker with sections/NN-name/index.html (dev and build)
+  main.js                imports shared/ and every section's style.css and script.js, starts the page
+  shared/
+    tokens.css           every colour family, type, space and shape token from rules.md
+    base.css             .section, the 100svh [data-stage], thread anchors, hand-off z-order
+    page.js              GSAP plugins, ScrollSmoother, matchMedia (desktop / phone / reduced),
+                         runs each section's script in order, and exports stitch, SEAM, handoff
+  sections/
+    01-hero/
+      index.html         the section's markup: its copy, data-section, data-scene, [data-stage],
+                         data-thread-in / data-thread-out
+      style.css          its look, still and in motion ([data-motion])
+      script.js          export default function (root, page) { … return cleanup }
+    02-problem/
+      index.html
+      style.css
+      script.js
+    …
 ```
 
-> Numbers live in `*.tuning.ts`, never inline: the lint bans magic numbers, and a seam
-> is tuned by changing a named value on each side, not by hunting through a timeline.
+> One section, three files. A section never reaches into another section's folder;
+> anything two sections both need lives in `shared/`.
 
-## 3. The motion layer contracts
+### The shell and the inliner
 
-```ts
-interface Shared {
-  gsap; ScrollTrigger; smoother: ScrollSmoother | null;
-  thread: Thread;        // the global thread layer and its colour
-  carried: Carried;      // the carried object, setForm(form)
-  handoff: Handoff;      // incoming(root) → {x, y, angle} | null; receive(root, taken)
-  ease; duration;        // the named verbs from rules.md §7
-  conditions: { desktop: boolean; phone: boolean; reduce: boolean };
-}
+`index.html` holds one `<!-- section NN-name -->` marker per section, in page order.
+`vite.config.js` replaces each marker with `sections/NN-name/index.html` in dev and in
+the build — that is the whole build step. The markup is in the page before any script
+runs, so the page reads without JavaScript and with reduced motion.
 
-interface SectionMotion {
-  id: string;                                           // "04-how-it-works"
-  receives: { form: CarriedForm; thread: ThreadColor } | null;   // for ?solo=
-  init: (root: HTMLElement, shared: Shared) => (() => void) | undefined;
-}
-```
+## 3. The shared layer — what keeps it coherent
 
-| Piece | Contract |
+`shared/page.js` exports what every section uses, and nothing else:
+
+| Export | Contract |
 |---|---|
-| `startPage(page, motions)` | Registers every section inside one `gsap.matchMedia()` context per condition set; creates ScrollSmoother unless `reduce`; refreshes ScrollTrigger after `document.fonts.ready`; returns a cleanup |
-| `?solo=NN` | Hides every other section and hands the solo section a stub object and thread colour from its `receives`. For debugging only — every exit check runs on the whole page |
-| `stitch([x0,y0],[x1,y1])` | Returns `C x0,mid x1,mid x1,y1`: vertical tangents at both ends. Every segment touching a seam uses it |
-| `SEAM` | `{ line: '75%', scrub }`: the viewport line where outgoing threads finish and incoming threads start |
-| `handoff` | The giver writes `data-exit-x/y/angle` on its `[data-handoff-object]`; the receiver reads `incoming(root)` in its own coordinates and calls `receive(root, taken)` at the one hand-off position |
-| Stacking | `.hero`-style givers carry `z-index: 2`; `.section[data-handed-off] { z-index: 1 }` drops them after hand-off; the receiver wins by DOM order. Pinned sections keep `z-index: 1` (the pin spacer copies it once) |
-| Reduced motion | Every `init` returns early when `conditions.reduce`; the CSS still state is the final composition |
+| `gsap`, `ScrollTrigger` | Registered once, with the named eases and durations from `rules.md` §7 |
+| `conditions` | `{ desktop, phone, reduce }` for the current `gsap.matchMedia` context |
+| `stitch([x0,y0],[x1,y1])` | Returns `C x0,mid x1,mid x1,y1`: vertical tangents at both ends. Every thread segment touching a seam uses it |
+| `SEAM` | `{ line: '75%', scrub }`: where an outgoing thread finishes and the incoming one starts |
+| `handoff.exit(root, {x, y, angle})` / `handoff.incoming(root)` / `handoff.receive(root, taken)` | The giver writes where the carried object leaves; the receiver reads it in its own coordinates and marks the hand-off |
+
+`main.js` imports each section's `script.js` in page order and calls
+`script(root, page)` inside one `matchMedia` context per condition set; under
+`reduce` it calls nothing, and the CSS still state is the page.
+
+`shared/base.css` holds the cross-section rules: every `.section` is a `100svh`
+scene with one `[data-stage]`; a giver section sits at `z-index: 2` until
+`[data-handed-off]` drops it to `1`, so the carried object is never cropped at a seam.
 
 ## 4. Per section
 
-1. Markup first, with every copy line from the section document and its source,
-   `data-thread-in` / `data-thread-out` anchors, `data-scene="<type>"` on the root and
-   one `[data-stage]` wrapping the `100svh` composition.
-2. Still CSS: the composition without motion, which is also the no-JS and the
-   reduced-motion page.
-3. `[data-motion]` CSS and `init`: the scene, pinned or not, its timeline by beats
-   from the section document's Motion table, every number in `tuning.ts`.
-4. Entry and Exit exactly as the section document says: the stitch point, the hand-off
-   position, the stacking. The section joins the one above it **in the same phase**.
+1. `index.html`: the copy from the section document, `data-section="NN-name"`,
+   `data-scene="<type>"`, one `[data-stage]`, the thread anchors.
+2. `style.css`: the still composition first — the page without motion — then the
+   `[data-motion]` styles. Colours only as `var(--<shade>)` from `tokens.css`.
+3. `script.js`: the scene, beat by beat from the section document's Motion table;
+   named numbers at the top of the file, not inline; phone handled under
+   `page.conditions.phone`; returns a cleanup.
+4. Entry and Exit exactly as the document says: `stitch` at the stitch point, the
+   hand-off at the named position, drawing scrubbed to `SEAM`.
 
-## 5. Tests that stay with the page
+## 5. Checking — by eye, in the browser
 
-| File | Proves |
+No test files. A section is done when, with `npm run dev` open on desktop and phone
+widths:
+
+- it fills the screen as its scene type says, and its signature moment plays;
+- its seam above (and below, once built) joins: open each seam with the seam at 85%,
+  55% and 25% of the viewport and look for a gap, a kink, a detour, a cropped object,
+  or a line drawn ahead of the one before it;
+- reduced motion (`prefers-reduced-motion`) shows the still composition;
+- the browser console shows no errors.
+
+Use whatever browser the session has (Chrome tools, or a quick screenshot) to look.
+
+## 6. L4 — writing the scaffold
+
+Run by `/pspt:landing-spec` after L3's seam gate passes. Copy every file in
+[`scaffold/`](./scaffold/) into `./landing/`, filling the placeholders:
+
+| File | Fill |
 |---|---|
-| `tests/unit/<name>.test.ts` | Every copy line of the section document is in the prerendered HTML, in order |
-| `tests/unit/tokens.test.ts` | Every colour in `src/**/*.css` is a `var(--…)` from `tokens.css`, and `tokens.css` holds no `#000`, `#fff` or pure primary |
-| `tests/e2e/<name>.spec.ts` | The section loads with no page errors and gets its motion once scrolled to |
-| `tests/e2e/flow.spec.ts` | The whole page scrolls top to bottom and back with no errors, one thread layer, and pins within the budget |
-| `tests/e2e/seams.spec.ts` | Every seam is stitched and nothing carried is painted over ([`seams.md`](./seams.md) §4) |
-| `tests/e2e/scenes.spec.ts` | With motion on, desktop and phone: every `[data-section]` is at least one viewport tall; its `[data-stage]` is the viewport's height and no child overflows it; only `data-scene="pinned"` and `data-scene="track"` sections are taller, and their extra height sums to the pin budget |
-| `tests/e2e/hardening.spec.ts` | No-JS copy, reduced motion with no pin spacers, phone width with no horizontal scroll |
+| `index.html` | `{{lang}}` from the brief or PRD, `{{title}}` the product or person's name, `{{sections}}` one `<!-- section NN-name -->` line per spine row, in order |
+| `package.json` | `{{slug}}` from the project name. Then `npm install --save-exact gsap` and `npm install --save-exact -D vite` (plus `motion` or `matter-js` only if a section document names them), so versions are the current stable ones |
+| `main.js` | `{{imports}}`: for each section, `import './sections/NN-name/style.css';` and `import sNN from './sections/NN-name/script.js';`. `{{scenes}}`: one `'NN-name': sNN,` per section |
+| `shared/tokens.css` | **Generated, no template.** One custom property per shade of every family in `rules.md` (`--pine-ink: #14261d;`), type, space and shape tokens, and the role aliases `base.css` uses: `--page` (background), `--ink` (text), `--thread`, `--danger` — each pointing at a shade (`--page: var(--ledger-cream);`) |
+| `sections/NN-name/` | From `section/` once per spine row: `{{id}}` = `NN-name`, `{{scene}}` = the row's scene type, `{{giver}}` = ` data-giver` when the seam map says this section hands the carried object on and its object straddles the seam, else empty |
 
-Plus the **seam audit**: a scratch Playwright script that screenshots every seam at
-85%, 55% and 25% of the viewport on desktop and phone. The builder reads the frames
-before closing a phase.
+Then run `npm run dev` once and open it: every section is an empty full-screen stage in
+page order, with no console errors. Nothing else is built at L4 — no copy, no motion.
+

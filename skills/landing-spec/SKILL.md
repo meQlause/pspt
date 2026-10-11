@@ -1,13 +1,15 @@
 ---
 name: landing-spec
-description: Specify a scroll-told landing page from the same BRD, PRD and HTML mockup as the app — or, when they are missing, from an interview that first asks what website to build (product, portfolio, agency, event…), defines the requirements that kind of site needs, and refuses to proceed while information is lacking. Then the creative general rules (colour as families of shades, never one flat colour; type, shape, SVG, motion grammar, anti-slop bans), then the story spine (one carried object, one thread, the seam map), then one document per section whose transitions are coherent and connected to the sections beside it. Runs one stage per invocation with a checkpoint between each, and reads companion craft skills (GSAP, scroll storytelling, SVG, impeccable, frontend-design, motion-framer) when a stage needs them. Use for "/pspt:landing-spec", "spec the landing page", "write the landing rules", "define each landing section", or before building a landing page with GSAP.
+description: Specify a scroll-told landing page from the same BRD, PRD and HTML mockup as the app — or, when they are missing, from an interview that first asks what website to build (product, portfolio, agency, event…), defines the requirements that kind of site needs, and refuses to proceed while information is lacking. Then the creative general rules (colour as families of shades, never one flat colour; type, shape, SVG, motion grammar, anti-slop bans), then the story spine (one carried object, one thread, the seam map), then one document per section whose transitions are coherent and connected to the sections beside it, and finally the scaffold — a plain HTML/CSS/JS folder per section — that /pspt:landing-build codes into. Runs one stage per invocation with a checkpoint between each, and reads companion craft skills (GSAP, scroll storytelling, SVG, impeccable, frontend-design, motion-framer) when a stage needs them. Use for "/pspt:landing-spec", "spec the landing page", "write the landing rules", "define each landing section", or before building a landing page with GSAP.
 ---
 
 # Specify the landing page
 
 The landing page tells the product's story in one scroll. This skill writes the
-specification for it: **rules → story → sections**. It writes documents, never
-code. Building comes after, section by section, against these documents.
+specification for it: **rules → story → sections → scaffold**. It writes documents,
+then an empty scaffold — one folder per section with its own `index.html`,
+`style.css` and `script.js`. It never writes the sections' content or motion:
+`/pspt:landing-build` codes into one section's folder at a time.
 
 You do **not** invent the product, its claims or its copy. Every promise on the
 page traces to the BRD or PRD, every value and screen it shows traces to the
@@ -109,9 +111,10 @@ infer from `docs/landing/`.
 | L1 Rules | `docs/landing/rules.md` meets every exit criterion in its guide | [`references/landing/rules.md`](../../references/landing/rules.md) |
 | L2 Story | `docs/landing/story.md` — the spine and the seam map | [`references/landing/story.md`](../../references/landing/story.md) |
 | L3 Sections | one `docs/landing/sections/NN-<name>.md` per row of the spine, and the seam gate passes | [`references/landing/sections.md`](../../references/landing/sections.md) |
+| L4 Scaffold | `./landing/` written from the templates, one `sections/NN-<name>/` folder per spine row, and `npm run dev` shows every empty stage in order | [`references/landing/architecture.md`](../../references/landing/architecture.md) §6 |
 
 Run **the first incomplete stage only**. L1 needs the sources or L0; L2 needs L1;
-L3 needs L2.
+L3 needs L2; L4 needs L3 with its seam gate passing.
 
 ## Step 4 — Run one stage
 
@@ -134,6 +137,11 @@ docs/landing/
   rules.md              L1 — the creative general rules
   story.md              L2 — the spine: sections, carried object, thread, seam map
   sections/NN-<name>.md L3 — one per section, entry and exit seams included
+
+landing/                L4 — the scaffold (architecture.md §2)
+  index.html  vite.config.js  main.js  package.json
+  shared/   tokens.css  base.css  page.js
+  sections/NN-<name>/   index.html  style.css  script.js
 ```
 
 ### State file
@@ -142,11 +150,12 @@ After each stage, add or update the `landing` key in `docs/.pspt.json`, keeping
 every other key untouched:
 
 ```json
-{ "landing": { "type": "portfolio", "l0": "<ISO date>", "l1": null, "l2": null, "l3": null, "sections": [] } }
+{ "landing": { "type": "portfolio", "l0": "<ISO date>", "l1": null, "l2": null, "l3": null, "l4": null, "sections": [], "built": [] } }
 ```
 
 `type` is the website type; `l0` stays `null` when the BRD, PRD and mockup were
-present. `sections` lists the ids written, in page order. Answers only, never content.
+present. `sections` lists the ids written, in page order; `built` is filled by
+`/pspt:landing-build`, one id per finished section. Answers only, never content.
 
 ## Step 5 — The seam gate (L3 only)
 
@@ -193,9 +202,9 @@ Read it and change anything that does not feel like the product; every section i
 Next: /pspt:landing-spec  → L2, the story spine and the seam map
 ```
 
-After L3 the last line names the build — `Next: /pspt:landing-build → P0, the motion
-foundation` — one phase per run, in page order, each section joined to the one above
-it before the next starts.
+After L3 the last line names L4, the scaffold. After L4 it names the build —
+`Next: /pspt:landing-build → 01-<name>` — one section per run, in page order, each
+joined to the one above it before the next starts.
 
 ---
 

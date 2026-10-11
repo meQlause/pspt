@@ -28,6 +28,13 @@ absolute image links. Versions are listed in
 
 ---
 
+## Unreleased
+
+- `/pspt:landing-spec` gains **L4 Scaffold**: a plain `landing/` folder from templates — `index.html`, a ten-line Vite inliner, `shared/` (tokens, base, a small `page.js` with `stitch`, `SEAM` and `handoff`) and one `sections/NN-name/` folder per section with its own `index.html`, `style.css` and `script.js`.
+- `/pspt:landing-build` now codes one section per run straight into that section's folder. No React, no TypeScript, no tests, no toolchain; each section is checked by eye in the browser, desktop and phone, with its seams at 85/55/25%.
+
+---
+
 ## v0.9.1 — 2026-10-11
 
 **Every landing section is proven full screen.**

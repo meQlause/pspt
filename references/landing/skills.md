@@ -21,8 +21,8 @@ Stage keys: **L1** rules · **L2** story · **L3** sections · **B** the build t
 | `gsap-scrolltrigger` | same | same | L2, L3, B | Pins, scrub, start/end, pin budget, refresh — every scroll-driven beat and every seam |
 | `gsap-plugins` | same | same | L3, B | SplitText, MotionPath, ScrambleText, DrawSVG, ScrollSmoother, Flip |
 | `gsap-utils` | same | same | B | `mapRange`, `interpolate`, `clamp`, `snap` |
-| `gsap-react` | same | same | B | `useGSAP`, context, cleanup in React |
-| `gsap-frameworks` | same | same | B | Vue, Svelte and other hosts |
+| `gsap-react` | same | same | — | Only if the page is ever moved into React; the scaffold is plain JavaScript |
+| `gsap-frameworks` | same | same | — | Only if the page is ever moved into a framework |
 | `gsap-performance` | same | same | L1, B | Transform-only animation, `will-change`, avoiding layout thrash — the performance budget |
 
 > The scroll-driven seams in [`seams.md`](./seams.md) are ScrollTrigger work. Without
@@ -61,11 +61,11 @@ Stage keys: **L1** rules · **L2** story · **L3** sections · **B** the build t
 | `impeccable` | [pbakaus/impeccable](https://claudemarketplaces.com/skills/pbakaus/impeccable/impeccable) | `npx -y skills add pbakaus/impeccable --skill impeccable --agent claude-code` | L1, L3 | Font selection that rejects overused faces; design-context discipline. Its context interview is answered by the BRD, PRD and mockup — never re-asked |
 | `motion-director` (agent) | `q-motion@q-motion` plugin | `/plugin install q-motion@q-motion` | L2, L3 | Every transition carried by something on screen; strips motion clichés. Written for video — take the principle, not the frame plan |
 
-## Motion in React — the alternative engine
+## Motion — the second engine, for small UI
 
 | Skill | Source | Install | Read at | For |
 |---|---|---|---|---|
-| `motion-framer` | `motion-framer@claude-design-skillstack` plugin | `/plugin install motion-framer@claude-design-skillstack` | L1, B | Framer Motion for UI micro-interactions (hover, press, presence). Scroll storytelling and seams stay on GSAP; never drive the same element with both |
+| `motion-framer` | `motion-framer@claude-design-skillstack` plugin | `/plugin install motion-framer@claude-design-skillstack` | L1, B | Motion (vanilla `motion`, formerly Framer Motion) for UI micro-interactions: hover, press, springs. Scroll storytelling and seams stay on GSAP; never drive the same element with both |
 
 ---
 

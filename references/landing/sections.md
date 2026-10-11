@@ -70,8 +70,7 @@ No-JS and reduced motion: what the visitor sees instead, and that every line of 
 still reads in order.
 
 ## Checks
-- [ ] The build's seam audit shows this section's entry and exit joined at 85/55/25%.
-- [ ] The seam test passes for both of its seams.
+- [ ] Its entry and exit seams look joined at 85/55/25%, desktop and phone.
 - [ ] <section-specific checks: copy present, pin length, signature moment visible>
 ```
 

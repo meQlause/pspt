@@ -52,8 +52,8 @@ imagined ERD produces tables nobody renders.
 /pspt:smoke       open the running app in Chrome, check each page loads, save a PNG of each
 /pspt:staging-fix  health endpoints, everything under /api/v1, env split from secrets
 /pspt:staging-scan  read-only: the docker buildx build and push commands for each app to GHCR
-/pspt:landing-spec  the landing page: creative rules, the story spine, one document per section, seams that join
-/pspt:landing-build  build the landing docs: full-screen GSAP + SVG scenes, one section per run, every seam proven
+/pspt:landing-spec  the landing page: creative rules, the story spine, one document per section, then the scaffold
+/pspt:landing-build  code one section into its own folder (html, css, js), joined to the one above
 ```
 
 `/pspt:enhance` changes the spec; `/pspt:ticket` turns one request into a

@@ -1,0 +1,46 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+}
+.section {
+  position: relative;
+  z-index: 1;
+}
+[data-stage] {
+  position: relative;
+  min-height: 100svh;
+}
+[data-thread-in],
+[data-thread-out] {
+  position: absolute;
+  left: 50%;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+[data-thread-in] {
+  top: 0;
+}
+[data-thread-out] {
+  bottom: 0;
+}
+.section[data-giver] {
+  z-index: 2;
+}
+.section[data-handed-off] {
+  z-index: 1;
+}
+[data-handed-off] [data-carried] {
+  visibility: hidden;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-stage] {
+    min-height: auto;
+  }
+}
