@@ -119,3 +119,7 @@ itself is whatever the underlying `/pspt:build` steps produced.
 - **Never assume "stop" means "revert".** When the user stops the loop, the
   work committed by earlier iterations stays. Only the unfinished iteration
   is discarded.
+
+## Newline formatting
+
+For Express and React TypeScript criteria, follow the canonical [newline rules](../../references/toolchain/formatting.md) and run `npm run format` before CHECK. Use the same layout in tests and application code.

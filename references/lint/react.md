@@ -422,3 +422,10 @@ commit even though `npm run lint` passes. Check it the way the hook does:
 ```sh
 npx eslint --max-warnings=0 --no-warn-ignored <files>
 ```
+
+## 13. Newline layout
+
+The canonical configuration also enforces `padding-line-between-statements` after
+eslint-config-prettier. Follow the shared [newline formatting rules](../toolchain/formatting.md)
+for import groups, declaration groups, functions, control-flow blocks and returns.
+This layout extension applies to the Express and React TypeScript sets.

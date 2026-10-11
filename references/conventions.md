@@ -353,3 +353,7 @@ repository owns that phase's files.
 Where this does not apply: `/pspt:spec`, `/pspt:enhance`, `/pspt:build`,
 `/pspt:build-long`, `/pspt:code` and `/pspt:reg` belong to a pspt project, whose
 parent is a git repository with the two submodules by construction.
+
+## Newline formatting
+
+Express and React TypeScript builds use the canonical [newline formatting rules](toolchain/formatting.md). Run `npm run format` before CHECK; formatter and linter must agree.

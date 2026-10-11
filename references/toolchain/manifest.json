@@ -6,15 +6,15 @@
       "files": {
         "eslint.config.mjs": {
           "source": "references/toolchain/express/eslint.config.mjs",
-          "sha256": "bea97525b2de56ed2ba03f4efbe2f3c3c514faba4ab3c11cb4f63785e846e6a6"
+          "sha256": "bbd130549fdffd61a3920479c911638bf019a66dbf60ca36413256ea46f686b6"
         },
         "knip.json": {
           "source": "references/toolchain/express/knip.json",
           "sha256": "e65c2d67c67dd8eb809d981d63b629a18881a4252136ad10ba0e6c3cd5fc4e08"
         },
         ".prettierrc.json": {
-          "source": "references/toolchain/shared/.prettierrc.json",
-          "sha256": "94699af1850daa277e8e21635ef353179ed6a40989038a0b8da1bf397f673e5b"
+          "source": "references/toolchain/shared/.prettierrc-readable.json",
+          "sha256": "08bce7ee66c2299c8bc4e7d8623d2fb0d333800eeb20dfee30439b8ceda1d8b9"
         },
         ".prettierignore": {
           "source": "references/toolchain/shared/.prettierignore",
@@ -31,6 +31,10 @@
         ".husky/commit-msg": {
           "source": "references/toolchain/shared/husky/commit-msg",
           "sha256": "28a616e5cb4c46b5b3119b320c4aae6a4de9c8cc634e712fedbff6aa752aa148"
+        },
+        ".gitattributes": {
+          "source": "references/toolchain/shared/.gitattributes",
+          "sha256": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c"
         }
       },
       "devDependencies": {
@@ -48,8 +52,8 @@
         "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
       },
       "scripts": {
-        "format": "prettier --write .",
-        "format:check": "prettier --check .",
+        "format": "prettier --write . && eslint --fix --fix-type layout .",
+        "format:check": "prettier --check . && eslint --max-warnings=0 .",
         "lint": "eslint --max-warnings=0 .",
         "lint:files": "eslint --max-warnings=0 --no-warn-ignored",
         "typecheck": "tsc --noEmit",
@@ -176,15 +180,15 @@
       "files": {
         "eslint.config.mjs": {
           "source": "references/toolchain/react/eslint.config.mjs",
-          "sha256": "24a784da34d81c7b7cff5c04a7922f0e797399f03562a8ebbb3e2ffdd5df0432"
+          "sha256": "afe829e728599d1c2f89fd54ffdcb7d5ec84e96f69d671f3844e2612973a9b9a"
         },
         "knip.json": {
           "source": "references/toolchain/react/knip.json",
           "sha256": "18e0cbfc74fffd1f437c4b59518e8efa635e0fb0987d5e6051e14bca5d1e3ce0"
         },
         ".prettierrc.json": {
-          "source": "references/toolchain/shared/.prettierrc.json",
-          "sha256": "94699af1850daa277e8e21635ef353179ed6a40989038a0b8da1bf397f673e5b"
+          "source": "references/toolchain/shared/.prettierrc-readable.json",
+          "sha256": "08bce7ee66c2299c8bc4e7d8623d2fb0d333800eeb20dfee30439b8ceda1d8b9"
         },
         ".prettierignore": {
           "source": "references/toolchain/shared/.prettierignore",
@@ -201,6 +205,10 @@
         ".husky/commit-msg": {
           "source": "references/toolchain/shared/husky/commit-msg",
           "sha256": "28a616e5cb4c46b5b3119b320c4aae6a4de9c8cc634e712fedbff6aa752aa148"
+        },
+        ".gitattributes": {
+          "source": "references/toolchain/shared/.gitattributes",
+          "sha256": "d60f352d0db1404c70afb4bb8b2ca3fd1c610572aa40720e8a0b7baa7885418c"
         }
       },
       "devDependencies": {
@@ -222,8 +230,8 @@
         "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
       },
       "scripts": {
-        "format": "prettier --write .",
-        "format:check": "prettier --check .",
+        "format": "prettier --write . && eslint --fix --fix-type layout .",
+        "format:check": "prettier --check . && eslint --max-warnings=0 .",
         "lint": "eslint --max-warnings=0 .",
         "lint:files": "eslint --max-warnings=0 --no-warn-ignored",
         "typecheck": "tsc --noEmit",

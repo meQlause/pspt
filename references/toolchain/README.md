@@ -109,3 +109,15 @@ a `disables` fixture in `verify/`.
 
 After changing any file here: format it with `shared/.prettierrc.json`,
 re-run `verify/`, then regenerate `manifest.json`.
+
+## Readable newline formatting
+
+Express and React TypeScript use `shared/.prettierrc-readable.json` and the
+[shared newline rules](formatting.md). Their `format` command runs Prettier
+followed by ESLint layout fixes; `format:check` checks both tools. The manifest
+also installs `.gitattributes` to preserve LF line endings across checkouts.
+The other stack toolchains retain their existing formatting commands.
+
+Run `node references/toolchain/verify/newlines.mjs <project-root>` against a
+project with `backend/` and `frontend/` dependencies installed to check the
+canonical fixture contracts, newline autofixes and formatter idempotence.

@@ -136,7 +136,11 @@ export default [
       // Identifier length
       'id-length': [
         'error',
-        { min: 3, properties: 'never', exceptions: ['id', 'db', 'to', 'up', 'fn'] },
+        {
+          min: 3,
+          properties: 'never',
+          exceptions: ['id', 'db', 'to', 'up', 'fn'],
+        },
       ],
 
       // Magic values
@@ -169,5 +173,38 @@ export default [
 
   // eslint-config-prettier also turns off `curly`; §3 requires it, so it is
   // re-enabled after prettier. With 'all' it never conflicts with formatting.
-  { files: SOURCE, rules: { curly: ['error', 'all'] } },
+  {
+    files: SOURCE,
+    rules: {
+      curly: ['error', 'all'],
+      'padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: 'import', next: '*' },
+        { blankLine: 'never', prev: 'import', next: 'import' },
+        {
+          blankLine: 'always',
+          prev: '*',
+          next: ['function', 'class', 'export'],
+        },
+        {
+          blankLine: 'always',
+          prev: ['function', 'class', 'export'],
+          next: '*',
+        },
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+        {
+          blankLine: 'any',
+          prev: ['const', 'let', 'var'],
+          next: ['const', 'let', 'var'],
+        },
+        {
+          blankLine: 'always',
+          prev: '*',
+          next: ['if', 'for', 'while', 'do', 'switch', 'try'],
+        },
+        { blankLine: 'always', prev: 'block-like', next: '*' },
+        { blankLine: 'always', prev: '*', next: 'return' },
+      ],
+    },
+  },
 ];

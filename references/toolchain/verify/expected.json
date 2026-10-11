@@ -51,12 +51,15 @@
     ]
   },
   "express": {
-    "src/features/bookings/booking.schema.ts": [],
+    "src/features/bookings/booking.schema.ts": [
+      "padding-line-between-statements"
+    ],
     "src/features/bookings/branch.ts": [
       "curly",
       "max-depth",
       "no-else-return",
       "no-negated-condition",
+      "padding-line-between-statements",
       "sonarjs/no-collapsible-if",
       "sonarjs/no-nested-conditional"
     ],
@@ -64,25 +67,30 @@
       "@eslint-community/eslint-comments/no-unlimited-disable",
       "@eslint-community/eslint-comments/require-description",
       "@typescript-eslint/ban-ts-comment",
+      "padding-line-between-statements",
       "unused-disable-directive"
     ],
     "src/features/bookings/long.ts": [
       "max-lines-per-function",
-      "max-statements"
+      "max-statements",
+      "padding-line-between-statements"
     ],
     "src/features/bookings/pricing.rules.ts": [
       "no-restricted-globals",
       "no-restricted-imports",
       "no-restricted-properties",
+      "padding-line-between-statements",
       "sonarjs/pseudo-random"
     ],
     "src/features/bookings/size.ts": [
       "max-classes-per-file",
       "max-nested-callbacks",
       "max-params",
-      "no-magic-numbers"
+      "no-magic-numbers",
+      "padding-line-between-statements"
     ],
     "src/features/bookings/unused.ts": [
+      "padding-line-between-statements",
       "sonarjs/no-unused-vars",
       "sonarjs/unused-import",
       "unused-imports/no-unused-imports",
@@ -94,34 +102,42 @@
       "no-else-return",
       "no-lonely-if",
       "no-magic-numbers",
+      "padding-line-between-statements",
       "sonarjs/no-duplicate-string",
       "sonarjs/todo-tag"
     ],
     "tests/unit/fee.test.ts": [
+      "padding-line-between-statements",
       "sonarjs/no-empty-test-file"
     ]
   },
   "react": {
     "src/features/review/Review.tsx": [
+      "padding-line-between-statements",
       "react-hooks/rules-of-hooks",
       "react/jsx-max-depth",
       "sonarjs/no-nested-conditional"
     ],
-    "src/features/review/booking.schema.ts": [],
+    "src/features/review/booking.schema.ts": [
+      "padding-line-between-statements"
+    ],
     "src/features/review/disables.ts": [
       "@eslint-community/eslint-comments/no-unlimited-disable",
       "@eslint-community/eslint-comments/require-description",
       "@typescript-eslint/ban-ts-comment",
+      "padding-line-between-statements",
       "unused-disable-directive"
     ],
     "src/features/review/values.ts": [
       "curly",
       "id-length",
       "no-magic-numbers",
+      "padding-line-between-statements",
       "sonarjs/no-duplicate-string",
       "sonarjs/todo-tag"
     ],
     "tests/unit/fee.test.ts": [
+      "padding-line-between-statements",
       "sonarjs/no-empty-test-file"
     ]
   },

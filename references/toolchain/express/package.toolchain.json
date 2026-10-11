@@ -15,8 +15,8 @@
     "@eslint-community/eslint-plugin-eslint-comments": "4.8.1"
   },
   "scripts": {
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --write . && eslint --fix --fix-type layout .",
+    "format:check": "prettier --check . && eslint --max-warnings=0 .",
     "lint": "eslint --max-warnings=0 .",
     "lint:files": "eslint --max-warnings=0 --no-warn-ignored",
     "typecheck": "tsc --noEmit",
