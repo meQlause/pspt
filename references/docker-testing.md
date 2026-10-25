@@ -11,7 +11,10 @@ For PostgreSQL 15/16/17 test images, the usual data path is
 `/var/lib/postgresql/data`; confirm the chosen image (newer majors may differ).
 Example test mount: `--tmpfs /var/lib/postgresql/data:rw,size=256m`.
 Size tmpfs and test concurrency to available memory; use a single worker on a
-constrained local Docker engine. Do not disable fsync or durability settings
+constrained local Docker engine. Start one database container per test run
+(Vitest `globalSetup`, a migrated template database, one copied database per
+file), not one per test file — see [test-cadence.md](test-cadence.md)
+§Resource discipline. Do not disable fsync or durability settings
 merely to speed tests, especially when testing persistence guarantees.
 
 Use `--rm` and label disposable containers with a project and test-run owner.

@@ -89,7 +89,9 @@ way through.
 Run `/pspt:ticket` Step 7 from the ticket's first unticked box in `phase.md`,
 then Step 8 — every rule unchanged:
 
-- tests red first, then green; every R row run each phase
+- tests red first, then green — each test file on its own; each phase runs its
+  own T rows and the R rows of the files it edited, and the whole suite runs
+  once, at close-out ([test cadence](../../references/test-cadence.md))
 - each box ticked the moment its work is done, never in a batch
 - every test outcome written into `plan.md` §6 `Result`
 - unplanned file → stop, record it with a test, tell the user

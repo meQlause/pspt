@@ -479,8 +479,9 @@ status `blocked · toolchain drift` — until the user restores or keeps it; a
 ticket never builds on a local variant of the rules its S rows run.
 
 Then run every R row once and record the baseline in `Result`
-(`pass · baseline`). An R that is red before any edit is not this ticket's to
-fix silently — stop and report it.
+(`pass · baseline`). These are the at-risk tests only, not the whole suite. An
+R that is red before any edit is not this ticket's to fix silently — stop and
+report it.
 
 For each phase, in order:
 
@@ -496,8 +497,10 @@ For each phase, in order:
    `pass · P<n> · <short sha>`, or `fail · P<n> · <one-line reason>` and the
    box stays unticked. Anyone opening `phase.md` mid-phase sees exactly where
    the work is.
-4. Run every R row too, not only the phase's own tests; an R that goes red
-   stops the phase (see Red test).
+4. Run the R rows whose at-risk file depends on a file **this phase** edited,
+   alongside the phase's T rows — not every R of the ticket, and never the
+   whole suite mid-ticket ([test cadence](../../references/test-cadence.md)).
+   An R that goes red stops the phase (see Red test).
 5. When every **Done when** box but the commit is ticked, commit (see
    Commits), write the short sha into the last box and tick it, then tick
    **Phase done**. Print one line:
@@ -547,8 +550,11 @@ propose the corrected row, and wait. Status → `blocked · <test id> red`.
 
 After the last phase:
 
-1. Run **every** T, R and S row in `plan.md` §6 on the final tree. Write each
-   `Result`. Every row must read `pass`.
+1. Run **every** T, R and S row in `plan.md` §6 on the final tree, then the
+   **whole suite once** — every unit and integration file and the e2e/fidelity
+   suites the project has (the boundary tier of
+   [test cadence](../../references/test-cadence.md)). Write each `Result`.
+   Every row must read `pass`, and the suite must be green.
 2. Tick every AC in `request.md` §4 whose T rows all pass. An AC that cannot be
    ticked means the ticket is not done — go back to Step 7, do not close.
 3. Tick every box in `plan.md` §7.

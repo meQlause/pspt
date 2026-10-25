@@ -35,8 +35,10 @@ short-cuts:
 2. **Step 1** — pick the first unticked exit criterion of the earliest
    incomplete phase. Print it verbatim.
 3. **Steps 2–6** — anchor, RED, GREEN, CLEAN, CHECK. Same rules as
-   `/pspt:build`. **Never lower the bar** (no skipped tests, no weakened
-   assertions, no `--no-verify`).
+   `/pspt:build`: only the criterion's own test file and the tests the change
+   can affect, never the whole suite per iteration
+   ([test cadence](../../references/test-cadence.md)). **Never lower the bar**
+   (no skipped tests, no weakened assertions, no `--no-verify`).
 4. **Step 7** — tick the checkbox in `phases.md`, write any specification
    correction back, and commit — inside the touched submodule first, then in
    the parent so the pointer moves in the same change. No push. Then
@@ -49,9 +51,10 @@ Print a one-line status: how many criteria are done in the current phase,
 how many remain, and what the next criterion is. Then start the next
 iteration.
 
-If the criterion that just completed was the **last** one in its phase, print
-a phase-completion line (`P<n> complete: <k>/<k> criteria ticked`) and roll
-into the first criterion of the next phase.
+If the criterion that just completed was the **last** one in its phase, it has
+already run the whole suite once (`/pspt:build` Step 7). Print a
+phase-completion line (`P<n> complete: <k>/<k> criteria ticked · full suite
+green`) and roll into the first criterion of the next phase.
 
 ## When to stop the loop
 

@@ -169,6 +169,12 @@ All Docker-based tests follow [docker-testing.md](docker-testing.md): prefer
 bounded tmpfs, clean exact test-owned resources even after failure, and verify
 that no test volumes remain. Persistent project data is retained.
 
+### When tests run
+
+[test-cadence.md](test-cadence.md): while building, only the tests of the code
+in hand; at a boundary — a phase's last criterion, a ticket's close-out, before
+a push — the whole suite once. One database container per run, capped workers.
+
 ## 9. Frontend copy — never invent text
 
 **If the text is already defined, write it.** If it is not, write lorem ipsum.

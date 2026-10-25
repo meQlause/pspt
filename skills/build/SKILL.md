@@ -184,9 +184,11 @@ Write the test **first**, at the level the criterion belongs to:
 The test **name quotes the specification statement**. Mirror the source path
 exactly — a test is found by transforming a path, not by searching.
 
-Run it. **Watch it fail, and confirm it fails for the right reason.** A test that
-passes before the code exists is testing nothing; a test that fails on an import
-error is not yet red, it is broken.
+Run it — **that file only** (`vitest run <path>`), never the whole suite while
+building ([test cadence](../../references/test-cadence.md)). **Watch it fail,
+and confirm it fails for the right reason.** A test that passes before the code
+exists is testing nothing; a test that fails on an import error is not yet red,
+it is broken.
 
 ## Step 4 — GREEN
 
@@ -215,7 +217,9 @@ Respect the architecture while you do it:
   recommendation the user has not approved. Tests find elements
   by role or test id, never by placeholder text — `references/conventions.md` §9.
 
-Run the test. Green.
+Run the test. Green. Also run any existing test the change can plausibly break —
+the mirrored test of every other source file you edited, a shared helper's
+other callers — and nothing beyond that.
 
 ## Step 5 — CLEAN
 
@@ -265,6 +269,13 @@ says: one rule, a reason, and reported — in the Step 7 report and as a
 whether you introduced the red or found it there.
 
 ## Step 7 — Close it
+
+**If this was the last unticked criterion of its phase**, run the whole suite
+once before ticking it — every unit and integration file, the e2e and fidelity
+suites the project has, then `pnpm check` (the boundary tier of
+[test cadence](../../references/test-cadence.md)). A red here blocks the phase
+like any red test. The same full run happens before any `git push` the user
+asks for.
 
 Tick the checkbox in `phases.md`. If behaviour diverged from the specification,
 write the correction back into the feature document **now**, in this same change
@@ -390,4 +401,7 @@ you are handing forward.
 
 When this workflow runs Docker-based tests, follow the shared
 [disposable storage and cleanup rules](../../references/docker-testing.md).
-Avoid persistent test volumes and verify cleanup after every run.
+Avoid persistent test volumes and verify cleanup after every run. Keep the
+suite within the machine's memory: one database container per run, capped
+workers, no browser or server left running between steps
+([test cadence](../../references/test-cadence.md) §Resource discipline).
