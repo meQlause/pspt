@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.11.0](#v0110--2026-10-25) | 2026-10-25 | Test what you touch while building; the whole suite at the boundaries |
 | [0.10.0](#v0100--2026-10-11) | 2026-10-11 | Landing scaffold in the spec; the build codes one section folder at a time |
 | [0.9.1](#v091--2026-10-11) | 2026-10-11 | Every landing section proven full screen |
 | [0.9.0](#v090--2026-10-11) | 2026-10-11 | Landing pages, specified then built scene by scene; S3 architecture review |
@@ -26,6 +27,16 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.11.0 — 2026-10-25
+
+**Test what you touch while building; run the whole suite at the boundaries.**
+
+- New [`references/test-cadence.md`](https://github.com/meQlause/pspt/blob/main/references/test-cadence.md): three tiers. Each criterion or ticket task runs only the tests of the code in hand (plus `pnpm check`, which is static). Each ticket phase runs its own T rows and the R rows of the files it edited. The whole suite runs once at a boundary: the last criterion of a `phases.md` phase, a ticket's close-out, and before any push.
+- `/pspt:build`, `/pspt:build-long`, `/pspt:ticket` and `/pspt:ticket-build` follow it: no more full runs per criterion or per phase.
+- Resource discipline so the suite fits an ordinary laptop: one database container per test run (Vitest `globalSetup` and a migrated template database, one copy per file) instead of one per file, unit and integration as separate projects, capped `maxWorkers`, and no browser or dev server left running between steps.
 
 ---
 
