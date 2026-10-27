@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.12.0](#v0120--2026-10-27) | 2026-10-27 | Deploy to Google Cloud from your own cost estimate; every secret in Secret Manager |
 | [0.11.0](#v0110--2026-10-25) | 2026-10-25 | Test what you touch while building; the whole suite at the boundaries |
 | [0.10.0](#v0100--2026-10-11) | 2026-10-11 | Landing scaffold in the spec; the build codes one section folder at a time |
 | [0.9.1](#v091--2026-10-11) | 2026-10-11 | Every landing section proven full screen |
@@ -27,6 +28,17 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.12.0 — 2026-10-27
+
+**Deploy to Google Cloud from your own cost estimate, with every secret in Secret Manager.**
+
+- New `/pspt:deploy-gcloud` ([skill](https://github.com/meQlause/pspt/blob/main/skills/deploy-gcloud/SKILL.md)). It installs the Google Cloud CLI if missing, signs in, and asks for the environments (staging only, or staging and production), each with its project and region.
+- The architecture is your [Pricing Calculator](https://cloud.google.com/products/calculator) estimate: export it as CSV and give the path or paste it. Each line item becomes a resource: single VM, Cloud Run, VM groups, GKE Autopilot, App Engine flexible, Cloud SQL, load balancer, buckets. The skill shows back the shape, a diagram, the total and what the estimate leaves out, then asks only what is still open.
+- Secrets move from `.env.secret` into Secret Manager without passing through the conversation. CI/CD is GitHub Actions through Workload Identity Federation (no key files, no GitHub secrets) or Cloud Build. Staging ships on push to `main`; production ships on a `v*` tag, behind a reviewer.
+- One plan, approved once, before anything billable is created. The skill never pushes, never tags and never deploys production itself.
 
 ---
 
