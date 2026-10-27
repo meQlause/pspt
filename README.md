@@ -52,6 +52,7 @@ imagined ERD produces tables nobody renders.
 /pspt:smoke       open the running app in Chrome, check each page loads, save a PNG of each
 /pspt:staging-fix  health endpoints, everything under /api/v1, env split from secrets
 /pspt:staging-scan  read-only: the docker buildx build and push commands for each app to GHCR
+/pspt:deploy-gcloud  Google Cloud via gcloud: project, environments, Cloud Run / VM / GKE / App Engine / Cloud Storage, optional load balancer, CI/CD with Secret Manager
 /pspt:landing-spec  the landing page: creative rules, the story spine, one document per section, then the scaffold
 /pspt:landing-build  code one section into its own folder (html, css, js), joined to the one above
 ```
