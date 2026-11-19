@@ -1,6 +1,6 @@
 ---
 name: ticket
-description: Plan one change conversationally before any code (requires the jcodemunch MCP server — asks permission and installs it if missing) — ask what the user wants, dig one or two questions at a time while reading the code to check each idea is possible, until every question is settled and the user says "ready". Then write tickets/slug/request.md (summary, scope, checkable acceptance criteria), plan.md (current state, affected and at-risk files, test cases written before code, traceability check) and phase.md (additive → wire-in → docs), stop for approval, implement phase by phase, record every test result and close out. Use for "/pspt:ticket name request", "ticket this", "plan this change before touching code", or to resume an existing ticket with "/pspt:ticket name".
+description: Plan one change conversationally before any code (requires the jcodemunch MCP server — asks permission and installs it if missing) — ask what the user wants, dig one or two questions at a time while reading the code to check each idea is possible, until every question is settled and the user says "ready". Then write tickets/slug/request.md (summary, scope, checkable acceptance criteria), plan.md (current state, affected and at-risk files, test cases written before code, traceability check) and phase.md (additive → wire-in → docs), stop for approval, implement phase by phase on a ticket/<slug> branch, record every test result and close out — then, once the user confirms, push, open the pull request and delete the branch. Use for "/pspt:ticket name request", "ticket this", "plan this change before touching code", or to resume an existing ticket with "/pspt:ticket name".
 ---
 
 # The ticket
@@ -472,7 +472,13 @@ approve <slug>`), and ask once:
 
 ## Step 7 — Implement, phase by phase
 
-Before P1, run `/pspt:build` **Step 0b** for every submodule the plan touches:
+Before P1, **create the ticket branch** — `ticket/<slug>`, in every git
+repository the plan touches, from the branch checked out now (see
+[Branch and pull request](#branch-and-pull-request)). Every phase commit lands
+on it; nothing of the build lands on the base branch. A ticket resumed at
+`in progress · P<n>` checks the branch out again instead of creating it.
+
+Then run `/pspt:build` **Step 0b** for every submodule the plan touches:
 the toolchain (ESLint, knip, Prettier, commitlint, hooks, pinned dependencies)
 must be pspt's canonical copy, installed if missing. Drift stops the ticket —
 status `blocked · toolchain drift` — until the user restores or keeps it; a
@@ -573,8 +579,15 @@ After the last phase:
      spec   docs/BE/features/bookings.md §1 corrected (reference format)
      copy   1 lorem ipsum placeholder — COPY-007 proposed, waiting for your approval (docs/FE/copy-recommendations.md)
 
-   Next: /pspt:trace FR-014 to confirm the chain, then push when ready.
+   branch ticket/booking-ref-v2 · parent, backend — 6 commits ahead of main
+
+   Open the pull request and delete the branch? (yes / not yet)
    ```
+
+7. **Wait for the user to confirm.** "Yes" → [Branch and pull request](#branch-and-pull-request)
+   §On confirm: push, open the pull request, delete the branch. "Not yet" →
+   stop; the branch stays checked out with every commit on it, and
+   `/pspt:ticket <name>` asks again later.
 
 ## Commits — automatic, and only inside a git repository
 
@@ -590,7 +603,15 @@ Same discipline as `/pspt:build`'s Commits section: `git status --porcelain`
 first, stage explicit paths (never `git add -A` or `git add .`), commit inside
 each touched submodule first, then the parent so the pointer moves in the same
 change. A submodule whose whole-tree check is red is never committed. No
-`git push`.
+`git push` — except the one push in [Branch and pull request](#branch-and-pull-request),
+after the user confirms the ticket is done.
+
+Which branch each commit lands on:
+
+| Commit | Branch |
+|---|---|
+| Ticket written, re-plan, approve (Step 6) | the base branch — so `/pspt:ticket-build` finds every approved ticket from one checkout |
+| Each phase, blocked status, close-out (Steps 7–8) | `ticket/<slug>` |
 
 Commits land at three moments:
 
@@ -626,6 +647,73 @@ footer, in the commit message and in the pull request description. The
 Skip the commit for this step only. The next step commits automatically again.
 Do not create a "wip:" or "temp:" commit as a workaround — leave the change
 staged (or unstaged) and stop.
+
+## Branch and pull request
+
+One branch per ticket, named `ticket/<slug>`, in every git repository whose
+files the plan changes — the parent, `backend/`, `frontend/`, each one that is a
+git repository (conventions §11). A repository the ticket does not touch gets
+no branch. No git repository at all → no branch, no pull request; the report
+says so, as it does for commits.
+
+### Create — at the start of Step 7
+
+In each repository:
+
+1. `git status --porcelain` — any uncommitted change to a path the plan lists
+   stops the ticket: status `blocked · dirty tree <path>`. Other untracked
+   files are left alone.
+2. Record the base: `git rev-parse --abbrev-ref HEAD` (e.g. `main`). Write it
+   once into the header of `phase.md`:
+   `**Branch:** ticket/<slug> · base: main`.
+3. `git switch -c ticket/<slug>`. The branch already exists → the ticket is
+   being resumed: `git switch ticket/<slug>` and continue from the first
+   unticked box. It exists **and** the ticket is not `in progress` or
+   `blocked` → stop and ask; never reset or reuse someone else's branch.
+
+In the parent, the submodule pointers committed on `ticket/<slug>` point at the
+submodules' `ticket/<slug>` commits.
+
+### On confirm — after Step 8, only on the user's "yes"
+
+Submodules first, then the parent, so the parent's pull request points at
+commits that exist on the remote:
+
+1. `git push -u origin ticket/<slug>`.
+2. Open the pull request with `gh pr create --base <base> --head ticket/<slug>`.
+   - **Title:** `<type>(<area>): <ticket name>` — the same semantic form as the
+     commits.
+   - **Body:** `request.md` §1 Summary, the AC list with ticks, the test line
+     from the Step 8 report, a link to `tickets/<slug>/`, and — in the parent's
+     pull request — the submodule pull request links. **SR-6:** no
+     `Co-Authored-By`, no tool attribution, no "generated with" footer.
+3. Write the pull request URL(s) into `phase.md` under the **Branch:** line,
+   commit (`docs(ticket): pr <slug>`) and push that commit to the same branch.
+4. Delete the local branch: `git switch <base>`, then `git branch -d ticket/<slug>`.
+   `-d`, never `-D` — it refuses unless every commit is on the pushed branch,
+   which is the proof nothing is lost.
+5. Remote branch: deleted by GitHub when the pull request is merged. Check
+   `gh repo view --json deleteBranchOnMerge`; if it is `false`, ask once:
+   **"Turn on automatic branch deletion after merge for <repo>?"** Yes →
+   `gh repo edit --delete-branch-on-merge`. No → say the branch stays on the
+   remote after merge. Never delete the remote branch before the merge — that
+   closes the pull request.
+
+Print one line per repository:
+
+```
+⇡ backend  ticket/booking-ref-v2 → main  PR #41  · local branch deleted · remote deletes on merge
+⇡ parent   ticket/booking-ref-v2 → main  PR #112 · local branch deleted · remote deletes on merge
+```
+
+**Anything fails** — no `origin`, `gh` missing or signed out, push rejected,
+pull request refused — stop at that step. Do not delete the branch: it is the
+only copy of the work that is not on the remote. Report what failed and what
+the user can run, and leave the ticket `done` on its branch.
+
+> The base branch only ever receives the ticket through a reviewed pull
+> request. The branch exists from the first phase commit until the work is
+> safely on the remote — and not one step longer.
 
 ---
 
@@ -671,6 +759,11 @@ staged (or unstaged) and stop.
   empty `Result`.
 - **Never tick a box in a batch, ahead of the work, or for a test that was not
   run on the current tree.**
+- **Never build on the base branch.** Phase and close-out commits land on
+  `ticket/<slug>`; the base receives them only through the pull request.
+- **Never push, open a pull request or delete the branch without the user's
+  "yes"** after close-out — and never delete a branch whose push or pull
+  request failed, or with `git branch -D`.
 
 ## Docker test storage
 

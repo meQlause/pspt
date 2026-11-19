@@ -1,6 +1,6 @@
 ---
 name: ticket-build
-description: Execute every approved ticket that has not been built yet, one ticket at a time — resume any ticket left in progress, then take approved tickets oldest first, re-check each plan against the current code, and run /pspt:ticket's implement and close-out steps on it until every box in its phase.md is ticked. Stops on a red test, an unplanned file, a stale plan, or when the user says stop. Use for "/pspt:ticket-build", "build the tickets", "run the approved tickets", "execute the queue", or "/pspt:ticket-build <name>" for one ticket.
+description: Execute every approved ticket that has not been built yet, one ticket at a time — resume any ticket left in progress, then take approved tickets oldest first, re-check each plan against the current code, and run /pspt:ticket's implement and close-out steps on it, on its own ticket/<slug> branch, until every box in its phase.md is ticked — then, on the user's confirm, open the pull request and delete the branch before the next ticket starts. Stops on a red test, an unplanned file, a stale plan, or when the user says stop. Use for "/pspt:ticket-build", "build the tickets", "run the approved tickets", "execute the queue", or "/pspt:ticket-build <name>" for one ticket.
 ---
 
 # The ticket queue
@@ -33,10 +33,21 @@ Read the `**Status:**` line of every `tickets/*/request.md`.
 | Status | In the queue? |
 |---|---|
 | `in progress · P<n>` | **Yes, first.** A ticket left mid-phase is finished before a new one starts |
-| `approved` | **Yes**, oldest `**Opened:**` date first, then slug |
+| `approved` | **Yes**, oldest `**Opened:**` date first, then slug — unless it is already built on its branch (below) |
 | `blocked · <reason>` | **No — stop the whole run.** Print the ticket and its reason; the user answers it through `/pspt:ticket <name>` first |
 | `planned` | No. Not approved; list it as waiting for approval |
 | `done` | No |
+
+The status on the base branch is the status at approval — the build itself is
+committed on `ticket/<slug>` (`/pspt:ticket` §Branch and pull request). So
+before queueing an `approved` ticket, look at its branch:
+
+| `ticket/<slug>` | Means | Queue |
+|---|---|---|
+| No local branch, no open pull request | Not started | **Yes** |
+| Local branch exists | Started, or done and waiting for confirm | **Yes, first** — read the status from `phase.md` on that branch and resume, or ask the confirm if it is `done` |
+| Open pull request (`gh pr list --head ticket/<slug> --state open`) | Built, in review | **No** — list it as in review with the PR link |
+| Merged pull request | Done | No |
 
 If the user named a ticket (`/pspt:ticket-build <name>`), the queue is that one
 ticket — refused, with the reason, if its status is not `approved` or
@@ -50,6 +61,7 @@ Queue: 3 tickets
   2  offline-banner      approved · opened 2026-09-21
   3  cancel-idempotent   approved · opened 2026-09-24
 Waiting for approval: venue-hours (planned)
+In review: guest-checkout (PR #38)
 ```
 
 An empty queue is a one-line answer — "nothing approved to build" plus the
@@ -75,6 +87,11 @@ Before the first unticked box of each ticket:
    the table does not list.
 4. No F file of this ticket was changed by a ticket earlier in this run
    without this plan knowing it.
+5. No F file of this ticket is changed by another ticket's **open pull
+   request** (`gh pr diff` on each in-review ticket). Each ticket branches from
+   the base, so an unmerged ticket's edits are not in this tree; building on top
+   of the same lines makes two pull requests that conflict. Drift of this kind
+   is reported as `plan stale · waits on PR #<n>`.
 
 **All hold** → Step 3. **Any drifted** → status `blocked · plan stale`, list
 each drifted row with what the code shows now, and **stop the run**. Re-planning
@@ -89,6 +106,10 @@ way through.
 Run `/pspt:ticket` Step 7 from the ticket's first unticked box in `phase.md`,
 then Step 8 — every rule unchanged:
 
+- the ticket branch first: switch to the base branch, then create (or resume)
+  `ticket/<slug>` in each repository the plan touches — `/pspt:ticket`
+  §Branch and pull request. Every ticket in the queue branches from the
+  **base**, never from the previous ticket's branch
 - tests red first, then green — each test file on its own; each phase runs its
   own T rows and the R rows of the files it edited, and the whole suite runs
   once, at close-out ([test cadence](../../references/test-cadence.md))
@@ -111,19 +132,34 @@ Every phase re-indexes the files it changed, as `/pspt:ticket` Step 7 · 6
 requires. When a ticket closes out, re-index once more incrementally — the next
 ticket's Step 2 re-check reads the code through jcodemunch and must see this
 ticket's changes (`references/prerequisites.md` §5). Then print its
-`/pspt:ticket` Step 8 report, then one line:
+`/pspt:ticket` Step 8 report and **ask the confirm** it ends with:
+
+> **Open the pull request and delete the branch?** (yes / not yet)
+
+| Answer | Do |
+|---|---|
+| **Yes** | `/pspt:ticket` §Branch and pull request §On confirm — push, open the pull request(s), switch back to the base, delete the local branch. Then the next ticket |
+| **Not yet** | Stop the run. The branch stays checked out; the next `/pspt:ticket-build` resumes it first and asks again |
+| Push or pull request fails | Stop the run, keep the branch, report what failed — the next ticket never starts on top of work that is only local |
+
+Then one line:
 
 ```
-✓ 1/3 booking-ref-v2 done · next: offline-banner
+✓ 1/3 booking-ref-v2 done · PR #41 · branch deleted · next: offline-banner
 ```
 
-Then start the next ticket at Step 2 — its plan re-check runs against the code
-the ticket just finished left behind.
+Then start the next ticket at Step 2, back on the base branch — its plan
+re-check runs against the base, and item 5 catches any overlap with the pull
+request just opened.
+
+After the run, re-index once more: switching back to the base removed the
+previous ticket's changes from the tree jcodemunch last saw.
 
 When the queue is empty, print a summary and stop:
 
 ```
 Ticket queue done.  3 built · 11 phases · 27 tests pass · 0 unplanned files.
+Pull requests: #41 booking-ref-v2 · #42 offline-banner · #43 cancel-idempotent
 Waiting for approval: venue-hours (planned)
 ```
 
@@ -150,7 +186,7 @@ is true:
 
 Every commit is `/pspt:ticket` §Commits — made only inside a git repository
 (conventions §11) — per phase (submodule first, then the
-parent, when the parent is a git repository) and at close-out, explicit paths, no `git add -A`, no `git push`,
+parent, when the parent is a git repository) and at close-out, on `ticket/<slug>`, explicit paths, no `git add -A`, no `git push` before the user confirms,
 semantic messages, and **SR-6: no `Co-Authored-By` trailer**, no tool
 attribution. The loop adds no commit of its own. A stale-plan or blocked status
 change is committed alone:
@@ -180,4 +216,8 @@ ticket: <slug>
 - **Never apply a copy recommendation** (`COPY-nnn`, conventions §9.1) that the
   user has not approved. Lorem ipsum stays until they do; the run does not wait
   for it.
-- **Never push.** The user pushes when the run stops.
+- **Never push without the confirm.** The only push is `ticket/<slug>`, after
+  the user says yes to opening its pull request — never the base branch.
+- **Never branch a ticket from another ticket's branch.** Every ticket starts
+  from the base; overlap with an open pull request is a stale plan.
+- **Never delete a branch whose push or pull request failed.**
