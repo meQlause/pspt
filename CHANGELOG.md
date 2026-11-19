@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.12.1](#v0121--2026-11-19) | 2026-11-19 | Every ticket on its own branch, landed through a pull request |
 | [0.12.0](#v0120--2026-10-27) | 2026-10-27 | Deploy to Google Cloud from your own cost estimate; every secret in Secret Manager |
 | [0.11.0](#v0110--2026-10-25) | 2026-10-25 | Test what you touch while building; the whole suite at the boundaries |
 | [0.10.0](#v0100--2026-10-11) | 2026-10-11 | Landing scaffold in the spec; the build codes one section folder at a time |
@@ -28,6 +29,17 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.12.1 — 2026-11-19
+
+**Every ticket is built on its own branch and lands through a pull request.**
+
+- `/pspt:ticket` creates `ticket/<slug>` when the build starts, in every repository the plan touches (parent, `backend/`, `frontend/`). Phase and close-out commits land there; plan and approve commits stay on the base, so the queue still finds every approved ticket.
+- After close-out the skill asks to confirm. On yes it pushes, opens the pull request (submodules first, then the parent), switches back to the base and deletes the local branch with `git branch -d`. The remote branch is deleted on merge, and the skill offers once to turn on automatic branch deletion if it is off.
+- A failed push or pull request keeps the branch and stops, so nothing that exists only locally is ever deleted.
+- `/pspt:ticket-build` asks the same confirm after each ticket, branches every ticket from the base, lists tickets with an open pull request as in review, and treats overlap with an open pull request as a stale plan.
 
 ---
 
