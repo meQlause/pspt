@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.13.1](#v0131--2026-11-25) | 2026-11-25 | The ticket queue skips the frontend pixel comparison |
 | [0.13.0](#v0130--2026-11-25) | 2026-11-25 | Each ticket on its own branch; the ticket queue tests in full at close-out |
 | [0.12.0](#v0120--2026-10-27) | 2026-10-27 | Deploy to Google Cloud from your own cost estimate; every secret in Secret Manager |
 | [0.11.0](#v0110--2026-10-25) | 2026-10-25 | Test what you touch while building; the whole suite at the boundaries |
@@ -29,6 +30,15 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.13.1 — 2026-11-25
+
+**The ticket queue skips the frontend pixel comparison.**
+
+- `/pspt:ticket-build` no longer runs the fidelity suite's `<screen>.visual.spec.ts` screenshot diffs, not per box and not at close-out ([skill](https://github.com/meQlause/pspt/blob/main/skills/ticket-build/SKILL.md#fast-test-cadence--unit-per-box-everything-else-at-close-out)). The fidelity row runs only the style, flow, behaviour and assets specs, so computed styles, assets and behaviour are still checked against the mockup. The row's result reads `pass · no pixel diff`.
+- `/pspt:ticket` used on its own and `/pspt:build` keep the pixel diff.
 
 ---
 
