@@ -127,10 +127,19 @@ ticket is finished. This replaces `/pspt:ticket` Step 7's R baseline and items
 | Before P1 | Nothing — no R baseline |
 | Each task, before its box is ticked | Only the **unit test of the function that task changed** — `vitest run <mirrored file> --project unit -t "<function>"`, red first then green. Plus `pnpm check` (static, no tests) |
 | Each phase | No test run. Integration T rows, every R and S row: `Result` = `deferred · close-out`, box left unticked; the phase still commits and ticks **Phase done** |
-| Close-out (`/pspt:ticket` Step 8) | Unchanged — every T, R and S row, then the whole suite once. Ticks the deferred boxes |
+| Close-out (`/pspt:ticket` Step 8) | Every T, R and S row, then the whole suite once — **except the frontend pixel comparison** (below). Ticks the deferred boxes |
 
 A task with no unit-testable function (config, migration, copy, wiring) runs
 no test at its box; its rows wait for close-out.
+
+**No pixel tests.** The queue never runs the fidelity suite's
+`<screen>.visual.spec.ts` screenshot diffs. The fidelity S row and the
+boundary run use only the other fidelity specs: `pnpm test:fidelity --
+'\.(style|flow|behaviour)\.spec' assets.spec`. For a row limited to one
+screen, put its name in front of the pattern, e.g. `'review\.(style|flow)\.spec'
+behaviour assets.spec`. Computed styles, assets and behaviour are
+still checked against the mockup. The row's `Result` says
+`pass · no pixel diff`.
 
 A red at close-out is fixed on the ticket branch like any red test; the phase
 commits narrow down which phase caused it. An R row that is red at close-out
