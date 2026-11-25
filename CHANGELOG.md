@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.13.2](#v0132--2026-11-25) | 2026-11-25 | Pixel diffs for the screens a ticket changed; a red one is removed |
 | [0.13.1](#v0131--2026-11-25) | 2026-11-25 | The ticket queue skips the frontend pixel comparison |
 | [0.13.0](#v0130--2026-11-25) | 2026-11-25 | Each ticket on its own branch; the ticket queue tests in full at close-out |
 | [0.12.0](#v0120--2026-10-27) | 2026-10-27 | Deploy to Google Cloud from your own cost estimate; every secret in Secret Manager |
@@ -30,6 +31,16 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.13.2 — 2026-11-25
+
+**Pixel diffs run for the screens a ticket changed; a red one is removed for the engineer to re-create.**
+
+- At close-out `/pspt:ticket-build` runs the `<screen>.visual.spec.ts` pixel diff only for the screens the ticket changed ([skill](https://github.com/meQlause/pspt/blob/main/skills/ticket-build/SKILL.md#fast-test-cadence--unit-per-box-everything-else-at-close-out)). Screens it did not touch never run one.
+- Green stays. Red means the ticket changed the screen on purpose: the spec and its baseline screenshots are deleted, the result reads `removed · pixel diff red · engineer re-creates`, and the removal is listed in the report and the pull request body so the engineer writes a new one.
+- Only pixel tests are removed. A red style, flow, behaviour, assets or any other test still blocks the ticket.
 
 ---
 

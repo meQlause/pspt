@@ -266,7 +266,7 @@ And `warn` is not advisory: the commit hook runs `--max-warnings=0`.
 ## Changelog
 
 What changed in every version, with a picture of each:
-[`CHANGELOG.md`](CHANGELOG.md). Each release is a git tag, `v0.1.0` to `v0.13.1`, published on the Releases page.
+[`CHANGELOG.md`](CHANGELOG.md). Each release is a git tag, `v0.1.0` to `v0.13.2`, published on the Releases page.
 
 ## Credit
 
