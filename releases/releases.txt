@@ -22,4 +22,4 @@ v0.10.0|f58c68f0fa4ad50895b907e65846bc297931b80f|v0.10.0 — landing scaffold in
 v0.11.0|a74623408450b4aa6da3be3cec6704cc9413d530|v0.11.0 — test what you touch; the whole suite at the boundaries
 v0.12.0|43096218f52aad37d2ec8376b7d29927e374fe4a|v0.12.0 — deploy to Google Cloud from your own cost estimate
 v0.13.0|6c552b251479a39325044ea85a2f2f9effa184f1|v0.13.0 — each ticket on its own branch; the ticket queue tests in full at close-out
-v0.13.1|HEAD|v0.13.1 — the ticket queue skips the frontend pixel comparison
+v0.13.1|406bfa2d3bf126a0dd5eda6bdc176a1ec827969f|v0.13.1 — the ticket queue skips the frontend pixel comparison
