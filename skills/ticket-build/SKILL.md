@@ -127,19 +127,33 @@ ticket is finished. This replaces `/pspt:ticket` Step 7's R baseline and items
 | Before P1 | Nothing — no R baseline |
 | Each task, before its box is ticked | Only the **unit test of the function that task changed** — `vitest run <mirrored file> --project unit -t "<function>"`, red first then green. Plus `pnpm check` (static, no tests) |
 | Each phase | No test run. Integration T rows, every R and S row: `Result` = `deferred · close-out`, box left unticked; the phase still commits and ticks **Phase done** |
-| Close-out (`/pspt:ticket` Step 8) | Every T, R and S row, then the whole suite once — **except the frontend pixel comparison** (below). Ticks the deferred boxes |
+| Close-out (`/pspt:ticket` Step 8) | Every T, R and S row, then the whole suite once — **pixel comparison only for touched screens, a red one removed** (below). Ticks the deferred boxes |
 
 A task with no unit-testable function (config, migration, copy, wiring) runs
 no test at its box; its rows wait for close-out.
 
-**No pixel tests.** The queue never runs the fidelity suite's
-`<screen>.visual.spec.ts` screenshot diffs. The fidelity S row and the
-boundary run use only the other fidelity specs: `pnpm test:fidelity --
+**Pixel tests: touched screens only, a red one is removed.** The fidelity S
+row and the boundary run use the other fidelity specs: `pnpm test:fidelity --
 '\.(style|flow|behaviour)\.spec' assets.spec`. For a row limited to one
 screen, put its name in front of the pattern, e.g. `'review\.(style|flow)\.spec'
-behaviour assets.spec`. Computed styles, assets and behaviour are
-still checked against the mockup. The row's `Result` says
-`pass · no pixel diff`.
+behaviour assets.spec`. Computed styles, assets and behaviour are still
+checked against the mockup.
+
+The `<screen>.visual.spec.ts` screenshot diffs run once, at close-out, and
+only for the screens this ticket changed (`pnpm test:fidelity -- 'review\.visual\.spec'`).
+Screens the ticket did not touch never run one.
+
+- **Green:** keep it. `Result` = `pass`.
+- **Red:** the ticket changed the screen on purpose, so the old picture no
+  longer applies. Delete that `<screen>.visual.spec.ts` and its
+  `tests/fidelity/baseline/screens/<screen>.*.png`, and commit the deletion at
+  close-out. `Result` = `removed · pixel diff red · engineer re-creates`. This
+  deletion is not an unplanned file and does not block the ticket. List every
+  removed pixel test in the Step 8 report and the pull request body, so the
+  engineer writes a new one for the updated screen.
+
+Only pixel tests are removed. A red style, flow, behaviour, assets or any
+other test is still a red test.
 
 A red at close-out is fixed on the ticket branch like any red test; the phase
 commits narrow down which phase caused it. An R row that is red at close-out

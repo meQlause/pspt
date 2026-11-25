@@ -10,7 +10,7 @@ a browser left open between steps. The skills follow three tiers.
 |---|---|
 | **While building** — each criterion (`/pspt:build`), each ticket task | The test(s) of the code in hand only: the mirrored file of the source you changed (`vitest run <path>`), unit or integration, red first then green. Plus `pnpm check` (static: format, lint, types, knip — no tests) and the hook's lint on the changed files |
 | **Each ticket phase** (P1, P2 …) | That phase's own **Verified by** rows: its T rows and the R rows whose at-risk file depends on a file the phase edited. Not every R of the ticket. **Under `/pspt:ticket-build`: nothing** — only the unit test of each task's function at its box; every other row waits for close-out ([ticket-build §Fast test cadence](../skills/ticket-build/SKILL.md#fast-test-cadence--unit-per-box-everything-else-at-close-out)) |
-| **At a boundary** — the last criterion of a `phases.md` phase, a ticket's close-out, and right before any `git push` | The whole suite once: every unit and integration file, the e2e/fidelity suites the project has, and `pnpm check`. Under `/pspt:ticket-build` the fidelity suite skips its pixel comparison (`*.visual.spec.ts`) |
+| **At a boundary** — the last criterion of a `phases.md` phase, a ticket's close-out, and right before any `git push` | The whole suite once: every unit and integration file, the e2e/fidelity suites the project has, and `pnpm check`. Under `/pspt:ticket-build` the pixel comparison (`*.visual.spec.ts`) runs only for the screens the ticket changed, and a red one is deleted for the engineer to re-create |
 
 A test that the change could plausibly break but that is not in the mirrored
 file — a shared helper's other caller, a mapper the edited service feeds — is
