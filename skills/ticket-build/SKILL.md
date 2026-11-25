@@ -104,26 +104,46 @@ way through.
 ## Step 3 — Execute one ticket
 
 Run `/pspt:ticket` Step 7 from the ticket's first unticked box in `phase.md`,
-then Step 8 — every rule unchanged:
+then Step 8 — every rule unchanged except the **test cadence**, which is fast
+here (below):
 
 - the ticket branch first: switch to the base branch, then create (or resume)
   `ticket/<slug>` in each repository the plan touches — `/pspt:ticket`
   §Branch and pull request. Every ticket in the queue branches from the
   **base**, never from the previous ticket's branch
-- tests red first, then green — each test file on its own; each phase runs its
-  own T rows and the R rows of the files it edited, and the whole suite runs
-  once, at close-out ([test cadence](../../references/test-cadence.md))
 - each box ticked the moment its work is done, never in a batch
 - every test outcome written into `plan.md` §6 `Result`
 - unplanned file → stop, record it with a test, tell the user
 - commits per phase and at close-out, per `/pspt:ticket` §Commits
 
+### Fast test cadence — unit per box, everything else at close-out
+
+The queue is built for speed: nothing heavier than a unit test runs until the
+ticket is finished. This replaces `/pspt:ticket` Step 7's R baseline and items
+3–4, and the phase tier of [test cadence](../../references/test-cadence.md):
+
+| When | What runs |
+|---|---|
+| Before P1 | Nothing — no R baseline |
+| Each task, before its box is ticked | Only the **unit test of the function that task changed** — `vitest run <mirrored file> --project unit -t "<function>"`, red first then green. Plus `pnpm check` (static, no tests) |
+| Each phase | No test run. Integration T rows, every R and S row: `Result` = `deferred · close-out`, box left unticked; the phase still commits and ticks **Phase done** |
+| Close-out (`/pspt:ticket` Step 8) | Unchanged — every T, R and S row, then the whole suite once. Ticks the deferred boxes |
+
+A task with no unit-testable function (config, migration, copy, wiring) runs
+no test at its box; its rows wait for close-out.
+
+A red at close-out is fixed on the ticket branch like any red test; the phase
+commits narrow down which phase caused it. An R row that is red at close-out
+is run once on the base branch first — red there too means it was already
+broken, and it is reported, not silently fixed (the baseline rule, paid only
+when it matters).
+
 Before each phase print one line; after it, the phase line `/pspt:ticket`
-Step 7 already prints:
+Step 7 already prints, with the deferred rows named:
 
 ```
 ▶ offline-banner · P1 additive · 0/3 tasks
-✓ offline-banner · P1 additive — T1 T2 R1 S1–S3 green; committed frontend@3e81a0c, parent@c02d7f4. Next: P2 wire-in.
+✓ offline-banner · P1 additive — unit T1 T2 green · T3 R1 S1–S3 deferred; committed frontend@3e81a0c, parent@c02d7f4. Next: P2 wire-in.
 ```
 
 ## Step 4 — Between tickets
