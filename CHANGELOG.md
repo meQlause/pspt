@@ -9,6 +9,7 @@ absolute image links. Versions are listed in
 
 | Version | Date | Headline |
 |---|---|---|
+| [0.13.0](#v0130--2026-11-25) | 2026-11-25 | Each ticket on its own branch; the ticket queue tests in full at close-out |
 | [0.12.0](#v0120--2026-10-27) | 2026-10-27 | Deploy to Google Cloud from your own cost estimate; every secret in Secret Manager |
 | [0.11.0](#v0110--2026-10-25) | 2026-10-25 | Test what you touch while building; the whole suite at the boundaries |
 | [0.10.0](#v0100--2026-10-11) | 2026-10-11 | Landing scaffold in the spec; the build codes one section folder at a time |
@@ -28,6 +29,16 @@ absolute image links. Versions are listed in
 | [0.3.0](#v030--2026-09-28) | 2026-09-28 | The ticket track — `/pspt:ticket` and `/pspt:ticket-build` |
 | [0.2.0](#v020--2026-09-24) | 2026-09-24 | Submodules, auto-commit, `/pspt:enhance`, `/pspt:build-long` |
 | [0.1.0](#v010--2026-09-23) | 2026-09-23 | First release — spec-driven development for Claude Code |
+
+---
+
+## v0.13.0 — 2026-11-25
+
+**Each ticket on its own branch with a pull request on confirm; the ticket queue runs fast and tests in full at close-out.**
+
+- `/pspt:ticket` and `/pspt:ticket-build` build every ticket on `ticket/<slug>` in each repository it touches. After close-out they ask before pushing. On yes they open the pull request(s), switch back to the base branch and delete the local branch. The queue skips tickets that already have an open pull request, and treats overlap with one as a stale plan.
+- `/pspt:ticket-build` uses a fast test cadence ([skill](https://github.com/meQlause/pspt/blob/main/skills/ticket-build/SKILL.md#fast-test-cadence--unit-per-box-everything-else-at-close-out)). Before each box is ticked, only the unit test of the function that task changed runs (red first, then green), plus `pnpm check`. Nothing runs per phase: integration, at-risk and S rows wait for close-out, which still runs every row and then the whole suite once.
+- An at-risk test that is red at close-out is run once on the base branch, so an existing failure is told apart from one the ticket caused. `/pspt:ticket` used on its own keeps the per-phase cadence.
 
 ---
 
